@@ -5,12 +5,30 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   collapsed: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
+  const navigate = useNavigate();
+  const handleClick = (e: any) => {
+    // mapping key -> path
+    switch (e.key) {
+      case "1":
+        navigate("/thongtincanhan");
+        break;
+      case "2":
+        navigate("/dangkyvexebuyt");
+        break;
+      case "3":
+        navigate("/upload");
+        break;
+      default:
+        break;
+    }
+  };
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -29,6 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         theme="dark"
         mode="inline"
         defaultSelectedKeys={["1"]}
+        onClick={handleClick}
         items={[
           {
             key: "1",

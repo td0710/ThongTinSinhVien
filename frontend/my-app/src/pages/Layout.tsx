@@ -1,20 +1,24 @@
 // layouts/MainLayout.tsx
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { Grid, Layout, theme } from "antd";
 import Sidebar from "../components/Sidebar";
 import HeaderBar from "../components/Header";
+
 const { useBreakpoint } = Grid;
 const { Sider, Header, Content } = Layout;
-
-const MainLayout: React.FC = () => {
+interface LayoutProps {
+  children?: ReactNode;
+}
+const MainLayout: React.FC<LayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const toggleCollapsed = () => setCollapsed(!collapsed);
-  const screens = useBreakpoint(); // 👈 lấy thông tin responsive
-  const isMobile = !screens.md; // 👈 nhỏ hơn md thì coi là mobile
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -43,7 +47,7 @@ const MainLayout: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          {children}
         </Content>
       </Layout>
     </Layout>
