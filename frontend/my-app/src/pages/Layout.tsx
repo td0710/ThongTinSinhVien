@@ -1,6 +1,6 @@
 // layouts/MainLayout.tsx
 import React, { ReactNode, useState } from "react";
-import { Grid, Layout, theme } from "antd";
+import { Drawer, Grid, Layout, theme } from "antd";
 import Sidebar from "../components/Sidebar";
 import HeaderBar from "../components/Header";
 
@@ -11,25 +11,47 @@ interface LayoutProps {
 }
 const MainLayout: React.FC<LayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const toggleCollapsed = () => setCollapsed(!collapsed);
+  const toggleCollapsed = () => {
+    if (isMobile) {
+      setDrawerVisible(!drawerVisible);
+    } else {
+      setCollapsed(!collapsed);
+    }
+  };
   const screens = useBreakpoint();
   const isMobile = !screens.md;
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        breakpoint="md"
-        collapsedWidth={isMobile ? 0 : 80}
-      >
-        <Sidebar collapsed={collapsed} />
-      </Sider>
+      {isMobile ? (
+        <Drawer
+          closable={false}
+          placement="left"
+          onClose={() => setDrawerVisible(false)}
+          open={drawerVisible}
+          width={240}
+          styles={{
+            body: {
+              padding: 0,
+              backgroundColor: "#001529",
+              color: "#fff",
+            },
+          }}
+        >
+          <Sidebar collapsed={false} />
+        </Drawer>
+      ) : (
+        <Sider collapsible collapsed={collapsed} trigger={null}>
+          <Sidebar collapsed={collapsed} />
+        </Sider>
+      )}
+
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
           <HeaderBar

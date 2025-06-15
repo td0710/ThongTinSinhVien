@@ -7,6 +7,10 @@ const AppRoutes = [
     element: <ThongTinCaNhanPage></ThongTinCaNhanPage>,
   },
   {
+    path: "/",
+    element: <ThongTinCaNhanPage></ThongTinCaNhanPage>,
+  },
+  {
     path: "/thongtincanhan",
     element: <ThongTinCaNhanPage />,
   },

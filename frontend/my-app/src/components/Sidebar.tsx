@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Menu } from "antd";
+import { Flex, Grid, Menu } from "antd";
 import {
   UploadOutlined,
   UserOutlined,
@@ -10,17 +10,17 @@ import { useNavigate } from "react-router-dom";
 interface SidebarProps {
   collapsed: boolean;
 }
+const { useBreakpoint } = Grid;
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   const navigate = useNavigate();
   const handleClick = (e: any) => {
-    // mapping key -> path
     switch (e.key) {
       case "1":
         navigate("/thongtincanhan");
         break;
       case "2":
-        navigate("/dangkyvexebuyt");
+        navigate("/dangky");
         break;
       case "3":
         navigate("/upload");
