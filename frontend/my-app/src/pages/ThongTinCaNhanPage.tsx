@@ -41,13 +41,42 @@ export const ThongTinCaNhanPage = () => {
     };
     fetchTinhThanh();
   }, []);
-  const handleSubmit = () => {
-    const values = form.getFieldsValue();
-    console.log("Dữ liệu form:", values);
+  useEffect(() => {
+    const fetchThongTinCaNhan = async () => {
+      const url = `http://localhost:8080/api/secure/thongtincanhan/get-by-id?id=1`;
+
+      const response = await axios.get(url);
+
+      console.log(response);
+    };
+    fetchThongTinCaNhan();
+  }, []);
+  const UpdateThongTinCaNhan = async (data: any) => {
+    try {
+      console.log(data);
+      const response = await axios.put(
+        `http://localhost:8080/api/secure/thongtincanhan/update`,
+        data
+      );
+      console.log("Cập nhật thành công:", response.data);
+    } catch (error) {
+      console.error("Lỗi khi cập nhật:", error);
+    }
   };
-  const onFinish = () => {
-    const values = form.getFieldsValue();
-    console.log("Dữ liệu form:", values);
+  const handleSubmit = async () => {
+    const data = {
+      ...form.getFieldsValue(),
+      userId: 1,
+    };
+    console.log(data);
+    await UpdateThongTinCaNhan(data);
+  };
+  const onFinish = async () => {
+    const data = {
+      ...form.getFieldsValue(),
+      userId: 1,
+    };
+    console.log(data);
   };
   return (
     <>
@@ -134,7 +163,7 @@ export const ThongTinCaNhanPage = () => {
                   </Col>
                   <Col xs={24} md={8}>
                     <Form.Item
-                      name="soCmnd"
+                      name="cccd"
                       label="Số CMND/CCCD"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
@@ -142,7 +171,7 @@ export const ThongTinCaNhanPage = () => {
                     </Form.Item>
                   </Col>
                   <Col xs={24} md={8}>
-                    <Form.Item name="ngayCap" label="Ngày cấp">
+                    <Form.Item name="cccdNgayCap" label="Ngày cấp">
                       <DatePicker
                         style={{ width: "100%" }}
                         placeholder="Ngày cấp CMND/CCCD"
@@ -150,7 +179,7 @@ export const ThongTinCaNhanPage = () => {
                     </Form.Item>
                   </Col>
                   <Col xs={24} md={8}>
-                    <Form.Item name="noiCap" label="Nơi cấp">
+                    <Form.Item name="cccdNoiCap" label="Nơi cấp">
                       <Select
                         showSearch
                         placeholder="Chọn nơi cấp"
@@ -220,7 +249,7 @@ export const ThongTinCaNhanPage = () => {
                   </Col>
                   <Col xs={24} md={8}>
                     <Form.Item
-                      name="sdtSinhVien"
+                      name="soDienThoai"
                       label="SĐT Sinh viên"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
@@ -242,7 +271,7 @@ export const ThongTinCaNhanPage = () => {
                   </Col>
                   <Col xs={24} md={8}>
                     <Form.Item
-                      name="hoKhauTinh"
+                      name="hoKhauThanhPho"
                       label="Tỉnh/Thành phố"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
@@ -280,7 +309,7 @@ export const ThongTinCaNhanPage = () => {
 
                   <Col xs={24} md={8}>
                     <Form.Item
-                      name="sdtGiaDinh"
+                      name="soDienThoaiGiaDinh"
                       label="SĐT Gia đình"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
@@ -308,7 +337,7 @@ export const ThongTinCaNhanPage = () => {
 
                   <Col xs={24} md={8}>
                     <Form.Item
-                      name="maBHYT"
+                      name="maBaoHiemYTe"
                       label="Mã số BHYT"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
@@ -317,7 +346,7 @@ export const ThongTinCaNhanPage = () => {
                   </Col>
                   <Col xs={24} md={8}>
                     <Form.Item
-                      name="maBHXH"
+                      name="maBaoHiemXaHoi"
                       label="Mã số BHXH"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
@@ -340,7 +369,7 @@ export const ThongTinCaNhanPage = () => {
                 <Row gutter={[16, 20]}>
                   <Col span={24}>
                     <Form.Item
-                      name="hoTenBo"
+                      name="tenBo"
                       label="Họ tên Bố"
                       rules={[
                         {
@@ -381,7 +410,7 @@ export const ThongTinCaNhanPage = () => {
                   </Col>
                   <Col span={24}>
                     <Form.Item
-                      name="dienThoaiBo"
+                      name="soDienThoaiBo"
                       label="Điện thoại"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
@@ -405,7 +434,7 @@ export const ThongTinCaNhanPage = () => {
                 <Row gutter={[16, 20]}>
                   <Col span={24}>
                     <Form.Item
-                      name="hoTenMe"
+                      name="tenMe"
                       label="Họ tên Mẹ"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
@@ -441,7 +470,7 @@ export const ThongTinCaNhanPage = () => {
                   </Col>
                   <Col span={24}>
                     <Form.Item
-                      name="dienThoaiMe"
+                      name="soDienThoaiMe"
                       label="Điện thoại"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
