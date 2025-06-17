@@ -10,10 +10,30 @@ import {
   Button,
 } from "antd";
 import { Typography } from "antd";
+import { useEffect, useState } from "react";
+import { GiayXacNhanModel } from "../models/GiayXacNhanModel";
+import axios from "axios";
+import { idText } from "typescript";
 const { Paragraph } = Typography;
 const { Option } = Select;
 
 export const GiayXacNhanSinhVienPage = () => {
+  const [giayXacNhan, setGiayXacNhan] = useState<GiayXacNhanModel[]>([]);
+  useEffect(() => {
+    const fetchLoaiGiayXacNhan = async () => {
+      const url = `http://localhost:8080/api/secure/giayxacnhan/get-all`;
+      const response = await axios.get(url);
+      const listGiayXacNhan = response.data.map((item: any) => {
+        return {
+          id: item.id,
+          name: item.name,
+        };
+      });
+      console.log(response);
+      setGiayXacNhan(listGiayXacNhan);
+    };
+    fetchLoaiGiayXacNhan();
+  }, []);
   const columns = [
     {
       title: "STT",
@@ -75,9 +95,11 @@ export const GiayXacNhanSinhVienPage = () => {
                     // onChange={handleChange}
                     style={{ width: "100%" }}
                   >
-                    <Option value="xac_nhan_sv">Xác nhận sinh viên</Option>
-                    <Option value="mien_giam_hp">Miễn giảm học phí</Option>
-                    <Option value="xac_nhan_tam_tru">Xác nhận tạm trú</Option>
+                    {giayXacNhan.map((item: any) => (
+                      <Option key={item.id} value={item.name}>
+                        {item.name}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
                 <Button
