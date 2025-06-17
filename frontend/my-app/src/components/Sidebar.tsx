@@ -1,6 +1,7 @@
 import React from "react";
 import { Flex, Grid, Menu } from "antd";
 import {
+  ContainerOutlined,
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
@@ -20,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         navigate("/thongtincanhan");
         break;
       case "2":
-        navigate("/dangky");
+        navigate("/giayxacnhansinhvien");
         break;
       case "3":
         navigate("/upload");
@@ -52,12 +53,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
           {
             key: "1",
             icon: <UserOutlined />,
-            label: "nav 1",
+            label: "Thông tin cá nhân",
           },
           {
             key: "2",
-            icon: <VideoCameraOutlined />,
-            label: "nav 2",
+            icon: <ContainerOutlined />,
+            label: <>Xin cấp giấy Xác nhận sinh viên</>,
           },
           {
             key: "3",

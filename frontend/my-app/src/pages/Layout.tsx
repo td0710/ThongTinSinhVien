@@ -47,7 +47,13 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
           <Sidebar collapsed={false} />
         </Drawer>
       ) : (
-        <Sider collapsible collapsed={collapsed} trigger={null}>
+        <Sider
+          width={275}
+          collapsedWidth={80}
+          collapsible
+          collapsed={collapsed}
+          trigger={null}
+        >
           <Sidebar collapsed={collapsed} />
         </Sider>
       )}

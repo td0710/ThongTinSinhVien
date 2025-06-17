@@ -1,4 +1,5 @@
 import { DangKyXeBuytPage } from "./pages/DangKyXeBuytPage";
+import { GiayXacNhanSinhVienPage } from "./pages/GiayXacNhanSinhVienPage";
 import { ThongTinCaNhanPage } from "./pages/ThongTinCaNhanPage";
 
 const AppRoutes = [
@@ -17,6 +18,10 @@ const AppRoutes = [
   {
     path: "/dangkyvexebuyt",
     element: <DangKyXeBuytPage />,
+  },
+  {
+    path: "/giayxacnhansinhvien",
+    element: <GiayXacNhanSinhVienPage />,
   },
 ];
 
