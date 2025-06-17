@@ -3,7 +3,6 @@ import {
   Card,
   Col,
   DatePicker,
-  DatePickerProps,
   Form,
   Input,
   Radio,
@@ -12,8 +11,10 @@ import {
   Space,
   Typography,
 } from "antd";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { useCustomNotification } from "../components/Notification";
 const { Text } = Typography;
 interface TinhThanh {
   value: string;
@@ -22,11 +23,7 @@ interface TinhThanh {
 export const ThongTinCaNhanPage = () => {
   const [form] = Form.useForm();
   const [listTinhThanh, setListTinhThanh] = useState<TinhThanh[]>([]);
-
-  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
-
+  const { contextHolder, notify } = useCustomNotification();
   useEffect(() => {
     const fetchTinhThanh = async () => {
       const url = `https://esgoo.net/api-tinhthanh/1/0.htm`;
@@ -41,25 +38,57 @@ export const ThongTinCaNhanPage = () => {
     };
     fetchTinhThanh();
   }, []);
-  useEffect(() => {
-    const fetchThongTinCaNhan = async () => {
+  const fetchThongTinCaNhan = async () => {
+    try {
       const url = `http://localhost:8080/api/secure/thongtincanhan/get-by-id?id=1`;
-
       const response = await axios.get(url);
 
-      console.log(response);
-    };
+      const formatted = {
+        ...response.data,
+        ngaySinh: response.data.ngaySinh ? dayjs(response.data.ngaySinh) : null,
+        cccdNgayCap: response.data.cccdNgayCap
+          ? dayjs(response.data.cccdNgayCap)
+          : null,
+      };
+
+      form.setFieldsValue(formatted);
+    } catch (error) {
+      let errorMessage = "Đã xảy ra lỗi khi lấy dữ liệu.";
+      console.log(errorMessage);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        errorMessage =
+          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
+      }
+      notify("error", "Lỗi khi tải dữ liệu", errorMessage);
+    }
+  };
+  useEffect(() => {
     fetchThongTinCaNhan();
-  }, []);
+  }, [form]);
+
   const UpdateThongTinCaNhan = async (data: any) => {
     try {
-      console.log(data);
       const response = await axios.put(
         `http://localhost:8080/api/secure/thongtincanhan/update`,
         data
       );
       console.log("Cập nhật thành công:", response.data);
+      notify(
+        "success",
+        "Cập nhật thành công",
+        "Thông tin cá nhân đã được cập nhật"
+      );
     } catch (error) {
+      let errorMessage = "Lỗi khi cập nhật thông tin.";
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        errorMessage =
+          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
+      }
+
+      notify("error", "Cập nhật thất bại", errorMessage);
+
       console.error("Lỗi khi cập nhật:", error);
     }
   };
@@ -78,8 +107,11 @@ export const ThongTinCaNhanPage = () => {
     };
     console.log(data);
   };
+
   return (
     <>
+      {contextHolder}
+
       <Form
         form={form}
         layout="vertical"
@@ -201,7 +233,10 @@ export const ThongTinCaNhanPage = () => {
                       label="Ngày sinh"
                       rules={[{ required: true, message: "Bắt buộc nhập" }]}
                     >
-                      <Input placeholder="Ngày sinh" />
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        placeholder="Ngày sinh"
+                      />
                     </Form.Item>
                   </Col>
                   <Col xs={24} md={8}>
@@ -485,7 +520,6 @@ export const ThongTinCaNhanPage = () => {
           <Row justify="end">
             <Col>
               <Space>
-                <Button htmlType="reset">Reset</Button>
                 <Button type="primary" htmlType="submit" onClick={handleSubmit}>
                   Lưu thông tin
                 </Button>

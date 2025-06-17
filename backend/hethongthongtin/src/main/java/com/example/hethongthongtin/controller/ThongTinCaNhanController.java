@@ -1,7 +1,8 @@
 package com.example.hethongthongtin.controller;
 
 
-import com.example.hethongthongtin.dto.ThongTinCaNhanDto;
+import com.example.hethongthongtin.dto.request.ThongTinCaNhanDto;
+import com.example.hethongthongtin.dto.response.ThongTinCaNhanResponse;
 import com.example.hethongthongtin.entity.ThongTinCaNhan;
 import com.example.hethongthongtin.service.ThongTinCaNhanService;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ThongTinCaNhanController {
     }
 
     @GetMapping("/get-by-id")
-    public ResponseEntity<ThongTinCaNhan> getById(@RequestParam Long id) {
+    public ResponseEntity<ThongTinCaNhanResponse> getById(@RequestParam Long id) {
         return ResponseEntity.ok(thongTinCaNhanService.getThongTinCaNhan(id)) ;
     }
     @PutMapping("/update")

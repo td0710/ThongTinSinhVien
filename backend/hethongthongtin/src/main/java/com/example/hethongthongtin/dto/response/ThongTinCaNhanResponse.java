@@ -1,8 +1,9 @@
-package com.example.hethongthongtin.dto;
+package com.example.hethongthongtin.dto.response;
 
-
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,12 +11,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class ThongTinCaNhanDto {
-    private Long id;
-
-    Long userId ;
+@Builder
+public class ThongTinCaNhanResponse {
 
     private String maSinhVien;
 

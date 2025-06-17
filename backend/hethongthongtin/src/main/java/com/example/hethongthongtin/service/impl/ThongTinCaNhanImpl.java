@@ -1,8 +1,11 @@
 package com.example.hethongthongtin.service.impl;
 
-import com.example.hethongthongtin.dto.ThongTinCaNhanDto;
+import com.example.hethongthongtin.dto.request.ThongTinCaNhanDto;
+import com.example.hethongthongtin.dto.response.ThongTinCaNhanResponse;
 import com.example.hethongthongtin.entity.ThongTinCaNhan;
 import com.example.hethongthongtin.entity.Users;
+import com.example.hethongthongtin.exception.AppException;
+import com.example.hethongthongtin.exception.ErrorCode;
 import com.example.hethongthongtin.repository.ThongTinCaNhanRepository;
 import com.example.hethongthongtin.repository.UserRepository;
 import com.example.hethongthongtin.service.ThongTinCaNhanService;
@@ -23,8 +26,52 @@ public class ThongTinCaNhanImpl implements ThongTinCaNhanService {
         this.userRepository = userRepository;
     }
 
-    public ThongTinCaNhan getThongTinCaNhan(Long userId) {
-        return thongTinCaNhanRepository.findByUserId(userId);
+    public ThongTinCaNhanResponse getThongTinCaNhan(Long userId) {
+        ThongTinCaNhan thongTinCaNhan =  thongTinCaNhanRepository.findByUserId(userId);
+
+        if(thongTinCaNhan == null) {
+            throw new AppException(ErrorCode.PROFILE_NOT_FOUND);
+        }
+
+        ThongTinCaNhanResponse thongTinCaNhanResponse = ThongTinCaNhanResponse.builder()
+                .maSinhVien(thongTinCaNhan.getMaSinhVien())
+                .hoTen(thongTinCaNhan.getHoTen())
+                .khoa(thongTinCaNhan.getKhoa())
+                .danToc(thongTinCaNhan.getDanToc())
+                .tonGiao(thongTinCaNhan.getTonGiao())
+                .quocTich(thongTinCaNhan.getQuocTich())
+                .cccd(thongTinCaNhan.getCccd())
+                .cccdNgayCap(thongTinCaNhan.getCccdNgayCap())
+                .cccdNoiCap(thongTinCaNhan.getCccdNoiCap())
+                .ngaySinh(thongTinCaNhan.getNgaySinh())
+                .noiSinh(thongTinCaNhan.getNoiSinh())
+                .gioiTinh(thongTinCaNhan.getGioiTinh())
+                .queQuan(thongTinCaNhan.getQueQuan())
+                .soDienThoai(thongTinCaNhan.getSoDienThoai())
+                .email(thongTinCaNhan.getEmail())
+                .hoKhauThanhPho(thongTinCaNhan.getHoKhauThanhPho())
+                .hoKhauHuyen(thongTinCaNhan.getHoKhauHuyen())
+                .hoKhauXa(thongTinCaNhan.getHoKhauXa())
+                .diaChiBaoTin(thongTinCaNhan.getDiaChiBaoTin())
+                .soDienThoaiGiaDinh(thongTinCaNhan.getSoDienThoaiGiaDinh())
+                .lop(thongTinCaNhan.getLop())
+                .cccdNguoiGiamHo(thongTinCaNhan.getCccdNguoiGiamHo())
+                .maBaoHiemYTe(thongTinCaNhan.getMaBaoHiemYTe())
+                .maBaoHiemXaHoi(thongTinCaNhan.getMaBaoHiemXaHoi())
+                .tenBo(thongTinCaNhan.getTenBo())
+                .namSinhBo(thongTinCaNhan.getNamSinhBo())
+                .ngheNghiepBo(thongTinCaNhan.getNgheNghiepBo())
+                .noiLamViecBo(thongTinCaNhan.getNoiLamViecBo())
+                .soDienThoaiBo(thongTinCaNhan.getSoDienThoaiBo())
+                .tenMe(thongTinCaNhan.getTenMe())
+                .namSinhMe(thongTinCaNhan.getNamSinhMe())
+                .ngheNghiepMe(thongTinCaNhan.getNgheNghiepMe())
+                .noiLamViecMe(thongTinCaNhan.getNoiLamViecMe())
+                .soDienThoaiMe(thongTinCaNhan.getSoDienThoaiMe())
+                .ngayCapNhat(LocalDateTime.now())
+                .build();
+
+        return thongTinCaNhanResponse;
     }
 
     public void updateThongTin(ThongTinCaNhanDto thongTinCaNhanDto) {
@@ -76,6 +123,9 @@ public class ThongTinCaNhanImpl implements ThongTinCaNhanService {
                     .build();
 
                     thongTinCaNhanRepository.save(thongTinCaNhan);
+        }
+        else {
+            throw new AppException(ErrorCode.USER_NOT_FOUND) ;
         }
     }
 }
