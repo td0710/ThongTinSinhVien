@@ -12,13 +12,18 @@ import {
 import { Typography } from "antd";
 import { useEffect, useState } from "react";
 import { GiayXacNhanModel } from "../models/GiayXacNhanModel";
-import axios from "axios";
-import { idText } from "typescript";
+import axios, { AxiosError } from "axios";
+import { useCustomNotification } from "../components/Notification";
 const { Paragraph } = Typography;
 const { Option } = Select;
 
 export const GiayXacNhanSinhVienPage = () => {
   const [giayXacNhan, setGiayXacNhan] = useState<GiayXacNhanModel[]>([]);
+  const [form] = Form.useForm();
+  const [dsYeuCau, setDsYeuCau] = useState([]);
+  const selectedGiay = Form.useWatch("giayXacNhan", form);
+  const { contextHolder, notify } = useCustomNotification();
+
   useEffect(() => {
     const fetchLoaiGiayXacNhan = async () => {
       const url = `http://localhost:8080/api/secure/giayxacnhan/get-all`;
@@ -34,6 +39,52 @@ export const GiayXacNhanSinhVienPage = () => {
     };
     fetchLoaiGiayXacNhan();
   }, []);
+  const fetchDanhSachYeuCau = async () => {
+    const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/get-all?userId=1`;
+    const response = await axios.get(url);
+    const list = response.data.map((item: any, index: number) => ({
+      key: index + 1,
+      loai: item.loaiGiay, // hoặc convert nếu là ENUM
+      ngayTao: item.ngayTao?.slice(0, 10),
+      trangThai: item.trangThai,
+      noiNhan: item.noiNhan,
+      ngayNhan: item.ngayNhan,
+      ghiChu: item.ghiChu,
+    }));
+    setDsYeuCau(list);
+  };
+  useEffect(() => {
+    fetchDanhSachYeuCau();
+  }, []);
+  const handleSubmit = async (values: any) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/secure/yeucaugiayxacnhan/create",
+        {
+          user_id: 1,
+          loaiGiay: values.giayXacNhan,
+        }
+      );
+      notify(
+        "success",
+        "Yêu cầu thành công",
+        "Yêu cầu cấp giấy xác nhận sinh viên đã được gửi"
+      );
+      form.resetFields();
+      fetchDanhSachYeuCau();
+    } catch (error) {
+      let errorMessage = "Đã xảy ra lỗi khi gửi yêu cầu.";
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        errorMessage =
+          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
+      }
+
+      notify("error", "Gửi yêu cầu thất bại", errorMessage);
+
+      console.error("Lỗi khi gửi yêu cầu:", error);
+    }
+  };
   const columns = [
     {
       title: "STT",
@@ -62,30 +113,21 @@ export const GiayXacNhanSinhVienPage = () => {
       key: "noiNhan",
     },
     {
+      title: "Ngày nhận",
+      dataIndex: "ngayNhan",
+      key: "ngayNhan",
+    },
+    {
       title: "Ghi chú",
       dataIndex: "ghiChu",
       key: "ghiChu",
     },
   ];
-
-  const dataSource = [
-    {
-      key: "1",
-      loai: "Xác nhận sinh viên",
-      ngayDangKy: "01/06/2025",
-      trangThai: "Đã duyệt",
-    },
-    {
-      key: "2",
-      loai: "Miễn giảm học phí",
-      ngayDangKy: "05/06/2025",
-      trangThai: "Đang xử lý",
-    },
-  ];
   return (
     <>
+      {contextHolder}
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        <Form>
+        <Form form={form} onFinish={handleSubmit}>
           <Card title="Chọn loại giấy xác nhận" bordered>
             <Row gutter={[16, 16]}>
               <Col span={12}>
@@ -105,7 +147,7 @@ export const GiayXacNhanSinhVienPage = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  // onClick={handleSubmit}
+                  disabled={!selectedGiay}
                 >
                   Xin cấp giấy XNSV
                 </Button>
@@ -167,7 +209,7 @@ export const GiayXacNhanSinhVienPage = () => {
         />
 
         <Card title="Danh sách giấy xác nhận đã đăng ký" bordered>
-          <Table columns={columns} dataSource={dataSource} />
+          <Table columns={columns} dataSource={dsYeuCau} />
         </Card>
       </Space>
     </>
