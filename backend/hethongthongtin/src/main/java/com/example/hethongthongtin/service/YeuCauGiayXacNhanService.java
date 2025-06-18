@@ -8,4 +8,5 @@ import java.util.List;
 public interface YeuCauGiayXacNhanService {
     void createYeuCauGiayXacNhan(YeuCauGiayXacNhanDto yeuCauXacNhanDto );
     List<YeuCauGiayXacNhanResponse> getByUserId(Long userId) ;
+    void deleteYeuCauGiayXacNhan(Long id) ;
 }

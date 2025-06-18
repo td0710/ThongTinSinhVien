@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class YeuCauGiayXacNhanResponse {
+    private Long id ;
+
     private String loaiGiay;
 
     private LocalDateTime ngayTao;

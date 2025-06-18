@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface YeuCauGiayXacNhanRepository extends JpaRepository<YeuCauGiayXacNhan,Long> {
     List<YeuCauGiayXacNhan> findYeuCauGiayXacNhanByMaSinhVien(String maSinhVien);
+    void deleteById(Long id);
 }

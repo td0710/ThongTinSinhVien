@@ -8,21 +8,26 @@ import {
   Select,
   Form,
   Button,
+  Grid,
+  TableColumnsType,
+  Popconfirm,
 } from "antd";
 import { Typography } from "antd";
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { GiayXacNhanModel } from "../models/GiayXacNhanModel";
 import axios, { AxiosError } from "axios";
 import { useCustomNotification } from "../components/Notification";
 const { Paragraph } = Typography;
 const { Option } = Select;
-
+const { useBreakpoint } = Grid;
 export const GiayXacNhanSinhVienPage = () => {
   const [giayXacNhan, setGiayXacNhan] = useState<GiayXacNhanModel[]>([]);
   const [form] = Form.useForm();
   const [dsYeuCau, setDsYeuCau] = useState([]);
   const selectedGiay = Form.useWatch("giayXacNhan", form);
   const { contextHolder, notify } = useCustomNotification();
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
 
   useEffect(() => {
     const fetchLoaiGiayXacNhan = async () => {
@@ -44,7 +49,8 @@ export const GiayXacNhanSinhVienPage = () => {
     const response = await axios.get(url);
     const list = response.data.map((item: any, index: number) => ({
       key: index + 1,
-      loai: item.loaiGiay, // hoặc convert nếu là ENUM
+      id: item.id,
+      loai: item.loaiGiay,
       ngayTao: item.ngayTao?.slice(0, 10),
       trangThai: item.trangThai,
       noiNhan: item.noiNhan,
@@ -58,13 +64,11 @@ export const GiayXacNhanSinhVienPage = () => {
   }, []);
   const handleSubmit = async (values: any) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/secure/yeucaugiayxacnhan/create",
-        {
-          user_id: 1,
-          loaiGiay: values.giayXacNhan,
-        }
-      );
+      const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/create`;
+      const response = await axios.post(url, {
+        user_id: 1,
+        loaiGiay: values.giayXacNhan,
+      });
       notify(
         "success",
         "Yêu cầu thành công",
@@ -85,17 +89,48 @@ export const GiayXacNhanSinhVienPage = () => {
       console.error("Lỗi khi gửi yêu cầu:", error);
     }
   };
-  const columns = [
+  const handleHuyYeuCau = async (data: number) => {
+    try {
+      const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/delete?id=${data}`;
+      const response = await axios.delete(url);
+      notify(
+        "success",
+        "Hủy yêu cầu thành công",
+        "Yêu cầu cấp giấy xác nhận sinh viên đã được hủy"
+      );
+      form.resetFields();
+      fetchDanhSachYeuCau();
+    } catch (error) {
+      let errorMessage = "Đã xảy ra lỗi khi hủy yêu cầu.";
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        errorMessage =
+          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
+      }
+
+      notify("error", "Hủy yêu cầu thất bại", errorMessage);
+
+      console.error("Lỗi khi hủy yêu cầu:", error);
+    }
+  };
+  interface DataType {
+    id: number;
+    key: React.Key;
+    ngayTao: string;
+    trangThai: string;
+    noiNhan: string;
+    ngayNhan: string;
+    loai: string;
+    ghiChu: string;
+  }
+  const columns: TableColumnsType<DataType> = [
     {
       title: "STT",
       dataIndex: "key",
       key: "key",
+      fixed: "left",
     },
-    {
-      title: "Loại giấy",
-      dataIndex: "loai",
-      key: "loai",
-    },
+
     {
       title: "Ngày tạo",
       dataIndex: "ngayTao",
@@ -118,28 +153,56 @@ export const GiayXacNhanSinhVienPage = () => {
       key: "ngayNhan",
     },
     {
+      title: "Loại giấy",
+      dataIndex: "loai",
+      key: "loai",
+    },
+    {
       title: "Ghi chú",
       dataIndex: "ghiChu",
       key: "ghiChu",
+    },
+    {
+      title: "Thao tác",
+      key: "actions",
+      render: (_, record) => (
+        <Popconfirm
+          title="Xác nhận hủy"
+          description="Bạn có chắc chắn muốn hủy yêu cầu này?"
+          onConfirm={() => handleHuyYeuCau(record.id)}
+          okText="Đồng ý"
+          cancelText="Hủy"
+        >
+          <Button danger>Hủy</Button>
+        </Popconfirm>
+      ),
     },
   ];
   return (
     <>
       {contextHolder}
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        <Form form={form} onFinish={handleSubmit}>
+        <Form form={form} onFinish={handleSubmit} style={{ maxWidth: "100%" }}>
           <Card title="Chọn loại giấy xác nhận" bordered>
             <Row gutter={[16, 16]}>
-              <Col span={12}>
+              <Col xs={24} md={12}>
                 <Form.Item name="giayXacNhan">
                   <Select
                     placeholder="Chọn loại giấy xác nhận"
-                    // onChange={handleChange}
-                    style={{ width: "100%" }}
+                    style={{
+                      width: "100%",
+                    }}
                   >
                     {giayXacNhan.map((item: any) => (
                       <Option key={item.id} value={item.name}>
-                        {item.name}
+                        <div
+                          style={{
+                            whiteSpace: "normal",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          {item.name}
+                        </div>
                       </Option>
                     ))}
                   </Select>
@@ -208,8 +271,12 @@ export const GiayXacNhanSinhVienPage = () => {
           }
         />
 
-        <Card title="Danh sách giấy xác nhận đã đăng ký" bordered>
-          <Table columns={columns} dataSource={dsYeuCau} />
+        <Card title="Danh sách giấy xác nhận đã đăng ký">
+          <Table
+            columns={columns}
+            dataSource={dsYeuCau}
+            scroll={{ x: "max-content" }}
+          />
         </Card>
       </Space>
     </>

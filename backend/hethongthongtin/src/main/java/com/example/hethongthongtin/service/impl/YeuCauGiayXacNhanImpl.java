@@ -58,6 +58,7 @@ public class YeuCauGiayXacNhanImpl implements YeuCauGiayXacNhanService {
         List<YeuCauGiayXacNhanResponse> yeuCauGiayXacNhanResponses = StreamSupport.
                 stream(yeuCauGiayXacNhan.spliterator(),false)
                 .map(gxn -> YeuCauGiayXacNhanResponse.builder()
+                                .id(gxn.getId())
                                 .loaiGiay(gxn.getLoaiGiay().getLabel())
                                 .ngayTao(gxn.getNgayTao())
                                 .noiNhan(gxn.getNoiNhan())
@@ -67,6 +68,12 @@ public class YeuCauGiayXacNhanImpl implements YeuCauGiayXacNhanService {
                                 .build()
                         )
                 .collect(Collectors.toList());
+        System.out.println(yeuCauGiayXacNhanResponses);
         return yeuCauGiayXacNhanResponses;
+    }
+
+    @Override
+    public void deleteYeuCauGiayXacNhan(Long id) {
+        yeuCauGiayXacNhanRepository.deleteById(id);
     }
 }

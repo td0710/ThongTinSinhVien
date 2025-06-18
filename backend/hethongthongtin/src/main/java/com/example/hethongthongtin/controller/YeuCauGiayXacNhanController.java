@@ -24,8 +24,13 @@ public class YeuCauGiayXacNhanController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> getAll(@RequestBody YeuCauGiayXacNhanDto yeuCauGiayXacNhanDto) {
+    public ResponseEntity<?> createGXN(@RequestBody YeuCauGiayXacNhanDto yeuCauGiayXacNhanDto) {
         yeuCauGiayXacNhanService.createYeuCauGiayXacNhan(yeuCauGiayXacNhanDto);
         return ResponseEntity.ok("Yêu cầu giấy xác nhận thành công") ;
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteById(@RequestParam Long id) {
+        yeuCauGiayXacNhanService.deleteYeuCauGiayXacNhan(id);
+        return ResponseEntity.ok("Hủy yêu cầu thành công") ;
     }
 }
