@@ -35,6 +35,29 @@ export const DangKyXeBuytPage = () => {
     }
     return e?.fileList;
   };
+  const handleSubmit = async (values: any) => {
+    try {
+      const img = values.anh?.[0]?.originFileObj;
+      const res = await axios.post(
+        "http://localhost:8080/api/secure/yeucauvexebuyt/create",
+        {
+          loaiVe: values.tuyen,
+          tuyen: values.selectedTuyen,
+          sdt: values.sdt,
+          file: img,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.error("Lỗi gửi dữ liệu:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchTuyenXe = async () => {
       const url = `http://localhost:8080/api/secure/tuyenxe/get-all`;
@@ -52,9 +75,6 @@ export const DangKyXeBuytPage = () => {
     };
     fetchTuyenXe();
   }, []);
-  const handleSubmit = () => {
-    console.log(form.getFieldsValue());
-  };
   return (
     <>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
@@ -159,11 +179,7 @@ export const DangKyXeBuytPage = () => {
                   </Upload>
                 </Form.Item>
               </Col>
-              <Button
-                type="primary"
-                htmlType="submit"
-                // disabled={!selectedGiay}
-              >
+              <Button type="primary" htmlType="submit">
                 Đăng ký
               </Button>
             </Row>
