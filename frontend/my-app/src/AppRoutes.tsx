@@ -23,6 +23,10 @@ const AppRoutes = [
     path: "/giayxacnhansinhvien",
     element: <GiayXacNhanSinhVienPage />,
   },
+  {
+    path: "/dangkyxebuyt",
+    element: <DangKyXeBuytPage />,
+  },
 ];
 
 export default AppRoutes;

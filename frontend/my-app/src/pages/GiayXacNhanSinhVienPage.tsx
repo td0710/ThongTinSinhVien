@@ -27,7 +27,6 @@ export const GiayXacNhanSinhVienPage = () => {
   const selectedGiay = Form.useWatch("giayXacNhan", form);
   const { contextHolder, notify } = useCustomNotification();
   const screens = useBreakpoint();
-  const isMobile = !screens.md;
 
   useEffect(() => {
     const fetchLoaiGiayXacNhan = async () => {

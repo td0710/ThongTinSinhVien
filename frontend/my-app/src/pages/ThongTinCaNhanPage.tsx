@@ -4,6 +4,7 @@ import {
   Col,
   DatePicker,
   Form,
+  Grid,
   Input,
   Radio,
   Row,
@@ -20,6 +21,8 @@ interface TinhThanh {
   value: string;
   label: string;
 }
+const { useBreakpoint } = Grid;
+
 export const ThongTinCaNhanPage = () => {
   const [form] = Form.useForm();
   const [listTinhThanh, setListTinhThanh] = useState<TinhThanh[]>([]);
