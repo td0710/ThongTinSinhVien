@@ -13,17 +13,22 @@ import {
   Flex,
   Input,
   Upload,
+  Popconfirm,
+  TableColumnsType,
 } from "antd";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { TuyenXeModel } from "../models/TuyenXeModel";
 import { PlusOutlined } from "@ant-design/icons";
+import { useCustomNotification } from "../components/Notification";
 const { Option } = Select;
 const { Paragraph } = Typography;
 export const DangKyXeBuytPage = () => {
   const [selectTuyen, setSelectTuyen] = useState("Mot tuyen");
   const [tuyenXe, setTuyenXe] = useState<TuyenXeModel[]>([]);
   const [form] = Form.useForm();
+  const { contextHolder, notify } = useCustomNotification();
+  const [dsYeuCau, setDsYeuCau] = useState([]);
 
   const handleSelectTuyen = (e: any) => {
     const value = e.target.value;
@@ -39,7 +44,7 @@ export const DangKyXeBuytPage = () => {
     try {
       const img = values.anh?.[0]?.originFileObj;
       const res = await axios.post(
-        "http://localhost:8080/api/secure/yeucauvexebuyt/create",
+        "http://localhost:8080/api/secure/yeucauvexebuyt/create?userId=1",
         {
           loaiVe: values.tuyen,
           tuyen: values.selectedTuyen,
@@ -52,9 +57,24 @@ export const DangKyXeBuytPage = () => {
           },
         }
       );
-      console.log(res.data);
+      notify(
+        "success",
+        "Yêu cầu thành công",
+        "Yêu cầu cấp giấy xác nhận sinh viên đã được gửi"
+      );
+      fetchDanhSachYeuCau();
+      form.resetFields();
     } catch (error) {
-      console.error("Lỗi gửi dữ liệu:", error);
+      let errorMessage = "Đã xảy ra lỗi khi gửi yêu cầu.";
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        errorMessage =
+          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
+      }
+
+      notify("error", "Gửi yêu cầu thất bại", errorMessage);
+
+      console.error("Lỗi khi gửi yêu cầu:", error);
     }
   };
 
@@ -75,14 +95,132 @@ export const DangKyXeBuytPage = () => {
     };
     fetchTuyenXe();
   }, []);
+
+  const fetchDanhSachYeuCau = async () => {
+    const url = `http://localhost:8080/api/secure/yeucauvexebuyt/get-all?userId=1`;
+
+    const response = await axios.get(url);
+
+    const list = response.data.map((item: any, index: number) => ({
+      key: index + 1,
+      id: item.id,
+      tuyen: item.tuyen,
+      ngayTao: item.ngayTao?.slice(0, 10),
+      trangThai: item.trangThai,
+      noiNhan: item.noiNhan,
+      ngayNhan: item.ngayNhan,
+      ghiChu: item.ghiChu,
+    }));
+    setDsYeuCau(list);
+  };
+  useEffect(() => {
+    fetchDanhSachYeuCau();
+  }, []);
+  const handleHuyYeuCau = async (data: number) => {
+    try {
+      console.log(data);
+      const url = `http://localhost:8080/api/secure/yeucauvexebuyt/delete?id=${data}`;
+      const response = await axios.delete(url);
+      notify(
+        "success",
+        "Hủy yêu cầu thành công",
+        "Yêu cầu đăng ký đã được hủy"
+      );
+      console.log(response);
+      form.resetFields();
+      fetchDanhSachYeuCau();
+    } catch (error) {
+      let errorMessage = "Đã xảy ra lỗi khi hủy yêu cầu.";
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        errorMessage =
+          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
+      }
+
+      notify("error", "Hủy yêu cầu thất bại", errorMessage);
+
+      console.error("Lỗi khi hủy yêu cầu:", error);
+    }
+  };
+  interface DataType {
+    id: number;
+    key: React.Key;
+    ngayTao: string;
+    trangThai: string;
+    noiNhan: string;
+    ngayNhan: string;
+    tuyen: string;
+    ghiChu: string;
+  }
+  const columns: TableColumnsType<DataType> = [
+    {
+      title: "STT",
+      dataIndex: "key",
+      key: "key",
+      fixed: "left",
+    },
+
+    {
+      title: "Ngày tạo",
+      dataIndex: "ngayTao",
+      key: "ngayTao",
+    },
+
+    {
+      title: "Trạng thái",
+      dataIndex: "trangThai",
+      key: "trangThai",
+    },
+    {
+      title: "Nơi nhận",
+      dataIndex: "noiNhan",
+      key: "noiNhan",
+    },
+    {
+      title: "Ngày nhận",
+      dataIndex: "ngayNhan",
+      key: "ngayNhan",
+    },
+    {
+      title: "Tuyến",
+      dataIndex: "tuyen",
+      key: "tuyen",
+    },
+    {
+      title: "Ghi chú",
+      dataIndex: "ghiChu",
+      key: "ghiChu",
+    },
+    {
+      title: "Thao tác",
+      key: "actions",
+      render: (_, record) => (
+        <Popconfirm
+          title="Xác nhận hủy"
+          description="Bạn có chắc chắn muốn hủy yêu cầu này?"
+          onConfirm={() => handleHuyYeuCau(record.id)}
+          okText="Đồng ý"
+          cancelText="Hủy"
+        >
+          <Button danger>Hủy</Button>
+        </Popconfirm>
+      ),
+    },
+  ];
   return (
     <>
+      {contextHolder}
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         <Form form={form} onFinish={handleSubmit} style={{ maxWidth: "100%" }}>
           <Card title="Chọn loại giấy xác nhận" bordered>
             <Row gutter={[16, 16]}>
               <Col span={24}>
-                <Form.Item name="tuyen">
+                <Form.Item
+                  name="tuyen"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn loại tuyến" },
+                  ]}
+                >
                   <Radio.Group
                     onChange={handleSelectTuyen}
                     defaultValue={1}
@@ -123,7 +261,10 @@ export const DangKyXeBuytPage = () => {
               </Col>
               {selectTuyen === "Mot tuyen" ? (
                 <Col span={24}>
-                  <Form.Item name="selectedTuyen">
+                  <Form.Item
+                    name="selectedTuyen"
+                    rules={[{ required: true, message: "Vui lòng chọn tuyến" }]}
+                  >
                     <Select
                       placeholder="Chọn tuyến"
                       style={{
@@ -151,7 +292,9 @@ export const DangKyXeBuytPage = () => {
               <Col span={24}>
                 <Form.Item
                   name="sdt"
-                  rules={[{ required: true, message: "Bắt buộc nhập" }]}
+                  rules={[
+                    { required: true, message: "Vui lòng nhập số điện thoại" },
+                  ]}
                 >
                   <Input placeholder="Số điện thoại"></Input>
                 </Form.Item>
@@ -162,6 +305,7 @@ export const DangKyXeBuytPage = () => {
                   valuePropName="fileList"
                   getValueFromEvent={normFile}
                   name="anh"
+                  rules={[{ required: true, message: "Vui lòng tải ảnh lên" }]}
                 >
                   <Upload listType="picture-card" beforeUpload={() => false}>
                     <button
@@ -219,10 +363,10 @@ export const DangKyXeBuytPage = () => {
           }
         />
 
-        <Card title="Danh sách giấy xác nhận đã đăng ký">
+        <Card title="Danh sách yêu cầu vé xe buýt">
           <Table
-            // columns={columns}
-            // dataSource={dsYeuCau}
+            columns={columns}
+            dataSource={dsYeuCau}
             scroll={{ x: "max-content" }}
           />
         </Card>

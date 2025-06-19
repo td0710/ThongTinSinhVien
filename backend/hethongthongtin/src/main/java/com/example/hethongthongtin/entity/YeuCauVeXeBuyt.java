@@ -20,7 +20,7 @@ public class YeuCauVeXeBuyt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "ma_sinh_vien", length = 20)
     private String maSinhVien;
@@ -28,6 +28,9 @@ public class YeuCauVeXeBuyt {
     @Enumerated(EnumType.STRING)
     @Column(name = "loai_ve", length = 20)
     private LoaiVe loaiVe;
+
+    @Column(name = "tuyen")
+    private String tuyen;
 
     @Column(name = "so_dien_thoai", length = 15)
     private String soDienThoai;

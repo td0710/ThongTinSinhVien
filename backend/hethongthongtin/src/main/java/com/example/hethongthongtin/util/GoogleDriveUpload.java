@@ -1,6 +1,6 @@
 package com.example.hethongthongtin.util;
 
-import com.example.hethongthongtin.dto.response.YeuCauVeXeBuytResponse;
+import com.example.hethongthongtin.dto.response.UploadResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
@@ -29,8 +29,8 @@ public class GoogleDriveUpload {
         return filePath.toString();
     }
 
-    public YeuCauVeXeBuytResponse uploadImageToDrive(File file) throws GeneralSecurityException, IOException {
-        YeuCauVeXeBuytResponse res = new YeuCauVeXeBuytResponse();
+    public UploadResponse uploadImageToDrive(File file) throws GeneralSecurityException, IOException {
+        UploadResponse res = new UploadResponse();
 
         try{
             String folderId = "1BlBLZ3z191gXaIvxFeU0RrOyyE5AXZqX";

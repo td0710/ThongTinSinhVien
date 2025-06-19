@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class YeuCauVeXeBuytResponse {
+public class UploadResponse {
     private int status;
     private String message;
     private String url;
