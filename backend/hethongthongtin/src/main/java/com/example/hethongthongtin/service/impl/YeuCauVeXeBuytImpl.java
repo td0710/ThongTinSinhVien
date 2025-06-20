@@ -65,7 +65,7 @@ public class YeuCauVeXeBuytImpl implements YeuCauVeXeBuytService {
         YeuCauVeXeBuyt yeuCauVeXeBuyt = YeuCauVeXeBuyt.builder()
                 .maSinhVien(thongTinCaNhan.getMaSinhVien())
                 .loaiVe(LoaiVe.fromLabel(yeuCauVeXeBuytRequest.getLoaiVe()))
-                .tuyen(yeuCauVeXeBuytRequest.getTuyen().equals("") ? "Liên tuyến" : yeuCauVeXeBuytRequest.getTuyen())
+                .tuyen(yeuCauVeXeBuytRequest.getTuyen() == null ? "Liên tuyến" : yeuCauVeXeBuytRequest.getTuyen())
                 .soDienThoai(yeuCauVeXeBuytRequest.getSdt())
                 .trangThai(TrangThai.DangTiepNhan)
                 .duongDanAnh(res.getUrl())
