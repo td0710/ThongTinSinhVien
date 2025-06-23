@@ -74,14 +74,14 @@ public class ThongTinCaNhanImpl implements ThongTinCaNhanService {
         return thongTinCaNhanResponse;
     }
 
-    public void updateThongTin(ThongTinCaNhanDto thongTinCaNhanDto) {
-        Long id = thongTinCaNhanDto.getUserId();
-        Optional<Users> optionalUser = userRepository.findById(id) ;
+    public void updateThongTin(ThongTinCaNhanDto thongTinCaNhanDto,Long userId) {
+
+        Optional<Users> optionalUser = userRepository.findById(userId) ;
 
         if (optionalUser.isPresent()) {
             Users user = optionalUser.get();
             ThongTinCaNhan thongTinCaNhan = ThongTinCaNhan.builder()
-                    .id(Optional.ofNullable(thongTinCaNhanRepository.findByUserId(id))
+                    .id(Optional.ofNullable(thongTinCaNhanRepository.findByUserId(userId))
                             .map(ThongTinCaNhan::getId)
                             .orElse(null))
                     .user(user)

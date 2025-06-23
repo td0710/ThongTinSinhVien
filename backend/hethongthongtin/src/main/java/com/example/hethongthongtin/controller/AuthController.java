@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> getById(@RequestParam String id, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestParam String id, HttpServletResponse response) {
 
         System.out.println(id);
         String jwt = authService.login(id);

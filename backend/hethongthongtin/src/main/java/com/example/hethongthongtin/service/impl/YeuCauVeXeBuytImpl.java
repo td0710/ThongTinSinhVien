@@ -35,23 +35,22 @@ public class YeuCauVeXeBuytImpl implements YeuCauVeXeBuytService {
     private GoogleDriveUpload googleDriveUpload;
     private YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository;
     private ThongTinCaNhanRepository thongTinCaNhanRepository;
-    private UserRepository userRepository;
 
 
     YeuCauVeXeBuytImpl(YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository,
                        GoogleDriveUpload googleDriveUpload,
-                       ThongTinCaNhanRepository thongTinCaNhanRepository,
-                       UserRepository userRepository
+                       ThongTinCaNhanRepository thongTinCaNhanRepository
                        ) {
         this.yeuCauVeXeBuytRepository = yeuCauVeXeBuytRepository;
         this.googleDriveUpload = googleDriveUpload;
         this.thongTinCaNhanRepository = thongTinCaNhanRepository;
-        this.userRepository = userRepository;
     }
 
 
     @Override
-    public void createYeuCauVeXe(YeuCauVeXeBuytRequest yeuCauVeXeBuytRequest,MultipartFile file,Long userId) throws IOException,
+    public void createYeuCauVeXe(YeuCauVeXeBuytRequest yeuCauVeXeBuytRequest,
+                                 MultipartFile file,
+                                 Long userId) throws IOException,
             GeneralSecurityException {
 
         File tempFile = File.createTempFile("temp", null);

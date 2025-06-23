@@ -31,8 +31,8 @@ public class YeuCauGiayXacNhanImpl implements YeuCauGiayXacNhanService {
     }
 
     @Override
-    public void createYeuCauGiayXacNhan(YeuCauGiayXacNhanDto yeuCauXacNhanDto) {
-        ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(yeuCauXacNhanDto.getUser_id()) ;
+    public void createYeuCauGiayXacNhan(YeuCauGiayXacNhanDto yeuCauXacNhanDto, Long userId) {
+        ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId) ;
         if(thongTinCaNhan == null) {
             throw new AppException(ErrorCode.PROFILE_NOT_FOUND);
         }

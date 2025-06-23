@@ -6,5 +6,5 @@ import com.example.hethongthongtin.dto.response.ThongTinCaNhanResponse;
 public interface ThongTinCaNhanService {
     ThongTinCaNhanResponse getThongTinCaNhan(Long userId);
 
-    void updateThongTin(ThongTinCaNhanDto thongTinCaNhan);
+    void updateThongTin(ThongTinCaNhanDto thongTinCaNhan,Long userId);
 }

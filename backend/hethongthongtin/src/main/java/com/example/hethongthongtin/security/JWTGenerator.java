@@ -4,6 +4,7 @@ import com.example.hethongthongtin.entity.Users;
 import com.example.hethongthongtin.exception.AppException;
 import com.example.hethongthongtin.exception.ErrorCode;
 import com.example.hethongthongtin.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Jwts;
 import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
 
@@ -69,7 +71,16 @@ public class JWTGenerator {
             return ex.getClaims().getSubject();
         }
     }
+    public Long extractUserIdFromJwt(String token) {
 
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("id", Long.class);
+    }
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
