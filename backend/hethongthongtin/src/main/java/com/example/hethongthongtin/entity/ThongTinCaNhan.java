@@ -29,10 +29,10 @@ public class ThongTinCaNhan {
     @JsonBackReference
     private Users user;
 
-    @Column(name = "ma_sinh_vien", unique = true, nullable = false, length = 20)
+    @Column(name = "ma_sinh_vien", unique = true, nullable = true, length = 20)
     private String maSinhVien;
 
-    @Column(name = "ho_ten", nullable = false, length = 100)
+    @Column(name = "ho_ten", nullable = true, length = 100)
     private String hoTen;
 
     @Column(name = "khoa", length = 50)
@@ -131,7 +131,7 @@ public class ThongTinCaNhan {
     @Column(name = "so_dien_thoai_me", length = 15)
     private String soDienThoaiMe;
 
-    @Column(name = "ngay_cap_nhat", nullable = false)
+    @Column(name = "ngay_cap_nhat", nullable = true)
     private LocalDateTime ngayCapNhat;
 
 

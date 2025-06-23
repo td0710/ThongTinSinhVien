@@ -20,10 +20,13 @@ public class Users {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
-    private String username;
+    private String email;
 
-    @Column(nullable = false, length = 255)
-    private String password;
+    @Column(nullable = false, unique = true, length = 50)
+    private String microsoft_id;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String full_name;
 
     @Column(nullable = false, columnDefinition = "ENUM('sinh_vien', 'admin')")
     private String role;
