@@ -25,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         navigate("/giayxacnhansinhvien");
         break;
       case "3":
-        navigate("/dangkyxebuyt");
+        navigate("/dangkyvexebuyt");
         break;
       default:
         break;

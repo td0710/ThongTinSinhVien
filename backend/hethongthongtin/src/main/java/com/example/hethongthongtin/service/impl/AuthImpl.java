@@ -35,19 +35,19 @@ public class AuthImpl implements AuthService {
 
 
     public String login(String code) {
-        String newCode = code.substring(3);
+
 
         WebClient webClient = WebClient.create();
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("client_id", System.getenv("AZURE_CLIENT_ID"));
         formData.add("scope", "openid profile email");
-        formData.add("code", newCode);
+        formData.add("code", code);
         formData.add("redirect_uri", System.getenv("AZURE_REDIRECT_URI"));
         formData.add("grant_type", "authorization_code");
         formData.add("client_secret", System.getenv("AZURE_CLIENT_SECRET"));
 
         String tokenUrl = "https://login.microsoftonline.com/" + System.getenv("AZURE_TENANT_ID") + "/oauth2/v2.0/token";
-
+        System.out.println(formData);
         Map<String, Object> tokenResponse = webClient.post()
                 .uri(tokenUrl)
                 .header(org.springframework.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)

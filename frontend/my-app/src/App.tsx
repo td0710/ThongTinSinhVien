@@ -1,16 +1,19 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppRoutes from "./AppRoutes";
+import { AuthProvider } from "./hooks/useAuth";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {AppRoutes.map((route, index) => {
-          const { element, ...rest } = route;
-          return <Route key={index} {...rest} element={element} />;
-        })}
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          {AppRoutes.map((route, index) => {
+            const { element, ...rest } = route;
+            return <Route key={index} {...rest} element={element} />;
+          })}
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

@@ -31,7 +31,7 @@ export const GiayXacNhanSinhVienPage = () => {
   useEffect(() => {
     const fetchLoaiGiayXacNhan = async () => {
       const url = `http://localhost:8080/api/secure/giayxacnhan/get-all`;
-      const response = await axios.get(url);
+      const response = await axios.get(url, { withCredentials: true });
       const listGiayXacNhan = response.data.map((item: any) => {
         return {
           id: item.id,
@@ -45,7 +45,7 @@ export const GiayXacNhanSinhVienPage = () => {
   }, []);
   const fetchDanhSachYeuCau = async () => {
     const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/get-all?userId=1`;
-    const response = await axios.get(url);
+    const response = await axios.get(url, { withCredentials: true });
     const list = response.data.map((item: any, index: number) => ({
       key: index + 1,
       id: item.id,
@@ -64,10 +64,14 @@ export const GiayXacNhanSinhVienPage = () => {
   const handleSubmit = async (values: any) => {
     try {
       const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/create`;
-      const response = await axios.post(url, {
-        user_id: 1,
-        loaiGiay: values.giayXacNhan,
-      });
+      const response = await axios.post(
+        url,
+        {
+          user_id: 1,
+          loaiGiay: values.giayXacNhan,
+        },
+        { withCredentials: true }
+      );
       notify(
         "success",
         "Yêu cầu thành công",
@@ -91,7 +95,7 @@ export const GiayXacNhanSinhVienPage = () => {
   const handleHuyYeuCau = async (data: number) => {
     try {
       const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/delete?id=${data}`;
-      const response = await axios.delete(url);
+      const response = await axios.delete(url, { withCredentials: true });
       notify(
         "success",
         "Hủy yêu cầu thành công",

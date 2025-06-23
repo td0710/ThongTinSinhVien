@@ -45,6 +45,8 @@ public class JWTGenerator {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
 
+        System.out.println(now);
+        System.out.println(expiryDate);
         return Jwts.builder()
                 .claim("id", user.getId())
                 .setSubject(user.getEmail())

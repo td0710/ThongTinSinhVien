@@ -55,6 +55,7 @@ export const DangKyXeBuytPage = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
         }
       );
       notify(
@@ -81,7 +82,7 @@ export const DangKyXeBuytPage = () => {
   useEffect(() => {
     const fetchTuyenXe = async () => {
       const url = `http://localhost:8080/api/secure/tuyenxe/get-all`;
-      const response = await axios.get(url);
+      const response = await axios.get(url, { withCredentials: true });
 
       const listTuyenXe = response.data.map((item: any) => {
         return {
@@ -99,7 +100,7 @@ export const DangKyXeBuytPage = () => {
   const fetchDanhSachYeuCau = async () => {
     const url = `http://localhost:8080/api/secure/yeucauvexebuyt/get-all?userId=1`;
 
-    const response = await axios.get(url);
+    const response = await axios.get(url, { withCredentials: true });
 
     const list = response.data.map((item: any, index: number) => ({
       key: index + 1,
@@ -116,11 +117,12 @@ export const DangKyXeBuytPage = () => {
   useEffect(() => {
     fetchDanhSachYeuCau();
   }, []);
+  console.log(123);
   const handleHuyYeuCau = async (data: number) => {
     try {
       console.log(data);
       const url = `http://localhost:8080/api/secure/yeucauvexebuyt/delete?id=${data}`;
-      const response = await axios.delete(url);
+      const response = await axios.delete(url, { withCredentials: true });
       notify(
         "success",
         "Hủy yêu cầu thành công",

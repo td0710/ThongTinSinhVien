@@ -14,11 +14,13 @@ import com.example.hethongthongtin.repository.UserRepository;
 import com.example.hethongthongtin.repository.YeuCauVeXeBuytRepository;
 import com.example.hethongthongtin.service.YeuCauVeXeBuytService;
 import com.example.hethongthongtin.util.GoogleDriveUpload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;

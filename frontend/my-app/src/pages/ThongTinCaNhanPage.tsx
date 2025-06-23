@@ -16,6 +16,7 @@ import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useCustomNotification } from "../components/Notification";
+import { useAuth } from "../hooks/useAuth";
 const { Text } = Typography;
 interface TinhThanh {
   value: string;
@@ -27,6 +28,8 @@ export const ThongTinCaNhanPage = () => {
   const [form] = Form.useForm();
   const [listTinhThanh, setListTinhThanh] = useState<TinhThanh[]>([]);
   const { contextHolder, notify } = useCustomNotification();
+  const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated);
   useEffect(() => {
     const fetchTinhThanh = async () => {
       const url = `https://esgoo.net/api-tinhthanh/1/0.htm`;
@@ -44,7 +47,7 @@ export const ThongTinCaNhanPage = () => {
   const fetchThongTinCaNhan = async () => {
     try {
       const url = `http://localhost:8080/api/secure/thongtincanhan/get-by-id?id=1`;
-      const response = await axios.get(url);
+      const response = await axios.get(url, { withCredentials: true });
 
       const formatted = {
         ...response.data,
@@ -74,7 +77,8 @@ export const ThongTinCaNhanPage = () => {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/secure/thongtincanhan/update`,
-        data
+        data,
+        { withCredentials: true }
       );
       console.log("Cập nhật thành công:", response.data);
       notify(

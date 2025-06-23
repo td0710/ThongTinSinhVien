@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="be704215-14fb-45fc-ba46-03ba72a21b22" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/security/JWTAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/security/JWTAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/security/JWTGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/security/JWTGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/service/impl/AuthImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/service/impl/AuthImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/service/impl/YeuCauVeXeBuytImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/hethongthongtin/src/main/java/com/example/hethongthongtin/service/impl/YeuCauVeXeBuytImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/src/AppRoutes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/src/AppRoutes.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/src/components/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/src/components/Sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/src/pages/DangKyXeBuytPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/src/pages/DangKyXeBuytPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/src/pages/GiayXacNhanSinhVienPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/src/pages/GiayXacNhanSinhVienPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/src/pages/Loading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/src/pages/Loading.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/my-app/src/pages/ThongTinCaNhanPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/my-app/src/pages/ThongTinCaNhanPage.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2yu6jq9yWaDP0qNP0CrapxtL3td" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.HethongthongtinApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/ThongTinSinhVien",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="backend" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="backend" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="HethongthongtinApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Downloads/jdk-23.0.1" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.hethongthongtin.HethongthongtinApplication" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="be704215-14fb-45fc-ba46-03ba72a21b22" name="Changes" comment="" />
+      <created>1750672248457</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1750672248457</updated>
+      <workItem from="1750672249899" duration="647000" />
+      <workItem from="1750672916807" duration="75000" />
+      <workItem from="1750673016855" duration="58000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
