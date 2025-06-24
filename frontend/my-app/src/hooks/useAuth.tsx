@@ -37,10 +37,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     try {
       await axios.post(
-        `${API_BASE_URL}/api/auth/logout`,
+        "http://localhost:8080/api/auth/logout",
         {},
         { withCredentials: true }
       );
+      console.log("zzz");
       setUser(null);
       setIsAuthenticated(false);
       navigate("/login");

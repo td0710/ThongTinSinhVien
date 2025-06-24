@@ -7,6 +7,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -16,7 +17,7 @@ const { Sider } = Layout;
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   const navigate = useNavigate();
-
+  const { signOut } = useAuth();
   const handleClick = (e: any) => {
     switch (e.key) {
       case "1":
@@ -88,7 +89,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       <Menu
         theme="dark"
         mode="inline"
-        onClick={handleClick}
+        onClick={signOut}
         style={{ fontSize: 16 }}
         items={[
           {
