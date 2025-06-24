@@ -4,6 +4,7 @@ import { Loading } from "../pages/Loading";
 import { ThongTinCaNhanPage } from "../pages/ThongTinCaNhanPage";
 import MainLayout from "../pages/Layout";
 import { ProtectedRoute } from "./ProtectedRoute";
+import LoginPage from "../pages/LoginPage";
 
 const withLayout = (component: React.ReactNode) => (
   <MainLayout>{component}</MainLayout>
@@ -14,6 +15,7 @@ const AppRoutes = [
     path: "/auth-callback",
     element: <Loading />,
   },
+
   {
     index: true,
     element: (

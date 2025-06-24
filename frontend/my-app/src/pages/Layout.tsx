@@ -53,6 +53,7 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
           collapsible
           collapsed={collapsed}
           trigger={null}
+          style={{ height: "100vh", position: "sticky", top: 0 }}
         >
           <Sidebar collapsed={collapsed} />
         </Sider>
