@@ -28,8 +28,6 @@ public class AuthController {
         System.out.println(id);
         String jwt = authService.login(id);
 
-
-
         Cookie cookie = new Cookie("jwt", jwt);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);

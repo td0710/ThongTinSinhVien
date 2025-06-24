@@ -6,101 +6,110 @@ import {
   LogoutOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 interface SidebarProps {
   collapsed: boolean;
+  setLoading: (value: boolean) => void;
 }
 
-const { Sider } = Layout;
+const Sidebar: React.FC<SidebarProps> = React.memo(
+  ({ collapsed, setLoading }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { signOut } = useAuth();
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
-  const handleClick = (e: any) => {
-    switch (e.key) {
-      case "1":
-        navigate("/thongtincanhan");
-        break;
-      case "2":
-        navigate("/giayxacnhansinhvien");
-        break;
-      case "3":
-        navigate("/dangkyvexebuyt");
-        break;
-      case "logout":
-        localStorage.removeItem("token");
-        navigate("/login");
-        break;
-      default:
-        break;
-    }
-  };
+    const handleClick = (e: any) => {
+      switch (e.key) {
+        case "1":
+          navigate("/thongtincanhan");
+          break;
+        case "2":
+          navigate("/giayxacnhansinhvien");
+          break;
+        case "3":
+          navigate("/dangkyvexebuyt");
+          break;
+        case "logout":
+          setLoading(true);
+          setTimeout(() => {
+            signOut();
+            setLoading(false);
+          }, 300);
+          break;
+        default:
+          break;
+      }
+    };
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-    >
-      <div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <img
-            style={{
-              height: 50,
-              margin: 16,
-              borderRadius: 6,
-              width: 80,
-            }}
-            src="https://qldt.utc.edu.vn/congthongtin/logo.png"
-            alt=""
+    const getSelectedKey = () => {
+      if (location.pathname.startsWith("/thongtincanhan")) return "1";
+      if (location.pathname.startsWith("/giayxacnhansinhvien")) return "2";
+      if (location.pathname.startsWith("/dangkyvexebuyt")) return "3";
+      return "";
+    };
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <img
+              style={{
+                height: 50,
+                margin: 16,
+                borderRadius: 6,
+                width: 80,
+              }}
+              src="https://qldt.utc.edu.vn/congthongtin/logo.png"
+              alt="Logo"
+            />
+          </div>
+
+          <Menu
+            theme="dark"
+            mode="inline"
+            selectedKeys={[getSelectedKey()]}
+            onClick={handleClick}
+            items={[
+              {
+                key: "1",
+                icon: <UserOutlined />,
+                label: "Thông tin cá nhân",
+              },
+              {
+                key: "2",
+                icon: <ContainerOutlined />,
+                label: "Xin cấp giấy Xác nhận sinh viên",
+              },
+              {
+                key: "3",
+                icon: <CarOutlined />,
+                label: "Đăng ký vé tháng xe buýt",
+              },
+            ]}
           />
         </div>
+
+        <div style={{ flexGrow: 1 }} />
+
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
           onClick={handleClick}
+          selectedKeys={[]}
+          style={{ fontSize: 16 }}
           items={[
             {
-              key: "1",
-              icon: <UserOutlined />,
-              label: "Thông tin cá nhân",
-            },
-            {
-              key: "2",
-              icon: <ContainerOutlined />,
-              label: "Xin cấp giấy Xác nhận sinh viên",
-            },
-            {
-              key: "3",
-              icon: <CarOutlined />,
-              label: "Đăng ký vé tháng xe buýt",
+              key: "logout",
+              icon: <LogoutOutlined />,
+              label: "Đăng xuất",
             },
           ]}
         />
       </div>
-
-      <div style={{ flexGrow: 1 }} />
-
-      <Menu
-        theme="dark"
-        mode="inline"
-        onClick={signOut}
-        style={{ fontSize: 16 }}
-        items={[
-          {
-            key: "logout",
-            icon: <LogoutOutlined />,
-            label: "Đăng xuất",
-          },
-        ]}
-      />
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default Sidebar;
