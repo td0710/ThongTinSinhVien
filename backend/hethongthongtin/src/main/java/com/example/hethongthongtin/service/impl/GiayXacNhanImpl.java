@@ -23,9 +23,9 @@ public class GiayXacNhanImpl implements GiayXacNhanService {
     }
 
     public List<GiayXacNhanResponse> getAll() {
-        Iterable<GiayXacNhan> giayXacNhan = giayXacNhanRepository.findAll() ;
-        List<GiayXacNhanResponse> giayXacNhanResponses = StreamSupport
-                .stream(giayXacNhan.spliterator(), false)
+        List<GiayXacNhan> giayXacNhan = giayXacNhanRepository.findAll() ;
+        List<GiayXacNhanResponse> giayXacNhanResponses = giayXacNhan
+                .stream()
                 .map(gxn -> GiayXacNhanResponse.builder()
                         .id(gxn.getId())
                         .name(gxn.getLoaiGiay().getLabel())

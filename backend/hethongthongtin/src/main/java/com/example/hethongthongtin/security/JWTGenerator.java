@@ -19,8 +19,6 @@ import java.util.Optional;
 
 @Component
 public class JWTGenerator {
-    @Value("${signerKey}")
-    private String signerKey ;
 
     private SecretKey key;
 
@@ -30,11 +28,11 @@ public class JWTGenerator {
         this.userRepository = userRepository;
     }
 
-    public static final long JWT_EXPIRATION = 2 * 60 * 60 * 1000;
+    public static final long JWT_EXPIRATION = 60 * 60 * 1000;
 
     @PostConstruct
     public void init() {
-        this.key = Keys.hmacShaKeyFor(signerKey.getBytes());
+        this.key = Keys.hmacShaKeyFor(System.getenv("SIGNER_KEY").getBytes());
     }
 
     public String generateToken(Authentication authentication) {

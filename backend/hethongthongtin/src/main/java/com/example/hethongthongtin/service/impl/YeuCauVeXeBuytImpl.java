@@ -84,8 +84,8 @@ public class YeuCauVeXeBuytImpl implements YeuCauVeXeBuytService {
 
         List<YeuCauVeXeBuyt> yeuCauVeXeBuyt = yeuCauVeXeBuytRepository.findAllByMaSinhVien(thongTinCaNhan.getMaSinhVien());
 
-        List<YeuCauVeXeBuytReponse> yeuCauVeXeBuytReponseList = StreamSupport
-                .stream(yeuCauVeXeBuyt.spliterator(),false)
+        List<YeuCauVeXeBuytReponse> yeuCauVeXeBuytReponseList = yeuCauVeXeBuyt
+                .stream()
                 .map(vxb -> YeuCauVeXeBuytReponse.builder()
                         .id(vxb.getId())
                         .trangThai(vxb.getTrangThai().getLabel())

@@ -21,7 +21,7 @@ public class TuyenXeController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<TuyenXe>> getAll() {
+    public ResponseEntity<List<TuyenXe>> getAllTxb() {
         return ResponseEntity.ok(tuyenXeService.getAllTuyenXe()) ;
     }
 }

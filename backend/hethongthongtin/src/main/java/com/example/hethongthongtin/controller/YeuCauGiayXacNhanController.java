@@ -23,20 +23,20 @@ public class YeuCauGiayXacNhanController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<YeuCauGiayXacNhanResponse>> getAll(@CookieValue("jwt") String token) {
+    public ResponseEntity<List<YeuCauGiayXacNhanResponse>> getAllGxn(@CookieValue("jwt") String token) {
         Long userId = jwtGenerator.extractUserIdFromJwt(token);
         return ResponseEntity.ok(yeuCauGiayXacNhanService.getByUserId(userId));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createGXN(@RequestBody YeuCauGiayXacNhanDto yeuCauGiayXacNhanDto,
+    public ResponseEntity<?> createGxn(@RequestBody YeuCauGiayXacNhanDto yeuCauGiayXacNhanDto,
                                        @CookieValue("jwt") String token) {
         Long userId = jwtGenerator.extractUserIdFromJwt(token);
         yeuCauGiayXacNhanService.createYeuCauGiayXacNhan(yeuCauGiayXacNhanDto,userId);
         return ResponseEntity.ok("Yêu cầu giấy xác nhận thành công") ;
     }
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteById(@RequestParam Long id) {
+    public ResponseEntity<?> deleteGxnById(@RequestParam Long id) {
         yeuCauGiayXacNhanService.deleteYeuCauGiayXacNhan(id);
         return ResponseEntity.ok("Hủy yêu cầu thành công") ;
     }

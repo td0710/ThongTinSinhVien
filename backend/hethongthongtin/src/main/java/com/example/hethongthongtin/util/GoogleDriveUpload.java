@@ -20,6 +20,9 @@ import java.util.Collections;
 
 @Service
 public class GoogleDriveUpload {
+
+
+
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String SERVICE_ACOUNT_KEY_PATH = getPathToGoodleCredentials();
 
@@ -33,7 +36,7 @@ public class GoogleDriveUpload {
         UploadResponse res = new UploadResponse();
 
         try{
-            String folderId = "1BlBLZ3z191gXaIvxFeU0RrOyyE5AXZqX";
+            String folderId = System.getenv("DRIVE_FOLDER_ID");
             Drive drive = createDriveService();
             com.google.api.services.drive.model.File fileMetaData = new com.google.api.services.drive.model.File();
             fileMetaData.setName(file.getName());

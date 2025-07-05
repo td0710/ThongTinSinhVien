@@ -55,8 +55,8 @@ public class YeuCauGiayXacNhanImpl implements YeuCauGiayXacNhanService {
         List<YeuCauGiayXacNhan> yeuCauGiayXacNhan = yeuCauGiayXacNhanRepository
                 .findYeuCauGiayXacNhanByMaSinhVien(thongTinCaNhan.getMaSinhVien());
 
-        List<YeuCauGiayXacNhanResponse> yeuCauGiayXacNhanResponses = StreamSupport.
-                stream(yeuCauGiayXacNhan.spliterator(),false)
+        List<YeuCauGiayXacNhanResponse> yeuCauGiayXacNhanResponses = yeuCauGiayXacNhan
+                .stream()
                 .map(gxn -> YeuCauGiayXacNhanResponse.builder()
                                 .id(gxn.getId())
                                 .loaiGiay(gxn.getLoaiGiay().getLabel())

@@ -18,7 +18,7 @@ public class GiayXacNhanController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<GiayXacNhanResponse>> getById() {
+    public ResponseEntity<List<GiayXacNhanResponse>> getAllGxn() {
         return ResponseEntity.ok(giayXacNhanService.getAll()) ;
     }
 }

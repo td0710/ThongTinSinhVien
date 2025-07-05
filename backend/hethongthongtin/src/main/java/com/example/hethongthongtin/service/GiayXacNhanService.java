@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface GiayXacNhanService {
 
-    public List<GiayXacNhanResponse> getAll() ;
+    List<GiayXacNhanResponse> getAll() ;
 }

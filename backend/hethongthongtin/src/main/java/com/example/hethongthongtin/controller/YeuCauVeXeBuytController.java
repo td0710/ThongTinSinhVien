@@ -26,7 +26,7 @@ public class YeuCauVeXeBuytController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@ModelAttribute YeuCauVeXeBuytRequest yeuCauVeXeBuytRequest,
+    public ResponseEntity<?> createVxb(@ModelAttribute YeuCauVeXeBuytRequest yeuCauVeXeBuytRequest,
                                     @CookieValue("jwt") String token
                                     ) throws IOException, GeneralSecurityException {
         Long userId = jwtGenerator.extractUserIdFromJwt(token);
@@ -35,13 +35,13 @@ public class YeuCauVeXeBuytController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<YeuCauVeXeBuytReponse>> getAll(@CookieValue("jwt") String token)
+    public ResponseEntity<List<YeuCauVeXeBuytReponse>> getAllVxb(@CookieValue("jwt") String token)
             throws IOException {
         Long userId = jwtGenerator.extractUserIdFromJwt(token);
         return ResponseEntity.ok(yeuCauVeXeBuytService.getYeuCauVeXeBuytList(userId));
     }
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam Long id)  {
+    public ResponseEntity<?> deleteVxbById(@RequestParam Long id)  {
         yeuCauVeXeBuytService.deleteYeuCauVeXeBuyt(id);
         return ResponseEntity.ok("Hủy yêu cầu thành công") ;
     }
