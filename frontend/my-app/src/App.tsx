@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AppRoutes from "./AppRoutes";
+import AppRoutes from "./routes/AppRoutes";
 import { AuthProvider } from "./hooks/useAuth";
 
 function App() {

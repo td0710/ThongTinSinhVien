@@ -4,6 +4,7 @@ import {
   CarOutlined,
   ContainerOutlined,
   LogoutOutlined,
+  NotificationOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -31,6 +32,9 @@ const Sidebar: React.FC<SidebarProps> = React.memo(
         case "3":
           navigate("/dangkyvexebuyt");
           break;
+        case "4":
+          navigate("/thongbao");
+          break;
         case "logout":
           setLoading(true);
           setTimeout(() => {
@@ -47,6 +51,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(
       if (location.pathname.startsWith("/thongtincanhan")) return "1";
       if (location.pathname.startsWith("/giayxacnhansinhvien")) return "2";
       if (location.pathname.startsWith("/dangkyvexebuyt")) return "3";
+      if (location.pathname.startsWith("/thongbao")) return "4";
       return "";
     };
 
@@ -86,6 +91,11 @@ const Sidebar: React.FC<SidebarProps> = React.memo(
                 key: "3",
                 icon: <CarOutlined />,
                 label: "Đăng ký vé tháng xe buýt",
+              },
+              {
+                key: "4",
+                icon: <NotificationOutlined />,
+                label: "Thông báo",
               },
             ]}
           />

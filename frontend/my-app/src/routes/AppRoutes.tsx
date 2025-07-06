@@ -6,8 +6,14 @@ import MainLayout from "../pages/Layout";
 import { ProtectedRoute } from "./ProtectedRoute";
 import LoginPage from "../pages/LoginPage";
 
+import { PublicRoute } from "./PublicRoute";
+import { ThongBaoPage } from "../pages/ThongBaoPage";
 const withLayout = (component: React.ReactNode) => (
   <MainLayout>{component}</MainLayout>
+);
+
+const protect = (component: React.ReactNode) => (
+  <ProtectedRoute>{component}</ProtectedRoute>
 );
 
 const AppRoutes = [
@@ -15,40 +21,38 @@ const AppRoutes = [
     path: "/auth-callback",
     element: <Loading />,
   },
+  {
+    path: "/login",
+    element: (
+      <PublicRoute>
+        (<LoginPage />)
+      </PublicRoute>
+    ),
+  },
 
   {
     index: true,
-    element: (
-      <ProtectedRoute>{withLayout(<ThongTinCaNhanPage />)}</ProtectedRoute>
-    ),
+    element: protect(withLayout(<ThongTinCaNhanPage />)),
   },
   {
     path: "/",
-    element: (
-      <ProtectedRoute>{withLayout(<ThongTinCaNhanPage />)}</ProtectedRoute>
-    ),
+    element: protect(withLayout(<ThongTinCaNhanPage />)),
   },
   {
     path: "/thongtincanhan",
-    element: <ThongTinCaNhanPage />,
+    element: protect(withLayout(<ThongTinCaNhanPage />)),
   },
   {
     path: "/dangkyvexebuyt",
-    element: (
-      <ProtectedRoute>{withLayout(<DangKyXeBuytPage />)}</ProtectedRoute>
-    ),
-  },
-  {
-    path: "/dangkyxebuyt",
-    element: (
-      <ProtectedRoute>{withLayout(<DangKyXeBuytPage />)}</ProtectedRoute>
-    ),
+    element: protect(withLayout(<DangKyXeBuytPage />)),
   },
   {
     path: "/giayxacnhansinhvien",
-    element: (
-      <ProtectedRoute>{withLayout(<GiayXacNhanSinhVienPage />)}</ProtectedRoute>
-    ),
+    element: protect(withLayout(<GiayXacNhanSinhVienPage />)),
+  },
+  {
+    path: "/thongbao",
+    element: protect(withLayout(<ThongBaoPage></ThongBaoPage>)),
   },
 ];
 
