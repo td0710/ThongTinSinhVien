@@ -67,9 +67,8 @@ public class AuthImpl implements AuthService {
         Jwt jwt = decoder.decode(idToken);
 
         String oid = jwt.getClaimAsString("oid");
-        String email = jwt.getClaimAsString("email");
+        String email = jwt.getClaimAsString("preferred_username");
         String name = jwt.getClaimAsString("name");
-
 
         Users user = userRepository.findByEmail(email);
         if (user == null) {
@@ -80,7 +79,10 @@ public class AuthImpl implements AuthService {
             user.setRole("sinh_vien");
             user.setCreatedDate(LocalDateTime.now());
 
+
             ThongTinCaNhan thongTinCaNhan = new ThongTinCaNhan();
+
+            thongTinCaNhan.setUser(user);
             user.setThongTinCaNhan(thongTinCaNhan);
 
             userRepository.save(user);

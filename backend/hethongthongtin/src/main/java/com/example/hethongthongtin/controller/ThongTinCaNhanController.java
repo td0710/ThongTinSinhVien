@@ -22,7 +22,7 @@ public class ThongTinCaNhanController {
         this.jwtGenerator = jwtGenerator;
     }
 
-    @GetMapping("/get-by-id")
+    @GetMapping("/get")
     public ResponseEntity<ThongTinCaNhanResponse> getTtcnById(@CookieValue("jwt") String token) {
         Long userId = jwtGenerator.extractUserIdFromJwt(token);
         return ResponseEntity.ok(thongTinCaNhanService.getThongTinCaNhan(userId)) ;
