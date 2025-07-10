@@ -44,7 +44,7 @@ export const DangKyXeBuytPage = () => {
     try {
       const img = values.anh?.[0]?.originFileObj;
       const res = await axios.post(
-        "http://localhost:8080/api/secure/yeucauvexebuyt/create?userId=1",
+        "http://localhost:8080/api/secure/yeucauvexebuyt/create",
         {
           loaiVe: values.tuyen,
           tuyen: values.selectedTuyen,
@@ -98,7 +98,7 @@ export const DangKyXeBuytPage = () => {
   }, []);
 
   const fetchDanhSachYeuCau = async () => {
-    const url = `http://localhost:8080/api/secure/yeucauvexebuyt/get-all?userId=1`;
+    const url = `http://localhost:8080/api/secure/yeucauvexebuyt/get-all`;
 
     const response = await axios.get(url, { withCredentials: true });
 

@@ -10,11 +10,11 @@ import java.util.List;
 
 @Service
 @Transactional
-public class TuyenXeImpl implements TuyenXeService {
+public class TuyenXeServiceImpl implements TuyenXeService {
 
     private TuyenXeRepository tuyenXeRepository;
 
-    TuyenXeImpl(TuyenXeRepository tuyenXeRepository) {
+    TuyenXeServiceImpl(TuyenXeRepository tuyenXeRepository) {
         this.tuyenXeRepository = tuyenXeRepository;
     }
 

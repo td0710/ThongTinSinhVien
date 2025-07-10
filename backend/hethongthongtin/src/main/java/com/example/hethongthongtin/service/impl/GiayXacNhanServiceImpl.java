@@ -7,18 +7,16 @@ import com.example.hethongthongtin.service.GiayXacNhanService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
-public class GiayXacNhanImpl implements GiayXacNhanService {
+public class GiayXacNhanServiceImpl implements GiayXacNhanService {
 
     private GiayXacNhanRepository giayXacNhanRepository;
 
-    GiayXacNhanImpl(GiayXacNhanRepository giayXacNhanRepository) {
+    GiayXacNhanServiceImpl(GiayXacNhanRepository giayXacNhanRepository) {
         this.giayXacNhanRepository = giayXacNhanRepository;
     }
 

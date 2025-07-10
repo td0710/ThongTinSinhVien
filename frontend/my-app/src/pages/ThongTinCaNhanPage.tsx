@@ -46,7 +46,7 @@ export const ThongTinCaNhanPage = () => {
   }, []);
   const fetchThongTinCaNhan = async () => {
     try {
-      const url = `http://localhost:8080/api/secure/thongtincanhan/get-by-id?id=1`;
+      const url = `http://localhost:8080/api/secure/thongtincanhan/get`;
       const response = await axios.get(url, { withCredentials: true });
 
       const formatted = {

@@ -44,7 +44,7 @@ export const GiayXacNhanSinhVienPage = () => {
     fetchLoaiGiayXacNhan();
   }, []);
   const fetchDanhSachYeuCau = async () => {
-    const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/get-all?userId=1`;
+    const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/get-all`;
     const response = await axios.get(url, { withCredentials: true });
     const list = response.data.map((item: any, index: number) => ({
       key: index + 1,

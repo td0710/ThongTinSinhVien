@@ -10,36 +10,32 @@ import com.example.hethongthongtin.entity.YeuCauVeXeBuyt;
 import com.example.hethongthongtin.exception.AppException;
 import com.example.hethongthongtin.exception.ErrorCode;
 import com.example.hethongthongtin.repository.ThongTinCaNhanRepository;
-import com.example.hethongthongtin.repository.UserRepository;
 import com.example.hethongthongtin.repository.YeuCauVeXeBuytRepository;
 import com.example.hethongthongtin.service.YeuCauVeXeBuytService;
 import com.example.hethongthongtin.util.GoogleDriveUpload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
-public class YeuCauVeXeBuytImpl implements YeuCauVeXeBuytService {
+public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
 
     private GoogleDriveUpload googleDriveUpload;
     private YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository;
     private ThongTinCaNhanRepository thongTinCaNhanRepository;
 
 
-    YeuCauVeXeBuytImpl(YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository,
-                       GoogleDriveUpload googleDriveUpload,
-                       ThongTinCaNhanRepository thongTinCaNhanRepository
+    YeuCauVeXeBuytServiceImpl(YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository,
+                              GoogleDriveUpload googleDriveUpload,
+                              ThongTinCaNhanRepository thongTinCaNhanRepository
                        ) {
         this.yeuCauVeXeBuytRepository = yeuCauVeXeBuytRepository;
         this.googleDriveUpload = googleDriveUpload;

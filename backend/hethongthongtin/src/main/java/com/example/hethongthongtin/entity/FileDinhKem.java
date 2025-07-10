@@ -1,5 +1,6 @@
 package com.example.hethongthongtin.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,8 +30,9 @@ public class FileDinhKem {
 
     @ManyToOne
     @JoinColumn(name = "thong_bao_id")
+    @JsonBackReference
     private ThongBao thongBao;
 
-    @Column(name = "ngay_dang", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "ngay_tao", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime ngayDang;
 }

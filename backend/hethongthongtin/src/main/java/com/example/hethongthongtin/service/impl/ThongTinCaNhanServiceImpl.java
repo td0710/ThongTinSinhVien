@@ -17,11 +17,11 @@ import java.util.Optional;
 
 @Transactional
 @Service
-public class ThongTinCaNhanImpl implements ThongTinCaNhanService {
+public class ThongTinCaNhanServiceImpl implements ThongTinCaNhanService {
 
     private final ThongTinCaNhanRepository thongTinCaNhanRepository;
     private final UserRepository userRepository;
-    ThongTinCaNhanImpl(ThongTinCaNhanRepository thongTinCaNhanRepository,UserRepository userRepository) {
+    ThongTinCaNhanServiceImpl(ThongTinCaNhanRepository thongTinCaNhanRepository, UserRepository userRepository) {
         this.thongTinCaNhanRepository = thongTinCaNhanRepository;
         this.userRepository = userRepository;
     }

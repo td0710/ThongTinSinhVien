@@ -25,10 +25,10 @@ import java.util.Map;
 
 @Service
 @Transactional
-public class AuthImpl implements AuthService {
+public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private JWTGenerator jwtGenerator;
-    AuthImpl(UserRepository userRepository,JWTGenerator jwtGenerator) {
+    AuthServiceImpl(UserRepository userRepository, JWTGenerator jwtGenerator) {
         this.userRepository = userRepository;
         this.jwtGenerator = jwtGenerator;
     }

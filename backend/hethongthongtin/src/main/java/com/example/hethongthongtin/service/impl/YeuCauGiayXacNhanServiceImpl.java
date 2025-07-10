@@ -17,15 +17,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
-public class YeuCauGiayXacNhanImpl implements YeuCauGiayXacNhanService {
+public class YeuCauGiayXacNhanServiceImpl implements YeuCauGiayXacNhanService {
 
     private YeuCauGiayXacNhanRepository yeuCauGiayXacNhanRepository;
     private ThongTinCaNhanRepository thongTinCaNhanRepository;
-    YeuCauGiayXacNhanImpl(YeuCauGiayXacNhanRepository yeuCauGiayXacNhanRepository, ThongTinCaNhanRepository thongTinCaNhanRepository) {
+    YeuCauGiayXacNhanServiceImpl(YeuCauGiayXacNhanRepository yeuCauGiayXacNhanRepository, ThongTinCaNhanRepository thongTinCaNhanRepository) {
         this.yeuCauGiayXacNhanRepository = yeuCauGiayXacNhanRepository;
         this.thongTinCaNhanRepository = thongTinCaNhanRepository;
     }
