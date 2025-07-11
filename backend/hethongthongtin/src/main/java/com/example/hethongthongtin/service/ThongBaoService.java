@@ -1,5 +1,6 @@
 package com.example.hethongthongtin.service;
 
+import com.example.hethongthongtin.dto.request.SearchThongBaoRequest;
 import com.example.hethongthongtin.dto.response.ThongBaoResponse;
 import com.example.hethongthongtin.entity.ThongBao;
 
@@ -9,5 +10,5 @@ public interface ThongBaoService {
 
     List<ThongBaoResponse> getAllThongBao();
 
-    List<ThongBaoResponse> searchThongBao(String search);
+    List<ThongBaoResponse> searchThongBao(SearchThongBaoRequest searchThongBaoRequest);
 }

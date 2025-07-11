@@ -27,12 +27,35 @@ export const ThongBaoPage = () => {
   const [thongBaoList, setThongBaoList] = useState<ThongBaoModel[]>([]);
   const [form] = Form.useForm();
 
+  const fetchThongBao = async () => {
+    const url = `http://localhost:8080/api/thongbao/get-all`;
+    const response = await axios.get(url, {
+      withCredentials: true,
+    });
+    const thongBaoList = response.data.map((item: any) => {
+      return {
+        tieuDe: item.tieuDe,
+        nguoiDang: item.nguoiDang,
+        ngayDang: dayjs(item.ngayDang).format(dateFormat),
+        noiDung: item.noiDung,
+        danhSachFileDinhKem: item.danhSachFileDinhKem
+          ? item.danhSachFileDinhKem
+          : null,
+      };
+    });
+    setThongBaoList(thongBaoList);
+  };
   useEffect(() => {
-    const fetchThongBaoData = async () => {
-      const url = `http://localhost:8080/api/thongbao/get-all`;
-      const response = await axios.get(url, {
-        withCredentials: true,
-      });
+    fetchThongBao();
+  }, []);
+
+  const timKiem = async (data: any) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/thongbao/search`,
+        data,
+        { withCredentials: true }
+      );
       const thongBaoList = response.data.map((item: any) => {
         return {
           tieuDe: item.tieuDe,
@@ -45,17 +68,6 @@ export const ThongBaoPage = () => {
         };
       });
       setThongBaoList(thongBaoList);
-    };
-    fetchThongBaoData();
-  }, []);
-
-  const timKiem = async (data: any) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:8080/api/secure/thongtincanhan/`,
-        data,
-        { withCredentials: true }
-      );
     } catch (error) {
       let errorMessage = "Lỗi khi tìm kiếm.";
       if (axios.isAxiosError(error)) {
@@ -68,12 +80,21 @@ export const ThongBaoPage = () => {
     }
   };
   const handleSubmit = async () => {
+    const raw = form.getFieldsValue();
+
     const data = {
-      ...form.getFieldsValue(),
+      ...raw,
+      startDate: raw.startDate
+        ? dayjs(raw.startDate).startOf("day").format("YYYY-MM-DDTHH:mm:ss")
+        : null,
+      endDate: raw.endDate
+        ? dayjs(raw.endDate).endOf("day").format("YYYY-MM-DDTHH:mm:ss")
+        : null,
     };
-    console.log(data);
+
     await timKiem(data);
   };
+
   const [selectedItem, setSelectedItem] = useState<ThongBaoModel | null>(null);
 
   return (
@@ -96,7 +117,7 @@ export const ThongBaoPage = () => {
             <Col>
               <Paragraph style={{ margin: 0 }}>Thông báo</Paragraph>
               <Title level={5} style={{ margin: 0 }}>
-                100
+                {thongBaoList.length}
               </Title>
             </Col>
             <Col>
@@ -116,7 +137,7 @@ export const ThongBaoPage = () => {
         <Form form={form} onFinish={handleSubmit}>
           <Row gutter={[16, 16]} align="bottom">
             <Col xs={24} sm={12} md={6} lg={4}>
-              <Form.Item name="dayStart">
+              <Form.Item name="startDate">
                 <DatePicker
                   placeholder="Từ ngày"
                   format={dateFormat}
@@ -126,7 +147,7 @@ export const ThongBaoPage = () => {
             </Col>
 
             <Col xs={24} sm={12} md={6} lg={4}>
-              <Form.Item name="dayEnd">
+              <Form.Item name="endDate">
                 <DatePicker
                   placeholder="Đến ngày"
                   format={dateFormat}
@@ -136,7 +157,7 @@ export const ThongBaoPage = () => {
             </Col>
 
             <Col xs={24} sm={24} md={12} lg={8}>
-              <Form.Item name="search">
+              <Form.Item name="tieuDe">
                 <Input placeholder="Tìm kiếm theo tiêu đề" />
               </Form.Item>
             </Col>
