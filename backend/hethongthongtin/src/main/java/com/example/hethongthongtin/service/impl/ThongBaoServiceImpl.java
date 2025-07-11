@@ -7,7 +7,6 @@ import com.example.hethongthongtin.service.ThongBaoService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,5 +41,8 @@ public class ThongBaoServiceImpl implements ThongBaoService {
             return thongBaoResponseList;
     }
 
-
+    @Override
+    public List<ThongBaoResponse> searchThongBao(String search) {
+        return List.of();
+    }
 }
