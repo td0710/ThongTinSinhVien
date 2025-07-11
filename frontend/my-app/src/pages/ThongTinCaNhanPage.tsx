@@ -46,7 +46,8 @@ export const ThongTinCaNhanPage = () => {
   }, []);
   const fetchThongTinCaNhan = async () => {
     try {
-      const url = `http://localhost:8080/api/secure/thongtincanhan/get`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/thongtincanhan/get`;
+      console.log(url);
       const response = await axios.get(url, { withCredentials: true });
 
       const formatted = {
@@ -76,7 +77,7 @@ export const ThongTinCaNhanPage = () => {
   const UpdateThongTinCaNhan = async (data: any) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/secure/thongtincanhan/update`,
+        `${process.env.REACT_APP_API_BASE_URL}/secure/thongtincanhan/update`,
         data,
         { withCredentials: true }
       );

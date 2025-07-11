@@ -8,6 +8,7 @@ import LoginPage from "../pages/LoginPage";
 
 import { PublicRoute } from "./PublicRoute";
 import { ThongBaoPage } from "../pages/ThongBaoPage";
+import { DangKyKTXPage } from "../pages/DangKyKTXPage";
 const withLayout = (component: React.ReactNode) => (
   <MainLayout>{component}</MainLayout>
 );
@@ -53,6 +54,10 @@ const AppRoutes = [
   {
     path: "/thongbao",
     element: protect(withLayout(<ThongBaoPage></ThongBaoPage>)),
+  },
+  {
+    path: "/dangkyktx",
+    element: protect(withLayout(<DangKyKTXPage />)),
   },
 ];
 

@@ -44,7 +44,7 @@ export const DangKyXeBuytPage = () => {
     try {
       const img = values.anh?.[0]?.originFileObj;
       const res = await axios.post(
-        "http://localhost:8080/api/secure/yeucauvexebuyt/create",
+        `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauvexebuyt/create`,
         {
           loaiVe: values.tuyen,
           tuyen: values.selectedTuyen,
@@ -81,7 +81,7 @@ export const DangKyXeBuytPage = () => {
 
   useEffect(() => {
     const fetchTuyenXe = async () => {
-      const url = `http://localhost:8080/api/secure/tuyenxe/get-all`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/tuyenxe/get-all`;
       const response = await axios.get(url, { withCredentials: true });
 
       const listTuyenXe = response.data.map((item: any) => {
@@ -98,7 +98,7 @@ export const DangKyXeBuytPage = () => {
   }, []);
 
   const fetchDanhSachYeuCau = async () => {
-    const url = `http://localhost:8080/api/secure/yeucauvexebuyt/get-all`;
+    const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauvexebuyt/get-all`;
 
     const response = await axios.get(url, { withCredentials: true });
 
@@ -121,7 +121,7 @@ export const DangKyXeBuytPage = () => {
   const handleHuyYeuCau = async (data: number) => {
     try {
       console.log(data);
-      const url = `http://localhost:8080/api/secure/yeucauvexebuyt/delete?id=${data}`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauvexebuyt/delete?id=${data}`;
       const response = await axios.delete(url, { withCredentials: true });
       notify(
         "success",
@@ -214,7 +214,7 @@ export const DangKyXeBuytPage = () => {
       {contextHolder}
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         <Form form={form} onFinish={handleSubmit} style={{ maxWidth: "100%" }}>
-          <Card title="Chọn loại giấy xác nhận" bordered>
+          <Card title="Chọn loại giấy xác nhận" bordered hoverable>
             <Row gutter={[16, 16]}>
               <Col span={24}>
                 <Form.Item
@@ -365,7 +365,7 @@ export const DangKyXeBuytPage = () => {
           }
         />
 
-        <Card title="Danh sách yêu cầu vé xe buýt">
+        <Card title="Danh sách yêu cầu vé xe buýt" hoverable>
           <Table
             columns={columns}
             dataSource={dsYeuCau}

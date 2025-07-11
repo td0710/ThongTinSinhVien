@@ -5,7 +5,6 @@ import {
   DatePicker,
   Flex,
   Row,
-  Select,
   Space,
   Typography,
   Input,
@@ -18,8 +17,6 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { ThongBaoModel } from "../models/ThongBaoModel";
 const { Paragraph, Title, Text } = Typography;
-const { RangePicker } = DatePicker;
-const { Search } = Input;
 
 const dateFormat = "YYYY/MM/DD";
 
@@ -28,22 +25,24 @@ export const ThongBaoPage = () => {
   const [form] = Form.useForm();
 
   const fetchThongBao = async () => {
-    const url = `http://localhost:8080/api/thongbao/get-all`;
-    const response = await axios.get(url, {
-      withCredentials: true,
-    });
-    const thongBaoList = response.data.map((item: any) => {
-      return {
-        tieuDe: item.tieuDe,
-        nguoiDang: item.nguoiDang,
-        ngayDang: dayjs(item.ngayDang).format(dateFormat),
-        noiDung: item.noiDung,
-        danhSachFileDinhKem: item.danhSachFileDinhKem
-          ? item.danhSachFileDinhKem
-          : null,
-      };
-    });
-    setThongBaoList(thongBaoList);
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/get-all`;
+      const response = await axios.get(url, {
+        withCredentials: true,
+      });
+      const thongBaoList = response.data.map((item: any) => {
+        return {
+          tieuDe: item.tieuDe,
+          nguoiDang: item.nguoiDang,
+          ngayDang: dayjs(item.ngayDang).format(dateFormat),
+          noiDung: item.noiDung,
+          danhSachFileDinhKem: item.danhSachFileDinhKem
+            ? item.danhSachFileDinhKem
+            : null,
+        };
+      });
+      setThongBaoList(thongBaoList);
+    } catch (error) {}
   };
   useEffect(() => {
     fetchThongBao();
@@ -52,7 +51,7 @@ export const ThongBaoPage = () => {
   const timKiem = async (data: any) => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/thongbao/search`,
+        `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/search`,
         data,
         { withCredentials: true }
       );
@@ -107,6 +106,7 @@ export const ThongBaoPage = () => {
             border: "1px solid #d9d9d9",
             boxShadow: "none",
           }}
+          hoverable
           bodyStyle={{ padding: 0, height: "100%" }}
         >
           <Row
@@ -131,8 +131,8 @@ export const ThongBaoPage = () => {
           width: "100%",
           minHeight: 90,
           border: "1px solid #d9d9d9",
-          boxShadow: "none",
         }}
+        hoverable
       >
         <Form form={form} onFinish={handleSubmit}>
           <Row gutter={[16, 16]} align="bottom">
@@ -190,6 +190,7 @@ export const ThongBaoPage = () => {
             <a onClick={() => setSelectedItem(null)}>← Quay lại danh sách</a>
           }
           style={{ width: "100%", border: "1px solid #d9d9d9" }}
+          hoverable
         >
           <Space direction="vertical" size="middle" style={{ width: "100%" }}>
             <Paragraph>
@@ -226,6 +227,7 @@ export const ThongBaoPage = () => {
         <Card
           title="Danh sách thông báo"
           style={{ width: "100%", border: "1px solid #d9d9d9" }}
+          hoverable
         >
           <List
             itemLayout="vertical"
