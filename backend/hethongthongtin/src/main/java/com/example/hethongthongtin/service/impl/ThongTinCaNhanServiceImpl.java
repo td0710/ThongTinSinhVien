@@ -1,6 +1,6 @@
 package com.example.hethongthongtin.service.impl;
 
-import com.example.hethongthongtin.dto.request.ThongTinCaNhanDto;
+import com.example.hethongthongtin.dto.request.ThongTinCaNhanRequest;
 import com.example.hethongthongtin.dto.response.ThongTinCaNhanResponse;
 import com.example.hethongthongtin.entity.ThongTinCaNhan;
 import com.example.hethongthongtin.entity.Users;
@@ -74,7 +74,7 @@ public class ThongTinCaNhanServiceImpl implements ThongTinCaNhanService {
         return thongTinCaNhanResponse;
     }
 
-    public void updateThongTin(ThongTinCaNhanDto thongTinCaNhanDto,Long userId) {
+    public void updateThongTin(ThongTinCaNhanRequest thongTinCaNhanDto, Long userId) {
 
         Optional<Users> optionalUser = userRepository.findById(userId) ;
 

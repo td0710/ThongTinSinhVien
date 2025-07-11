@@ -102,29 +102,16 @@ export const ThongTinCaNhanPage = () => {
   const handleSubmit = async () => {
     const data = {
       ...form.getFieldsValue(),
-      userId: 1,
     };
     console.log(data);
     await UpdateThongTinCaNhan(data);
-  };
-  const onFinish = async () => {
-    const data = {
-      ...form.getFieldsValue(),
-      userId: 1,
-    };
-    console.log(data);
   };
 
   return (
     <>
       {contextHolder}
 
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={onFinish}
-        style={{ maxWidth: "100%" }}
-      >
+      <Form form={form} layout="vertical" style={{ maxWidth: "100%" }}>
         <Space direction="vertical" size={16} style={{ width: "100%" }}>
           <Row gutter={[16, 20]}>
             <Col span={24}>

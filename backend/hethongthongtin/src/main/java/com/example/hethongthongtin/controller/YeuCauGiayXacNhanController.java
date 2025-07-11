@@ -1,6 +1,6 @@
 package com.example.hethongthongtin.controller;
 
-import com.example.hethongthongtin.dto.request.YeuCauGiayXacNhanDto;
+import com.example.hethongthongtin.dto.request.YeuCauGiayXacNhanRequest;
 import com.example.hethongthongtin.dto.response.YeuCauGiayXacNhanResponse;
 import com.example.hethongthongtin.security.JWTGenerator;
 import com.example.hethongthongtin.service.YeuCauGiayXacNhanService;
@@ -29,10 +29,10 @@ public class YeuCauGiayXacNhanController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createGxn(@RequestBody YeuCauGiayXacNhanDto yeuCauGiayXacNhanDto,
+    public ResponseEntity<?> createGxn(@RequestBody YeuCauGiayXacNhanRequest yeuCauGiayXacNhanRequest,
                                        @CookieValue("jwt") String token) {
         Long userId = jwtGenerator.extractUserIdFromJwt(token);
-        yeuCauGiayXacNhanService.createYeuCauGiayXacNhan(yeuCauGiayXacNhanDto,userId);
+        yeuCauGiayXacNhanService.createYeuCauGiayXacNhan(yeuCauGiayXacNhanRequest,userId);
         return ResponseEntity.ok("Yêu cầu giấy xác nhận thành công") ;
     }
     @DeleteMapping("/delete")

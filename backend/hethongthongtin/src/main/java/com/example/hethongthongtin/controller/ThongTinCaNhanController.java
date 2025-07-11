@@ -1,9 +1,8 @@
 package com.example.hethongthongtin.controller;
 
 
-import com.example.hethongthongtin.dto.request.ThongTinCaNhanDto;
+import com.example.hethongthongtin.dto.request.ThongTinCaNhanRequest;
 import com.example.hethongthongtin.dto.response.ThongTinCaNhanResponse;
-import com.example.hethongthongtin.entity.ThongTinCaNhan;
 import com.example.hethongthongtin.security.JWTGenerator;
 import com.example.hethongthongtin.service.ThongTinCaNhanService;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class ThongTinCaNhanController {
         return ResponseEntity.ok(thongTinCaNhanService.getThongTinCaNhan(userId)) ;
     }
     @PutMapping("/update")
-    public ResponseEntity<?> updateThongTin(@RequestBody ThongTinCaNhanDto thongTinCaNhanDto,
+    public ResponseEntity<?> updateThongTin(@RequestBody ThongTinCaNhanRequest thongTinCaNhanDto,
                                             @CookieValue("jwt") String token) {
         Long userId = jwtGenerator.extractUserIdFromJwt(token);
         thongTinCaNhanService.updateThongTin(thongTinCaNhanDto,userId);

@@ -27,9 +27,8 @@ public class ThongBao {
     @Column(name = "noi_dung", nullable = false, columnDefinition = "TEXT")
     private String noiDung;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "nguoi_dang")
-    @JsonBackReference
     private Users user;
 
     @OneToMany(mappedBy = "thongBao", cascade = CascadeType.ALL, orphanRemoval = true)

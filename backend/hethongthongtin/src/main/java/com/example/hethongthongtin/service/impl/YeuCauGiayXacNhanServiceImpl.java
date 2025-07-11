@@ -1,6 +1,6 @@
 package com.example.hethongthongtin.service.impl;
 
-import com.example.hethongthongtin.dto.request.YeuCauGiayXacNhanDto;
+import com.example.hethongthongtin.dto.request.YeuCauGiayXacNhanRequest;
 import com.example.hethongthongtin.dto.response.YeuCauGiayXacNhanResponse;
 import com.example.hethongthongtin.entity.LoaiGiay;
 import com.example.hethongthongtin.entity.ThongTinCaNhan;
@@ -30,7 +30,7 @@ public class YeuCauGiayXacNhanServiceImpl implements YeuCauGiayXacNhanService {
     }
 
     @Override
-    public void createYeuCauGiayXacNhan(YeuCauGiayXacNhanDto yeuCauXacNhanDto, Long userId) {
+    public void createYeuCauGiayXacNhan(YeuCauGiayXacNhanRequest yeuCauXacNhanDto, Long userId) {
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId) ;
         if(thongTinCaNhan == null) {
             throw new AppException(ErrorCode.PROFILE_NOT_FOUND);

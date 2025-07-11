@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ThongTinCaNhanDto {
+public class ThongTinCaNhanRequest {
     private Long id;
 
     Long userId ;

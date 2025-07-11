@@ -1,10 +1,13 @@
 package com.example.hethongthongtin.service;
 
+import com.example.hethongthongtin.dto.response.ThongBaoResponse;
 import com.example.hethongthongtin.entity.ThongBao;
 
 import java.util.List;
 
 public interface ThongBaoService {
 
-    List<ThongBao> getAllThongBao();
+    List<ThongBaoResponse> getAllThongBao();
+
+    List<ThongBaoResponse> searchThongBao(String search);
 }

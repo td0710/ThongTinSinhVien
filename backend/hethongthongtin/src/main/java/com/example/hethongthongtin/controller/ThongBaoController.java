@@ -1,6 +1,7 @@
 package com.example.hethongthongtin.controller;
 
 
+import com.example.hethongthongtin.dto.response.ThongBaoResponse;
 import com.example.hethongthongtin.entity.ThongBao;
 import com.example.hethongthongtin.security.JWTGenerator;
 import com.example.hethongthongtin.service.ThongBaoService;
@@ -26,7 +27,7 @@ public class ThongBaoController {
     }
 
     @GetMapping("get-all")
-    public ResponseEntity<List<ThongBao>> getAll() {
+    public ResponseEntity<List<ThongBaoResponse>> getAll() {
         return ResponseEntity.ok(thongBaoService.getAllThongBao()) ;
     }
 }

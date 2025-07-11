@@ -1,15 +1,20 @@
 package com.example.hethongthongtin.dto.request;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class YeuCauGiayXacNhanDto {
-    private Long user_id;
-    private String loaiGiay;
+public class DangKyXeBuytRequest {
+    String sdt;
+    String tuyen;
+    String loaiTuyen;
+
+    MultipartFile anh ;
 }
