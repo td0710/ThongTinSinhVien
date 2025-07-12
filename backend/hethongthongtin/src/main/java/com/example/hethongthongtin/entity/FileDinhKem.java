@@ -2,10 +2,7 @@ package com.example.hethongthongtin.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -28,10 +25,8 @@ public class FileDinhKem {
     @Column(name = "duong_dan", nullable = false)
     private String duongDan;
 
-    @ManyToOne
-    @JoinColumn(name = "thong_bao_id")
-    @JsonBackReference
-    private ThongBao thongBao;
+    @Column(name = "thong_bao_id")
+    private Integer thongBaoId;
 
     @Column(name = "ngay_tao", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime ngayDang;

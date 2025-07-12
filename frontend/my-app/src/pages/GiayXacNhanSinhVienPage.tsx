@@ -30,7 +30,7 @@ export const GiayXacNhanSinhVienPage = () => {
 
   useEffect(() => {
     const fetchLoaiGiayXacNhan = async () => {
-      const url = `http://localhost:8080/api/secure/giayxacnhan/get-all`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/giayxacnhan/get-all`;
       const response = await axios.get(url, { withCredentials: true });
       const listGiayXacNhan = response.data.map((item: any) => {
         return {
@@ -44,7 +44,7 @@ export const GiayXacNhanSinhVienPage = () => {
     fetchLoaiGiayXacNhan();
   }, []);
   const fetchDanhSachYeuCau = async () => {
-    const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/get-all`;
+    const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucaugiayxacnhan/get-all`;
     const response = await axios.get(url, { withCredentials: true });
     const list = response.data.map((item: any, index: number) => ({
       key: index + 1,
@@ -63,7 +63,7 @@ export const GiayXacNhanSinhVienPage = () => {
   }, []);
   const handleSubmit = async (values: any) => {
     try {
-      const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/create`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucaugiayxacnhan/create`;
       const response = await axios.post(
         url,
         {
@@ -94,7 +94,7 @@ export const GiayXacNhanSinhVienPage = () => {
   };
   const handleHuyYeuCau = async (data: number) => {
     try {
-      const url = `http://localhost:8080/api/secure/yeucaugiayxacnhan/delete?id=${data}`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucaugiayxacnhan/delete?id=${data}`;
       const response = await axios.delete(url, { withCredentials: true });
       notify(
         "success",
@@ -186,7 +186,7 @@ export const GiayXacNhanSinhVienPage = () => {
       {contextHolder}
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         <Form form={form} onFinish={handleSubmit} style={{ maxWidth: "100%" }}>
-          <Card title="Chọn loại giấy xác nhận" bordered>
+          <Card title="Chọn loại giấy xác nhận" bordered hoverable>
             <Row gutter={[16, 16]}>
               <Col xs={24} md={12}>
                 <Form.Item name="giayXacNhan">
@@ -225,6 +225,7 @@ export const GiayXacNhanSinhVienPage = () => {
           type="info"
           showIcon
           message="Hướng dẫn nhận các loại giấy xác nhận"
+          style={{ boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
           description={
             <>
               <Paragraph>
@@ -274,7 +275,11 @@ export const GiayXacNhanSinhVienPage = () => {
           }
         />
 
-        <Card title="Danh sách giấy xác nhận đã đăng ký">
+        <Card
+          title="Danh sách giấy xác nhận đã đăng ký"
+          variant="borderless"
+          hoverable
+        >
           <Table
             columns={columns}
             dataSource={dsYeuCau}

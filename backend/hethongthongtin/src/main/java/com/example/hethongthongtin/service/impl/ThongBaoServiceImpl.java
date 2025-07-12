@@ -27,7 +27,6 @@ public class ThongBaoServiceImpl implements ThongBaoService {
 
         List<ThongBao> thongbaoList = thongBaoRepository.findAll();
 
-
         List<ThongBaoResponse> thongBaoResponseList = thongbaoList.stream().
                 map((item) -> {
                     ThongBaoResponse thongBaoResponse = new ThongBaoResponse();
@@ -46,8 +45,7 @@ public class ThongBaoServiceImpl implements ThongBaoService {
     @Override
     public List<ThongBaoResponse> searchThongBao(SearchThongBaoRequest searchThongBaoRequest) {
 
-        System.out.println(searchThongBaoRequest.getStartDate());
-        System.out.println(searchThongBaoRequest.getEndDate());
+
         List<ThongBao> thongbaoList = thongBaoRepository.findBySearch(searchThongBaoRequest.getStartDate()
                                                                     ,searchThongBaoRequest.getEndDate()
                                                                     ,searchThongBaoRequest.getTieuDe());

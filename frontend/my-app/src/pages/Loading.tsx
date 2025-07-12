@@ -17,7 +17,7 @@ export const Loading = () => {
         if (isMatch) {
           const authCode = decodeURIComponent(`${isMatch[1]}`);
 
-          const url = `http://localhost:8080/api/auth/login?id=${authCode}`;
+          const url = `${process.env.REACT_APP_API_BASE_URL}/auth/login?id=${authCode}`;
 
           const response = await axios.post(
             url,

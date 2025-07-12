@@ -3,6 +3,7 @@ import { Layout, Menu } from "antd";
 import {
   CarOutlined,
   ContainerOutlined,
+  HomeOutlined,
   LogoutOutlined,
   NotificationOutlined,
   UserOutlined,
@@ -35,6 +36,9 @@ const Sidebar: React.FC<SidebarProps> = React.memo(
         case "4":
           navigate("/thongbao");
           break;
+        case "5":
+          navigate("/dangkyktx");
+          break;
         case "logout":
           setLoading(true);
           setTimeout(() => {
@@ -52,6 +56,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(
       if (location.pathname.startsWith("/giayxacnhansinhvien")) return "2";
       if (location.pathname.startsWith("/dangkyvexebuyt")) return "3";
       if (location.pathname.startsWith("/thongbao")) return "4";
+      if (location.pathname.startsWith("/dangkyktx")) return "5";
       return "";
     };
 
@@ -96,6 +101,11 @@ const Sidebar: React.FC<SidebarProps> = React.memo(
                 key: "4",
                 icon: <NotificationOutlined />,
                 label: "Thông báo",
+              },
+              {
+                key: "5",
+                icon: <HomeOutlined />,
+                label: "Đăng ký Ký túc xá",
               },
             ]}
           />

@@ -1,6 +1,5 @@
 package com.example.hethongthongtin.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,12 +26,12 @@ public class ThongBao {
     @Column(name = "noi_dung", nullable = false, columnDefinition = "TEXT")
     private String noiDung;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "nguoi_dang")
     private Users user;
 
-    @OneToMany(mappedBy = "thongBao", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany
+    @JoinColumn(name = "thong_bao_id")
     private List<FileDinhKem> danhSachFileDinhKem;
 
     @Column(name = "ngay_dang", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")

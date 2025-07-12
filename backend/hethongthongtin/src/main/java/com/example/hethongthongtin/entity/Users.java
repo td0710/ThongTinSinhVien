@@ -37,6 +37,4 @@ public class Users {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private ThongTinCaNhan thongTinCaNhan;
-
-
 }

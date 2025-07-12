@@ -3,8 +3,6 @@ package com.example.hethongthongtin.controller;
 
 import com.example.hethongthongtin.dto.request.SearchThongBaoRequest;
 import com.example.hethongthongtin.dto.response.ThongBaoResponse;
-import com.example.hethongthongtin.entity.ThongBao;
-import com.example.hethongthongtin.repository.ThongBaoRepository;
 import com.example.hethongthongtin.security.JWTGenerator;
 import com.example.hethongthongtin.service.ThongBaoService;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
-@RequestMapping("/api/thongbao")
+@RequestMapping("/api/secure/thongbao")
 public class ThongBaoController {
     private ThongBaoService thongBaoService;
     private JWTGenerator jwtGenerator;
