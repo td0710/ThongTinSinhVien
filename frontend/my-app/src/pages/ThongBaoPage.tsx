@@ -66,6 +66,7 @@ export const ThongBaoPage = () => {
             : null,
         };
       });
+
       setThongBaoList(thongBaoList);
     } catch (error) {
       let errorMessage = "Lỗi khi tìm kiếm.";

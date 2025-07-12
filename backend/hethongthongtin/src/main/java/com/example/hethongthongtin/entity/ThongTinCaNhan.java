@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString(exclude = {"user"})
 public class ThongTinCaNhan {
 
     @Id
@@ -24,7 +23,6 @@ public class ThongTinCaNhan {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     private Users user;
 
     @Column(name = "ma_sinh_vien", unique = true, nullable = true, length = 20)

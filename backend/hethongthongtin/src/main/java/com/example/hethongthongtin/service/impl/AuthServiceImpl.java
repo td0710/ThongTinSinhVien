@@ -83,7 +83,6 @@ public class AuthServiceImpl implements AuthService {
             ThongTinCaNhan thongTinCaNhan = new ThongTinCaNhan();
 
             thongTinCaNhan.setUser(user);
-            user.setThongTinCaNhan(thongTinCaNhan);
 
             userRepository.save(user);
         }

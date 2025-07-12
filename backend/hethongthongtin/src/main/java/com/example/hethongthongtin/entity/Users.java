@@ -34,7 +34,5 @@ public class Users {
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private ThongTinCaNhan thongTinCaNhan;
+
 }

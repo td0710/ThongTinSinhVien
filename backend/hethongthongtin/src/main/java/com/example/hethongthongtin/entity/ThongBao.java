@@ -30,8 +30,8 @@ public class ThongBao {
     @JoinColumn(name = "nguoi_dang")
     private Users user;
 
-    @OneToMany
-    @JoinColumn(name = "thong_bao_id")
+    @OneToMany(mappedBy = "thongBao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<FileDinhKem> danhSachFileDinhKem;
 
     @Column(name = "ngay_dang", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")

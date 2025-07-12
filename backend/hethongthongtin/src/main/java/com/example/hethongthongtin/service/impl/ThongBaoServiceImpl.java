@@ -26,7 +26,7 @@ public class ThongBaoServiceImpl implements ThongBaoService {
 
 
         List<ThongBao> thongbaoList = thongBaoRepository.findAll();
-
+        System.out.println(thongbaoList);
         List<ThongBaoResponse> thongBaoResponseList = thongbaoList.stream().
                 map((item) -> {
                     ThongBaoResponse thongBaoResponse = new ThongBaoResponse();

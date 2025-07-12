@@ -8,7 +8,7 @@ import LoginPage from "../pages/LoginPage";
 
 import { PublicRoute } from "./PublicRoute";
 import { ThongBaoPage } from "../pages/ThongBaoPage";
-import { DangKyKTXPage } from "../pages/DangKyKTXPage";
+import { DangKyKTXPage } from "../pages/KTX/DangKyKTXPage";
 const withLayout = (component: React.ReactNode) => (
   <MainLayout>{component}</MainLayout>
 );

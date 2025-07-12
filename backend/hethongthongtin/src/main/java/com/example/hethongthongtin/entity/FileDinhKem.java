@@ -1,6 +1,7 @@
 package com.example.hethongthongtin.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"thongBao"})
 public class FileDinhKem {
 
     @Id
@@ -25,8 +27,10 @@ public class FileDinhKem {
     @Column(name = "duong_dan", nullable = false)
     private String duongDan;
 
-    @Column(name = "thong_bao_id")
-    private Integer thongBaoId;
+    @ManyToOne
+    @JoinColumn(name = "thong_bao_id")
+    @JsonBackReference
+    private ThongBao thongBao;
 
     @Column(name = "ngay_tao", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime ngayDang;
