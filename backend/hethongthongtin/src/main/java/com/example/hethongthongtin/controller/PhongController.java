@@ -23,7 +23,7 @@ public class PhongController {
         return ResponseEntity.ok(phongService.findAllByPage(page,size)) ;
     }
 
-    @PostMapping("get-by-search")
+    @PostMapping("/search")
     public ResponseEntity<PhongPageResponse> getBySearch(@RequestParam int page
             , @RequestParam int size, @RequestBody SearchPhongRequest searchPhongRequest) {
         return ResponseEntity.ok(phongService.findAllBySearch(page,size,searchPhongRequest)) ;

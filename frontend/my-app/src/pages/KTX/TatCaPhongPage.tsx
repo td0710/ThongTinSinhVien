@@ -64,6 +64,7 @@ export const TatCaPhongPage = () => {
         withCredentials: true,
       });
       const data = response.data;
+      console.log(data);
       const phongList = response.data.phong.map((item: any) => {
         return new PhongModel(
           item.id,
@@ -90,29 +91,35 @@ export const TatCaPhongPage = () => {
   }, [currentPage]);
 
   const handleTimKiem = async (values: any) => {
-    const url = `${
-      process.env.REACT_APP_API_BASE_URL
-    }/secure/phong/get-by-search?page=${currentPage - 1}&size=${PAGE_SIZE}`;
-    const response = await axios.post(url, values, {
-      withCredentials: true,
-    });
-    const data = response.data;
-    const phongList = data.phong.map((item: any) => {
-      return new PhongModel(
-        item.id,
-        item.tenPhong,
-        item.loaiPhong,
-        item.soSv,
-        item.gia,
-        item.soLuongDaDangKy,
-        item.tienIchList.map(
-          (tienIch: any) => new TienIchModel(tienIch.id, tienIch.tenTienIch)
-        )
-      );
-    });
-    setCurrentPage(1);
-    setPhongList(phongList);
-    setTotalItems(data.totalElements);
+    try {
+      const url = `${
+        process.env.REACT_APP_API_BASE_URL
+      }/secure/phong/search?page=${currentPage - 1}&size=${PAGE_SIZE}`;
+      const response = await axios.post(url, values, {
+        withCredentials: true,
+      });
+      const data = response.data;
+      const phongList = data.phong.map((item: any) => {
+        return new PhongModel(
+          item.id,
+          item.tenPhong,
+          item.loaiPhong,
+          item.soSv,
+          item.gia,
+          item.soLuongDaDangKy,
+          item.tienIchList.map(
+            (tienIch: any) => new TienIchModel(tienIch.id, tienIch.tenTienIch)
+          )
+        );
+      });
+      setCurrentPage(1);
+      setPhongList(phongList);
+      setTotalItems(data.totalElements);
+    } catch (error) {
+      console.error("Error searching phong:", error);
+      setPhongList([]);
+      setTotalItems(0);
+    }
   };
   const handleSubmit = async () => {
     const gia = form.getFieldValue("gia");

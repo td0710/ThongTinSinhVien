@@ -1,6 +1,8 @@
 package com.example.hethongthongtin.repository;
 
 import com.example.hethongthongtin.entity.ThongBao;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @Repository
 public interface ThongBaoRepository extends JpaRepository<ThongBao, Long> {
-
+    Page<ThongBao> findAll(Pageable pageable);
     @Query(
             value = """
             SELECT * FROM thong_bao
@@ -23,7 +25,8 @@ public interface ThongBaoRepository extends JpaRepository<ThongBao, Long> {
             """,
             nativeQuery = true
     )
-    List<ThongBao> findBySearch(
+    Page <ThongBao> findBySearch(
+            Pageable pageable,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("tieuDe") String tieuDe

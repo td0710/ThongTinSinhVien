@@ -1,4 +1,4 @@
-import { MailOutlined, SettingOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, ProfileOutlined } from "@ant-design/icons";
 import { Card, Menu, MenuProps, Typography } from "antd";
 import { useState } from "react";
 import { TatCaPhongPage } from "./TatCaPhongPage";
@@ -11,12 +11,12 @@ const items: MenuItem[] = [
   {
     label: "Tất cả các phòng",
     key: "phong",
-    icon: <MailOutlined />,
+    icon: <AppstoreOutlined />,
   },
   {
     label: "Theo dõi quá trình & phòng của tôi",
     key: "theo_doi",
-    icon: <MailOutlined />,
+    icon: <ProfileOutlined />,
   },
 ];
 

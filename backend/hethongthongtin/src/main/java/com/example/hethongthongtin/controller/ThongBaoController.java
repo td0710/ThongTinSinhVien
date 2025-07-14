@@ -2,6 +2,7 @@ package com.example.hethongthongtin.controller;
 
 
 import com.example.hethongthongtin.dto.request.SearchThongBaoRequest;
+import com.example.hethongthongtin.dto.response.ThongBaoPageResponse;
 import com.example.hethongthongtin.dto.response.ThongBaoResponse;
 import com.example.hethongthongtin.security.JWTGenerator;
 import com.example.hethongthongtin.service.ThongBaoService;
@@ -23,14 +24,19 @@ public class ThongBaoController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<ThongBaoResponse>> getAll() {
-        return ResponseEntity.ok(thongBaoService.getAllThongBao()) ;
+    public ResponseEntity<ThongBaoPageResponse> getAll(@RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(thongBaoService.getAllThongBao(page, size)) ;
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<ThongBaoResponse>> search(@RequestBody SearchThongBaoRequest searchThongBaoRequest) {
-        return ResponseEntity.ok(thongBaoService.searchThongBao(searchThongBaoRequest));
+    public ResponseEntity<ThongBaoPageResponse> search(@RequestParam int page, @RequestParam int size,
+                                                       @RequestBody SearchThongBaoRequest searchThongBaoRequest) {
+        return ResponseEntity.ok(thongBaoService.searchThongBao(page,size,searchThongBaoRequest));
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Long> totalThongBao() {
+        return ResponseEntity.ok(thongBaoService.totalThongBao());
+    }
 
 }

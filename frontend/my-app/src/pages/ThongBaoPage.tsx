@@ -11,6 +11,7 @@ import {
   List,
   Form,
   Button,
+  Pagination,
 } from "antd";
 import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
@@ -19,18 +20,25 @@ import { ThongBaoModel } from "../models/ThongBaoModel";
 const { Paragraph, Title, Text } = Typography;
 
 const dateFormat = "YYYY/MM/DD";
-
+const PAGE_SIZE = 3;
 export const ThongBaoPage = () => {
   const [thongBaoList, setThongBaoList] = useState<ThongBaoModel[]>([]);
+  const [totalThongBao, setTotalThongBao] = useState<number>(0);
   const [form] = Form.useForm();
+  const [totalItems, setTotalItems] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchThongBao = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/get-all`;
+      const url = `${
+        process.env.REACT_APP_API_BASE_URL
+      }/secure/thongbao/get-all?page=${currentPage - 1}&size=${PAGE_SIZE}`;
       const response = await axios.get(url, {
         withCredentials: true,
       });
-      const thongBaoList = response.data.map((item: any) => {
+
+      console.log("Response data:", response.data);
+      const thongBaoList = response.data.thongBao.map((item: any) => {
         return {
           tieuDe: item.tieuDe,
           nguoiDang: item.nguoiDang,
@@ -41,21 +49,37 @@ export const ThongBaoPage = () => {
             : null,
         };
       });
+      setTotalItems(response.data.totalElements);
       setThongBaoList(thongBaoList);
     } catch (error) {}
   };
+  const fetchTotalThongBao = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/total`,
+        { withCredentials: true }
+      );
+      console.log("Tổng số thông báo:", response.data);
+      setTotalThongBao(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy tổng số thông báo", error);
+    }
+  };
   useEffect(() => {
     fetchThongBao();
-  }, []);
+    fetchTotalThongBao();
+  }, [currentPage]);
 
-  const timKiem = async (data: any) => {
+  const handleTimKiem = async (data: any) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/search`,
+        `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/search?page=${
+          currentPage - 1
+        }&size=${PAGE_SIZE}`,
         data,
         { withCredentials: true }
       );
-      const thongBaoList = response.data.map((item: any) => {
+      const thongBaoList = response.data.thongBao.map((item: any) => {
         return {
           tieuDe: item.tieuDe,
           nguoiDang: item.nguoiDang,
@@ -66,7 +90,8 @@ export const ThongBaoPage = () => {
             : null,
         };
       });
-
+      setCurrentPage(1);
+      setTotalItems(response.data.totalElements);
       setThongBaoList(thongBaoList);
     } catch (error) {
       let errorMessage = "Lỗi khi tìm kiếm.";
@@ -92,7 +117,7 @@ export const ThongBaoPage = () => {
         : null,
     };
 
-    await timKiem(data);
+    await handleTimKiem(data);
   };
 
   const [selectedItem, setSelectedItem] = useState<ThongBaoModel | null>(null);
@@ -116,9 +141,11 @@ export const ThongBaoPage = () => {
             style={{ height: "100%", padding: 8 }}
           >
             <Col>
-              <Paragraph style={{ margin: 0 }}>Thông báo</Paragraph>
+              <Paragraph style={{ margin: 0, fontSize: 13 }}>
+                Số thông báo
+              </Paragraph>{" "}
               <Title level={5} style={{ margin: 0 }}>
-                {thongBaoList.length}
+                {totalThongBao}
               </Title>
             </Col>
             <Col>
@@ -249,6 +276,13 @@ export const ThongBaoPage = () => {
           />
         </Card>
       )}
+      <Pagination
+        align="center"
+        current={currentPage}
+        pageSize={PAGE_SIZE}
+        total={totalItems}
+        onChange={(page) => setCurrentPage(page)}
+      ></Pagination>
     </Space>
   );
 };
