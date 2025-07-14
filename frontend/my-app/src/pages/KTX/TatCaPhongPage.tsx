@@ -1,5 +1,13 @@
 import {
-  Badge,
+  ApartmentOutlined,
+  CloudOutlined,
+  FireOutlined,
+  InboxOutlined,
+  RestOutlined,
+  SkinOutlined,
+  WifiOutlined,
+} from "@ant-design/icons";
+import {
   Button,
   Card,
   Col,
@@ -11,99 +19,58 @@ import {
   Space,
   Tag,
   Typography,
+  Pagination,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { PhongModel } from "../../models/PhongModel";
+import axios from "axios";
+import { TienIchModel } from "../../models/TienIchModel";
 const { Option } = Select;
 const { Paragraph, Title, Text } = Typography;
+
+const PAGE_SIZE = 6;
+
 export const TatCaPhongPage = () => {
+  const [totalItems, setTotalItems] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [form] = Form.useForm();
-  const [phongList, setPhongList] = useState([
-    {
-      id: 1,
-      ten: "Phòng A101",
-      loai: "Cơ bản",
-      trangThai: "Còn trống",
-      gia: 300000,
-      soLuongSV: 4,
-      soSVDaDK: 2,
-      tienIch: ["Vệ sinh khép kín", "Giường tầng", "Internet"],
-    },
-    {
-      id: 2,
-      ten: "Phòng A102",
-      loai: "Cơ bản nhỏ",
-      trangThai: "Còn trống",
-      gia: 225000,
-      soLuongSV: 4,
-      soSVDaDK: 1,
-      tienIch: ["Vệ sinh khép kín", "Giường tầng", "Internet"],
-    },
-    {
-      id: 3,
-      ten: "Phòng B201",
-      loai: "Thiết bị tăng cường",
-      trangThai: "Còn trống",
-      gia: 625000,
-      soLuongSV: 6,
-      soSVDaDK: 4,
-      tienIch: [
-        "Vệ sinh khép kín",
-        "Giường tầng",
-        "Máy lạnh",
-        "Bình nước nóng",
-        "Internet",
-      ],
-    },
-    {
-      id: 4,
-      ten: "Phòng B202",
-      loai: "Phổ thông không điều hòa",
-      trangThai: "Còn trống",
-      gia: 1140000,
-      soLuongSV: 4,
-      soSVDaDK: 2,
-      tienIch: [
-        "Vệ sinh khép kín",
-        "Giường tầng",
-        "Bình nước nóng",
-        "Internet",
-      ],
-    },
-    {
-      id: 5,
-      ten: "Phòng C301",
-      loai: "Phổ thông có điều hòa",
-      trangThai: "Đang sử dụng",
-      gia: 1245000,
-      soLuongSV: 4,
-      soSVDaDK: 4,
-      tienIch: [
-        "Vệ sinh khép kín",
-        "Giường tầng",
-        "Bình nước nóng",
-        "Điều hòa",
-        "Internet",
-      ],
-    },
-    {
-      id: 6,
-      ten: "Phòng C302",
-      loai: "Tiêu chuẩn",
-      trangThai: "Còn trống",
-      gia: 1275000,
-      soLuongSV: 4,
-      soSVDaDK: 1,
-      tienIch: [
-        "Vệ sinh khép kín",
-        "Giường tầng",
-        "Bình nước nóng",
-        "Điều hòa",
-        "Tủ quần áo",
-        "Tủ giày",
-        "Internet",
-      ],
-    },
-  ]);
+  const [phongList, setPhongList] = useState<PhongModel[]>([]);
+
+  const fetchPhongList = async () => {
+    try {
+      const url = `http://localhost:8080/api/secure/phong/get-all?page=${
+        currentPage - 1
+      }&size=${PAGE_SIZE}`;
+      const response = await axios.get(url, {
+        withCredentials: true,
+      });
+      const data = response.data;
+      console.log(data);
+      const phongList = response.data.phong.map((item: any) => {
+        return new PhongModel(
+          item.id,
+          item.tenPhong,
+          item.loaiPhong,
+          item.soSv,
+          item.gia,
+          item.soLuongDaDangKy,
+          item.tienIchList.map(
+            (tienIch: any) => new TienIchModel(tienIch.id, tienIch.tenTienIch)
+          )
+        );
+      });
+      console.log(phongList);
+      setPhongList(phongList);
+      setTotalItems(data.totalElements);
+    } catch (error) {
+      console.error("Error fetching phong list:", error);
+      setPhongList([]);
+      setTotalItems(0);
+    }
+  };
+  useEffect(() => {
+    fetchPhongList();
+  }, [currentPage]);
 
   const tagColorByLoai = {
     "Cơ bản": "default",
@@ -113,13 +80,21 @@ export const TatCaPhongPage = () => {
     "Phổ thông có điều hòa": "orange",
     "Tiêu chuẩn": "blue",
   };
+  const iconByTienIch = {
+    "Vệ sinh khép kín": <RestOutlined />,
+    "Giường tầng": <ApartmentOutlined />,
+    "Bình nước nóng": <FireOutlined />,
+    Internet: <WifiOutlined />,
+    "Điều hòa": <CloudOutlined />,
+    "Tủ quần áo": <SkinOutlined />,
+    "Tủ giày": <InboxOutlined />,
+  };
   const handleSubmit = (values: any) => {
     console.log("Filter values:", values);
-    // Gọi API lọc ở đây nếu cần
   };
+  console.log("Phong List:", phongList);
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
-      {/* Thanh lọc dữ liệu */}
       <Card hoverable style={{ border: "1px solid #d9d9d9" }}>
         <Form form={form} onFinish={handleSubmit}>
           <Row gutter={[16, 16]}>
@@ -163,7 +138,7 @@ export const TatCaPhongPage = () => {
               }}
               cover={
                 <img
-                  alt={phong.ten}
+                  alt={phong.tenPhong}
                   src="https://www.houzlook.com/assets/images/upload/Rooms/Bed%20Rooms/Malson%20Modern%20Bed%20Room-20180819090641741.jpg"
                   style={{
                     height: 180,
@@ -176,16 +151,16 @@ export const TatCaPhongPage = () => {
               <Row gutter={[8, 16]} justify={"space-between"} align="top">
                 <Col span={24}>
                   <Title level={5} style={{ marginTop: 8, marginBottom: 4 }}>
-                    🏠 <Text strong>{phong.ten}</Text>
+                    🏠 <Text strong>{phong.tenPhong}</Text>
                   </Title>
                   <Tag
                     color={
                       tagColorByLoai[
-                        phong.loai as keyof typeof tagColorByLoai
+                        phong.loaiPhong as keyof typeof tagColorByLoai
                       ] || "default"
                     }
                   >
-                    {phong.loai}
+                    {phong.loaiPhong}
                   </Tag>
                 </Col>
 
@@ -197,7 +172,7 @@ export const TatCaPhongPage = () => {
                   <Paragraph style={{ marginBottom: 4 }}>
                     <Text type="secondary">Sức chứa:</Text>{" "}
                     <Text strong>
-                      {phong.soSVDaDK}/{phong.soLuongSV} SV
+                      {phong.soLuongDaDangKy}/{phong.soSv} SV
                     </Text>
                   </Paragraph>
                 </Col>
@@ -205,13 +180,21 @@ export const TatCaPhongPage = () => {
                 <Col
                   span={24}
                   style={{
-                    height: 48, // Chiều cao cố định cho tags
+                    height: 48,
                   }}
                 >
                   <Space wrap size={8}>
-                    {phong.tienIch?.map((item: any, idx: number) => (
-                      <Tag key={idx} color="default">
-                        {item}
+                    {phong.tienIchList?.map((tienIch: TienIchModel) => (
+                      <Tag
+                        key={tienIch.id}
+                        color="default"
+                        icon={
+                          iconByTienIch[
+                            tienIch.tenTienIch as keyof typeof iconByTienIch
+                          ]
+                        }
+                      >
+                        {tienIch.tenTienIch}
                       </Tag>
                     ))}
                   </Space>
@@ -235,6 +218,13 @@ export const TatCaPhongPage = () => {
           </Col>
         ))}
       </Row>
+      <Pagination
+        align="center"
+        current={currentPage}
+        pageSize={PAGE_SIZE}
+        total={totalItems}
+        onChange={(page) => setCurrentPage(page)}
+      ></Pagination>
     </Space>
   );
 };
