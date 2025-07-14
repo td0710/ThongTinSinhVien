@@ -1,19 +1,17 @@
 package com.example.hethongthongtin.controller;
 
 
+import com.example.hethongthongtin.dto.response.PhongPageResponse;
 import com.example.hethongthongtin.entity.Phong;
 import com.example.hethongthongtin.service.PhongService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
-@RequestMapping("/api/phong")
+@RequestMapping("/api/secure/phong")
 public class PhongController {
 
     private PhongService phongService;
@@ -21,8 +19,8 @@ public class PhongController {
         this.phongService = phongService;
     }
 
-    @GetMapping("get-all")
-    public ResponseEntity<List<Phong>> getAll() {
-        return ResponseEntity.ok(phongService.getAllPhong()) ;
+    @GetMapping("/get-all")
+    public ResponseEntity<PhongPageResponse> getAll(@RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(phongService.findAllByPage(page,size)) ;
     }
 }
