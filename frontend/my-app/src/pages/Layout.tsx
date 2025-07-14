@@ -16,12 +16,13 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const location = useLocation();
+  const screens = useBreakpoint();
+  const isMobile = !screens.lg;
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
-  const screens = useBreakpoint();
-  const isMobile = !screens.md;
 
   const toggleCollapsed = () => {
     if (isMobile) {
@@ -30,8 +31,6 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
       setCollapsed(!collapsed);
     }
   };
-
-  const location = useLocation();
 
   useEffect(() => {
     setLoading(true);

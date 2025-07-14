@@ -20,6 +20,8 @@ import {
   Tag,
   Typography,
   Pagination,
+  Slider,
+  Switch,
 } from "antd";
 import { useEffect, useState } from "react";
 import { PhongModel } from "../../models/PhongModel";
@@ -35,42 +37,6 @@ export const TatCaPhongPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [form] = Form.useForm();
   const [phongList, setPhongList] = useState<PhongModel[]>([]);
-
-  const fetchPhongList = async () => {
-    try {
-      const url = `http://localhost:8080/api/secure/phong/get-all?page=${
-        currentPage - 1
-      }&size=${PAGE_SIZE}`;
-      const response = await axios.get(url, {
-        withCredentials: true,
-      });
-      const data = response.data;
-      console.log(data);
-      const phongList = response.data.phong.map((item: any) => {
-        return new PhongModel(
-          item.id,
-          item.tenPhong,
-          item.loaiPhong,
-          item.soSv,
-          item.gia,
-          item.soLuongDaDangKy,
-          item.tienIchList.map(
-            (tienIch: any) => new TienIchModel(tienIch.id, tienIch.tenTienIch)
-          )
-        );
-      });
-      console.log(phongList);
-      setPhongList(phongList);
-      setTotalItems(data.totalElements);
-    } catch (error) {
-      console.error("Error fetching phong list:", error);
-      setPhongList([]);
-      setTotalItems(0);
-    }
-  };
-  useEffect(() => {
-    fetchPhongList();
-  }, [currentPage]);
 
   const tagColorByLoai = {
     "Cơ bản": "default",
@@ -89,38 +55,160 @@ export const TatCaPhongPage = () => {
     "Tủ quần áo": <SkinOutlined />,
     "Tủ giày": <InboxOutlined />,
   };
-  const handleSubmit = (values: any) => {
-    console.log("Filter values:", values);
+  const fetchPhongList = async () => {
+    try {
+      const url = `${
+        process.env.REACT_APP_API_BASE_URL
+      }/secure/phong/get-all?page=${currentPage - 1}&size=${PAGE_SIZE}`;
+      const response = await axios.get(url, {
+        withCredentials: true,
+      });
+      const data = response.data;
+      const phongList = response.data.phong.map((item: any) => {
+        return new PhongModel(
+          item.id,
+          item.tenPhong,
+          item.loaiPhong,
+          item.soSv,
+          item.gia,
+          item.soLuongDaDangKy,
+          item.tienIchList.map(
+            (tienIch: any) => new TienIchModel(tienIch.id, tienIch.tenTienIch)
+          )
+        );
+      });
+      setPhongList(phongList);
+      setTotalItems(data.totalElements);
+    } catch (error) {
+      console.error("Error fetching phong list:", error);
+      setPhongList([]);
+      setTotalItems(0);
+    }
+  };
+  useEffect(() => {
+    fetchPhongList();
+  }, [currentPage]);
+
+  const handleTimKiem = async (values: any) => {
+    const url = `${
+      process.env.REACT_APP_API_BASE_URL
+    }/secure/phong/get-by-search?page=${currentPage - 1}&size=${PAGE_SIZE}`;
+    const response = await axios.post(url, values, {
+      withCredentials: true,
+    });
+    const data = response.data;
+    const phongList = data.phong.map((item: any) => {
+      return new PhongModel(
+        item.id,
+        item.tenPhong,
+        item.loaiPhong,
+        item.soSv,
+        item.gia,
+        item.soLuongDaDangKy,
+        item.tienIchList.map(
+          (tienIch: any) => new TienIchModel(tienIch.id, tienIch.tenTienIch)
+        )
+      );
+    });
+    setCurrentPage(1);
+    setPhongList(phongList);
+    setTotalItems(data.totalElements);
+  };
+  const handleSubmit = async () => {
+    const gia = form.getFieldValue("gia");
+    const data = {
+      ten: form.getFieldValue("ten"),
+      loaiPhong: form.getFieldValue("loaiPhong"),
+      soSv: form.getFieldValue("soSv"),
+      start: gia[0],
+      end: gia[1],
+      trong: form.getFieldValue("trong"),
+    };
+    await handleTimKiem(data);
   };
   console.log("Phong List:", phongList);
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
       <Card hoverable style={{ border: "1px solid #d9d9d9" }}>
-        <Form form={form} onFinish={handleSubmit}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={{
+            gia: [500000, 2000000],
+            trong: false,
+          }}
+        >
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} md={6}>
-              <Form.Item name="ngay"></Form.Item>
-            </Col>
-
-            <Col xs={24} sm={12} md={6}>
-              <Form.Item name="ten">
-                <Input placeholder="Tìm theo tên phòng" />
+              <Form.Item name="ten" label="Tên phòng">
+                <Input placeholder="Nhập tên phòng" allowClear />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={6}>
-              <Form.Item name="loai">
-                <Select placeholder="Loại phòng">
-                  <Option value="VIP">VIP</Option>
-                  <Option value="Thường">Thường</Option>
+              <Form.Item name="loaiPhong" label="Loại phòng">
+                <Select placeholder="Chọn loại phòng" allowClear>
+                  <Option value="Cơ bản">Cơ bản</Option>
+                  <Option value="Cơ bản nhỏ">Cơ bản nhỏ</Option>
+                  <Option value="Thiết bị tăng cường">
+                    Thiết bị tăng cường
+                  </Option>
+                  <Option value="Phổ thông không điều hòa">
+                    Phổ thông không điều hòa
+                  </Option>
+                  <Option value="Phổ thông có điều hòa">
+                    Phổ thông có điều hòa
+                  </Option>
+                  <Option value="Tiêu chuẩn">Tiêu chuẩn</Option>
                 </Select>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={6}>
-              <Button type="primary" htmlType="submit" block>
-                Tìm kiếm
-              </Button>
+              <Form.Item name="soSv" label="Số sinh viên">
+                <Select placeholder="Số SV / phòng" allowClear>
+                  <Option value={2}>2</Option>
+                  <Option value={4}>4</Option>
+                  <Option value={6}>6</Option>
+                  <Option value={8}>8</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={24} md={6}>
+              <Form.Item name="gia" label="Khoảng giá (VNĐ)">
+                <Slider
+                  range
+                  step={50000}
+                  min={500000}
+                  max={2000000}
+                  tooltip={{ formatter: (v: any) => `${v.toLocaleString()} đ` }}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={6}>
+              <Form.Item
+                name="trong"
+                label="Chỉ còn phòng trống"
+                valuePropName="checked"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+
+            <Col
+              xs={24}
+              sm={12}
+              md={6}
+              style={{ display: "flex", alignItems: "flex-end" }}
+            >
+              <Form.Item>
+                <Button type="primary" htmlType="submit" block>
+                  Tìm kiếm
+                </Button>
+              </Form.Item>
             </Col>
           </Row>
         </Form>

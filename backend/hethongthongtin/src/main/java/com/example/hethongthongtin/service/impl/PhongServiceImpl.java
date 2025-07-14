@@ -1,5 +1,6 @@
 package com.example.hethongthongtin.service.impl;
 
+import com.example.hethongthongtin.dto.request.SearchPhongRequest;
 import com.example.hethongthongtin.dto.response.PhongPageResponse;
 import com.example.hethongthongtin.entity.Phong;
 import com.example.hethongthongtin.repository.PhongRepository;
@@ -30,6 +31,32 @@ public class PhongServiceImpl implements PhongService {
 
         List<Phong> phongList = phongPage.getContent();
 
+
+        PhongPageResponse response = PhongPageResponse.builder()
+                .phong(phongList)
+                .pageNo(phongPage.getNumber())
+                .pageSize(phongPage.getSize())
+                .totalPages(phongPage.getTotalPages())
+                .totalElements(phongPage.getTotalElements())
+                .last(phongPage.isLast())
+                .build();
+
+        return response ;
+    }
+
+    @Override
+    public PhongPageResponse findAllBySearch(int page, int size, SearchPhongRequest searchPhongRequest) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Phong> phongPage = phongRepository.findAllBySearch(pageable,
+                searchPhongRequest.getTen(),
+                searchPhongRequest.getLoaiPhong(),
+                searchPhongRequest.getSoSv(),
+                searchPhongRequest.getStart(),
+                searchPhongRequest.getEnd(),
+                searchPhongRequest.getTrong()
+                );
+        List<Phong> phongList = phongPage.getContent();
 
         PhongPageResponse response = PhongPageResponse.builder()
                 .phong(phongList)
