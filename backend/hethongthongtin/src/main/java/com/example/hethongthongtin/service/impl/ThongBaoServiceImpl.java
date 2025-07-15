@@ -26,40 +26,6 @@ public class ThongBaoServiceImpl implements ThongBaoService {
     }
 
     @Override
-    public ThongBaoPageResponse getAllThongBao(int page, int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-
-        Page thongBaoPage = thongBaoRepository.findAll(pageable);
-
-        List<ThongBao> thongBaoList = thongBaoPage.getContent();
-
-        List<ThongBaoResponse> thongBaoResponseList = thongBaoList.stream().
-                map((item) -> {
-                    ThongBaoResponse thongBaoResponse = new ThongBaoResponse();
-                    thongBaoResponse.setId(item.getId());
-                    thongBaoResponse.setNoiDung(item.getNoiDung());
-                    thongBaoResponse.setTieuDe(item.getTieuDe());
-                    thongBaoResponse.setDanhSachFileDinhKem(item.getDanhSachFileDinhKem());
-                    thongBaoResponse.setNguoiDang(item.getUser().getFull_name());
-                    thongBaoResponse.setNgayDang(item.getNgayDang());
-                    return thongBaoResponse;
-                })
-                .collect(Collectors.toList());
-
-        ThongBaoPageResponse thongBaoPageResponse = ThongBaoPageResponse.builder()
-                .thongBao(thongBaoResponseList)
-                .pageNo(thongBaoPage.getNumber())
-                .totalElements(thongBaoPage.getTotalElements())
-                .totalPages(thongBaoPage.getTotalPages())
-                .pageSize(thongBaoPage.getSize())
-                .last(thongBaoPage.isLast())
-                .build();
-
-        return thongBaoPageResponse;
-    }
-
-    @Override
     public ThongBaoPageResponse searchThongBao(int page, int size,
                                                SearchThongBaoRequest searchThongBaoRequest) {
 

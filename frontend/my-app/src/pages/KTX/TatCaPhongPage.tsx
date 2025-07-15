@@ -76,7 +76,6 @@ export const TatCaPhongPage = () => {
       const response = await axios.post(url, data, {
         withCredentials: true,
       });
-      console.log("API URL:", url);
 
       const phongList = response.data.phong.map((item: any) => {
         return new PhongModel(
@@ -98,7 +97,9 @@ export const TatCaPhongPage = () => {
       setPhongList([]);
       setTotalItems(0);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
   };
   useEffect(() => {

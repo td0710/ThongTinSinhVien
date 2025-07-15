@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface ThongBaoService {
 
-    ThongBaoPageResponse getAllThongBao(int page, int size);
 
     ThongBaoPageResponse searchThongBao(int page, int size,
                                         SearchThongBaoRequest searchThongBaoRequest);

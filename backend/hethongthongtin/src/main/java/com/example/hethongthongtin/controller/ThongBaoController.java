@@ -23,12 +23,7 @@ public class ThongBaoController {
         this.jwtGenerator = jwtGenerator;
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<ThongBaoPageResponse> getAll(@RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.ok(thongBaoService.getAllThongBao(page, size)) ;
-    }
-
-    @PostMapping("/search")
+    @PostMapping("/search-thong-bao")
     public ResponseEntity<ThongBaoPageResponse> search(@RequestParam int page, @RequestParam int size,
                                                        @RequestBody SearchThongBaoRequest searchThongBaoRequest) {
         return ResponseEntity.ok(thongBaoService.searchThongBao(page,size,searchThongBaoRequest));
