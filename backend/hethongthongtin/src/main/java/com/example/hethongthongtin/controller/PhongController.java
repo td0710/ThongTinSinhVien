@@ -18,14 +18,9 @@ public class PhongController {
         this.phongService = phongService;
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<PhongPageResponse> getAll(@RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.ok(phongService.findAllByPage(page,size)) ;
-    }
-
-    @PostMapping("/search")
-    public ResponseEntity<PhongPageResponse> getBySearch(@RequestParam int page
-            , @RequestParam int size, @RequestBody SearchPhongRequest searchPhongRequest) {
-        return ResponseEntity.ok(phongService.findAllBySearch(page,size,searchPhongRequest)) ;
+    @PostMapping("/search-phong")
+    public ResponseEntity<PhongPageResponse> searchPhong(@RequestParam int page, @RequestParam int size
+    ,@RequestBody SearchPhongRequest searchPhongRequest) {
+        return ResponseEntity.ok(phongService.findBySearch(page,size,searchPhongRequest)) ;
     }
 }

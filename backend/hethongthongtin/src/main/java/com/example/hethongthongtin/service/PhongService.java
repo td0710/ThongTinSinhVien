@@ -10,8 +10,5 @@ import java.util.List;
 
 public interface PhongService {
 
-    PhongPageResponse findAllByPage(int page, int size);
-
-    PhongPageResponse findAllBySearch(int page, int size, SearchPhongRequest searchPhongRequest);
-
+    PhongPageResponse findBySearch(int page, int size, SearchPhongRequest searchPhongRequest);
 }

@@ -22,6 +22,7 @@ import {
   Pagination,
   Slider,
   Switch,
+  Spin,
 } from "antd";
 import { useEffect, useState } from "react";
 import { PhongModel } from "../../models/PhongModel";
@@ -37,6 +38,7 @@ export const TatCaPhongPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [form] = Form.useForm();
   const [phongList, setPhongList] = useState<PhongModel[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const tagColorByLoai = {
     "Cơ bản": "default",
@@ -55,16 +57,27 @@ export const TatCaPhongPage = () => {
     "Tủ quần áo": <SkinOutlined />,
     "Tủ giày": <InboxOutlined />,
   };
+
   const fetchPhongList = async () => {
     try {
+      setLoading(true);
+      const gia = form.getFieldValue("gia");
+      const data = {
+        ten: form.getFieldValue("ten"),
+        loaiPhong: form.getFieldValue("loaiPhong"),
+        soSv: form.getFieldValue("soSv"),
+        start: gia[0],
+        end: gia[1],
+        trong: form.getFieldValue("trong"),
+      };
       const url = `${
         process.env.REACT_APP_API_BASE_URL
-      }/secure/phong/get-all?page=${currentPage - 1}&size=${PAGE_SIZE}`;
-      const response = await axios.get(url, {
+      }/secure/phong/search-phong?page=${currentPage - 1}&size=${PAGE_SIZE}`;
+      const response = await axios.post(url, data, {
         withCredentials: true,
       });
-      const data = response.data;
-      console.log(data);
+      console.log("API URL:", url);
+
       const phongList = response.data.phong.map((item: any) => {
         return new PhongModel(
           item.id,
@@ -79,63 +92,42 @@ export const TatCaPhongPage = () => {
         );
       });
       setPhongList(phongList);
-      setTotalItems(data.totalElements);
+      setTotalItems(response.data.totalElements);
     } catch (error) {
       console.error("Error fetching phong list:", error);
       setPhongList([]);
       setTotalItems(0);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchPhongList();
+    window.scrollTo({
+      top: window.innerHeight / 2,
+      behavior: "smooth",
+    });
   }, [currentPage]);
-
-  const handleTimKiem = async (values: any) => {
-    try {
-      const url = `${
-        process.env.REACT_APP_API_BASE_URL
-      }/secure/phong/search?page=${currentPage - 1}&size=${PAGE_SIZE}`;
-      const response = await axios.post(url, values, {
-        withCredentials: true,
-      });
-      const data = response.data;
-      const phongList = data.phong.map((item: any) => {
-        return new PhongModel(
-          item.id,
-          item.tenPhong,
-          item.loaiPhong,
-          item.soSv,
-          item.gia,
-          item.soLuongDaDangKy,
-          item.tienIchList.map(
-            (tienIch: any) => new TienIchModel(tienIch.id, tienIch.tenTienIch)
-          )
-        );
-      });
-      setCurrentPage(1);
-      setPhongList(phongList);
-      setTotalItems(data.totalElements);
-    } catch (error) {
-      console.error("Error searching phong:", error);
-      setPhongList([]);
-      setTotalItems(0);
-    }
-  };
   const handleSubmit = async () => {
-    const gia = form.getFieldValue("gia");
-    const data = {
-      ten: form.getFieldValue("ten"),
-      loaiPhong: form.getFieldValue("loaiPhong"),
-      soSv: form.getFieldValue("soSv"),
-      start: gia[0],
-      end: gia[1],
-      trong: form.getFieldValue("trong"),
-    };
-    await handleTimKiem(data);
+    currentPage == 1 ? fetchPhongList() : setCurrentPage(1);
   };
-  console.log("Phong List:", phongList);
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(255,255,255,0.5)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin size="large" tip="Đang tải..." />
+        </div>
+      )}
       <Card hoverable style={{ border: "1px solid #d9d9d9" }}>
         <Form
           form={form}

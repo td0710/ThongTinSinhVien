@@ -24,29 +24,9 @@ public class PhongServiceImpl implements PhongService {
     }
 
     @Override
-    public PhongPageResponse findAllByPage(int page, int size) {
+    public PhongPageResponse findBySearch(int page, int size, SearchPhongRequest searchPhongRequest) {
         Pageable pageable = PageRequest.of(page, size);
-
-        Page<Phong> phongPage = phongRepository.findAll(pageable);
-
-        List<Phong> phongList = phongPage.getContent();
-
-
-        PhongPageResponse response = PhongPageResponse.builder()
-                .phong(phongList)
-                .pageNo(phongPage.getNumber())
-                .pageSize(phongPage.getSize())
-                .totalPages(phongPage.getTotalPages())
-                .totalElements(phongPage.getTotalElements())
-                .last(phongPage.isLast())
-                .build();
-
-        return response ;
-    }
-
-    @Override
-    public PhongPageResponse findAllBySearch(int page, int size, SearchPhongRequest searchPhongRequest) {
-        Pageable pageable = PageRequest.of(page, size);
+        System.out.println(searchPhongRequest);
 
         Page<Phong> phongPage = phongRepository.findAllBySearch(pageable,
                 searchPhongRequest.getTen(),
@@ -55,9 +35,9 @@ public class PhongServiceImpl implements PhongService {
                 searchPhongRequest.getStart(),
                 searchPhongRequest.getEnd(),
                 searchPhongRequest.getTrong()
-                );
+        );
         List<Phong> phongList = phongPage.getContent();
-
+        System.out.println(phongList);
         PhongPageResponse response = PhongPageResponse.builder()
                 .phong(phongList)
                 .pageNo(phongPage.getNumber())
@@ -66,7 +46,8 @@ public class PhongServiceImpl implements PhongService {
                 .totalElements(phongPage.getTotalElements())
                 .last(phongPage.isLast())
                 .build();
-
+        System.out.println(response);
         return response ;
     }
+
 }
