@@ -12,6 +12,7 @@ import {
   Form,
   Button,
   Pagination,
+  Spin,
 } from "antd";
 import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
@@ -24,56 +25,31 @@ const PAGE_SIZE = 3;
 export const ThongBaoPage = () => {
   const [thongBaoList, setThongBaoList] = useState<ThongBaoModel[]>([]);
   const [totalThongBao, setTotalThongBao] = useState<number>(0);
+  const [selectedItem, setSelectedItem] = useState<ThongBaoModel | null>(null);
+  const [loading, setLoading] = useState(false);
+
   const [form] = Form.useForm();
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const fetchThongBao = async () => {
     try {
-      const url = `${
-        process.env.REACT_APP_API_BASE_URL
-      }/secure/thongbao/get-all?page=${currentPage - 1}&size=${PAGE_SIZE}`;
-      const response = await axios.get(url, {
-        withCredentials: true,
-      });
+      setLoading(true);
+      const raw = form.getFieldsValue();
 
-      console.log("Response data:", response.data);
-      const thongBaoList = response.data.thongBao.map((item: any) => {
-        return {
-          tieuDe: item.tieuDe,
-          nguoiDang: item.nguoiDang,
-          ngayDang: dayjs(item.ngayDang).format(dateFormat),
-          noiDung: item.noiDung,
-          danhSachFileDinhKem: item.danhSachFileDinhKem
-            ? item.danhSachFileDinhKem
-            : null,
-        };
-      });
-      setTotalItems(response.data.totalElements);
-      setThongBaoList(thongBaoList);
-    } catch (error) {}
-  };
-  const fetchTotalThongBao = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/total`,
-        { withCredentials: true }
-      );
-      console.log("Tổng số thông báo:", response.data);
-      setTotalThongBao(response.data);
-    } catch (error) {
-      console.error("Lỗi khi lấy tổng số thông báo", error);
-    }
-  };
-  useEffect(() => {
-    fetchThongBao();
-    fetchTotalThongBao();
-  }, [currentPage]);
-
-  const handleTimKiem = async (data: any) => {
-    try {
+      const data = {
+        ...raw,
+        startDate: raw.startDate
+          ? dayjs(raw.startDate).startOf("day").format("YYYY-MM-DDTHH:mm:ss")
+          : null,
+        endDate: raw.endDate
+          ? dayjs(raw.endDate).endOf("day").format("YYYY-MM-DDTHH:mm:ss")
+          : null,
+      };
       const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/search?page=${
+        `${
+          process.env.REACT_APP_API_BASE_URL
+        }/secure/thongbao/search-thong-bao?page=${
           currentPage - 1
         }&size=${PAGE_SIZE}`,
         data,
@@ -90,40 +66,57 @@ export const ThongBaoPage = () => {
             : null,
         };
       });
-      setCurrentPage(1);
       setTotalItems(response.data.totalElements);
       setThongBaoList(thongBaoList);
     } catch (error) {
-      let errorMessage = "Lỗi khi tìm kiếm.";
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message?: string }>;
-        errorMessage =
-          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
-      }
-
-      console.error("Lỗi khi tìm kiếm", error);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
   };
-  const handleSubmit = async () => {
-    const raw = form.getFieldsValue();
-
-    const data = {
-      ...raw,
-      startDate: raw.startDate
-        ? dayjs(raw.startDate).startOf("day").format("YYYY-MM-DDTHH:mm:ss")
-        : null,
-      endDate: raw.endDate
-        ? dayjs(raw.endDate).endOf("day").format("YYYY-MM-DDTHH:mm:ss")
-        : null,
-    };
-
-    await handleTimKiem(data);
+  const fetchTotalThongBao = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/total`,
+        { withCredentials: true }
+      );
+      console.log("Tổng số thông báo:", response.data);
+      setTotalThongBao(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy tổng số thông báo", error);
+    }
   };
 
-  const [selectedItem, setSelectedItem] = useState<ThongBaoModel | null>(null);
+  const handleSubmit = async () => {
+    currentPage === 1 ? fetchThongBao() : setCurrentPage(1);
+  };
+  useEffect(() => {
+    fetchThongBao();
+    fetchTotalThongBao();
+    window.scrollTo({
+      top: window.innerHeight / 2,
+      behavior: "smooth",
+    });
+  }, [currentPage]);
 
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(255,255,255,0.5)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin size="large" tip="Đang tải..." />
+        </div>
+      )}
       <Flex>
         <Card
           style={{

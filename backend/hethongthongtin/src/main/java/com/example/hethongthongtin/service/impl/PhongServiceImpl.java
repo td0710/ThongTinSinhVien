@@ -26,7 +26,6 @@ public class PhongServiceImpl implements PhongService {
     @Override
     public PhongPageResponse findBySearch(int page, int size, SearchPhongRequest searchPhongRequest) {
         Pageable pageable = PageRequest.of(page, size);
-        System.out.println(searchPhongRequest);
 
         Page<Phong> phongPage = phongRepository.findAllBySearch(pageable,
                 searchPhongRequest.getTen(),
@@ -37,7 +36,6 @@ public class PhongServiceImpl implements PhongService {
                 searchPhongRequest.getTrong()
         );
         List<Phong> phongList = phongPage.getContent();
-        System.out.println(phongList);
         PhongPageResponse response = PhongPageResponse.builder()
                 .phong(phongList)
                 .pageNo(phongPage.getNumber())
@@ -46,7 +44,6 @@ public class PhongServiceImpl implements PhongService {
                 .totalElements(phongPage.getTotalElements())
                 .last(phongPage.isLast())
                 .build();
-        System.out.println(response);
         return response ;
     }
 

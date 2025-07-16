@@ -194,7 +194,7 @@ export const TatCaPhongPage = () => {
                 label="Chỉ còn phòng trống"
                 valuePropName="checked"
               >
-                <Switch />
+                <Switch onClick={handleSubmit} />
               </Form.Item>
             </Col>
 
