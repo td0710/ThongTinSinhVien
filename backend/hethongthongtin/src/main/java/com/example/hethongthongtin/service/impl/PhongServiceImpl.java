@@ -1,10 +1,14 @@
 package com.example.hethongthongtin.service.impl;
 
-import com.example.hethongthongtin.dto.request.PhongResponse;
+import com.example.hethongthongtin.dto.response.PhongResponse;
 import com.example.hethongthongtin.dto.request.SearchPhongRequest;
 import com.example.hethongthongtin.dto.response.PhongPageResponse;
 import com.example.hethongthongtin.entity.Phong;
+import com.example.hethongthongtin.entity.PhongSinhVien;
+import com.example.hethongthongtin.entity.Users;
 import com.example.hethongthongtin.repository.PhongRepository;
+import com.example.hethongthongtin.repository.PhongSinhVienRepository;
+import com.example.hethongthongtin.repository.UserRepository;
 import com.example.hethongthongtin.service.PhongService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -20,9 +24,16 @@ import java.util.stream.Collectors;
 public class PhongServiceImpl implements PhongService {
 
     private PhongRepository phongRepository;
+    private PhongSinhVienRepository phongSinhVienRepository;
+    private UserRepository userRepository;
 
-    PhongServiceImpl(PhongRepository phongRepository) {
+    PhongServiceImpl(PhongRepository phongRepository,
+                     PhongSinhVienRepository phongSinhVienRepository,
+                     UserRepository userRepository
+                     ) {
         this.phongRepository = phongRepository;
+        this.phongSinhVienRepository = phongSinhVienRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -65,4 +76,24 @@ public class PhongServiceImpl implements PhongService {
         return response ;
     }
 
+    @Override
+    public PhongResponse getPhongHienTai(Long userId) {
+
+        Users user = userRepository.findById(userId).get();
+
+
+        PhongSinhVien phongSinhVien = phongSinhVienRepository.findPhongSinhVienByUsers(user);
+
+        PhongResponse phongResponse = PhongResponse.builder()
+                        .id(phongSinhVien.getPhong().getId())
+                        .loaiPhong(phongSinhVien.getPhong().getLoaiPhong())
+                .tenPhong(phongSinhVien.getPhong().getTenPhong())
+                .soSv(phongSinhVien.getPhong().getSoSv())
+                .gia(phongSinhVien.getPhong().getGia())
+                .tienIchList(phongSinhVien.getPhong().getTienIchList())
+                .soLuongDaDangKy(phongSinhVien.getPhong().getDanhSachSinhVien().size())
+                .build();
+
+        return phongResponse;
+    }
 }

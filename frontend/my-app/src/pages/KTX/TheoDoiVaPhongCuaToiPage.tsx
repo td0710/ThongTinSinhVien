@@ -1,62 +1,109 @@
+import {
+  ApartmentOutlined,
+  CloudOutlined,
+  FireOutlined,
+  InboxOutlined,
+  RestOutlined,
+  SkinOutlined,
+  WifiOutlined,
+} from "@ant-design/icons";
 import { Button, Card, Col, Row, Typography, Tag, Flex, Space } from "antd";
+import { YeuCauKTXModel } from "../../models/YeuCauKTXModel";
+import { use, useEffect, useState } from "react";
+import { TienIchModel } from "../../models/TienIchModel";
+import axios from "axios";
+import { PhongModel } from "../../models/PhongModel";
 const { Title, Paragraph, Text } = Typography;
 export const TheoDoiVaPhongCuaToiPage = () => {
-  const phong = {
-    tenPhong: "Phòng A101",
-    loaiPhong: "4 người",
-    gia: 1200000,
-    soSv: 4,
-    soLuongDaDangKy: 2,
-    tienIchList: [
-      { id: 1, tenTienIch: "Máy lạnh" },
-      { id: 2, tenTienIch: "Wifi" },
-    ],
-  };
-  const yeuCauList = [
-    {
-      id: 1,
-      loai: "Yêu cầu đổi phòng",
-      phong: {
-        tenPhong: "B203",
-        loaiPhong: "4 người",
-        gia: 1200000,
-        soLuongDaDangKy: 2,
-        soSv: 4,
-        tienIchList: ["Máy lạnh", "Wifi"],
-        hinhAnh:
-          "https://www.houzlook.com/assets/images/upload/Rooms/Bed%20Rooms/Malson%20Modern%20Bed%20Room-20180819090641741.jpg",
-      },
-      trangThai: "Chờ duyệt",
-      tagColor: "processing",
-    },
-    {
-      id: 2,
-      loai: "Yêu cầu đăng ký phòng mới",
-      phong: {
-        tenPhong: "C102",
-        loaiPhong: "6 người",
-        gia: 1000000,
-        soLuongDaDangKy: 5,
-        soSv: 6,
-        tienIchList: ["Quạt", "Truyền hình"],
-        hinhAnh:
-          "https://cdn.nhadatmoi.net/news/wp-content/uploads/2020/12/phong-tro-dep-1.jpg",
-      },
-      trangThai: "Đã gửi",
-      tagColor: "success",
-    },
-  ];
+  const [yeuCauList, setYeuCauList] = useState<YeuCauKTXModel[]>([]);
+  const [phongCuaToi, setPhongCuaToi] = useState<PhongModel>();
+  const fetchYeuCauList = async () => {
+    try {
+      const url = "http://localhost:8080/api/yeucauktx/get-by-id?id=1";
 
-  const tagColorByLoai: Record<string, string> = {
-    "4 người": "blue",
-    "6 người": "green",
+      const response = await axios.get(url);
+
+      console.log(response);
+
+      const danhSachYeuCau = response.data.map((item: YeuCauKTXModel) => {
+        const yeuCau = new YeuCauKTXModel(
+          item.id,
+          item.loaiYeuCau,
+          new PhongModel(
+            item.phongHienTai.id,
+            item.phongHienTai.tenPhong,
+            item.phongHienTai.loaiPhong,
+            item.phongHienTai.soSv,
+            item.phongHienTai.gia,
+            item.phongHienTai.soLuongDaDangKy,
+            item.phongHienTai.tienIchList
+          ),
+          item.trangThai,
+          item.phongMongMuon
+            ? new PhongModel(
+                item.phongMongMuon.id,
+                item.phongMongMuon.tenPhong,
+                item.phongMongMuon.loaiPhong,
+                item.phongMongMuon.soSv,
+                item.phongMongMuon.gia,
+                item.phongMongMuon.soLuongDaDangKy,
+                item.phongMongMuon.tienIchList
+              )
+            : undefined
+        );
+        return yeuCau;
+      });
+      console.log(danhSachYeuCau);
+      setYeuCauList(danhSachYeuCau);
+    } catch (error) {
+      console.error("Error fetching yêu cầu KTX:", error);
+    }
+  };
+  const fetchPhongCuaToi = async () => {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/phong/phong-hien-tai`;
+
+      const response = await axios.get(url, {
+        withCredentials: true,
+      });
+
+      console.log(response);
+
+      setPhongCuaToi(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const iconByTienIch: Record<string, React.ReactNode> = {
-    "Máy lạnh": <i className="fas fa-snowflake" />,
-    Wifi: <i className="fas fa-wifi" />,
+  useEffect(() => {
+    fetchPhongCuaToi();
+    fetchYeuCauList();
+  }, []);
+
+  const tagColorByLoai = {
+    "Cơ bản": "default",
+    "Cơ bản nhỏ": "gray",
+    "Thiết bị tăng cường": "green",
+    "Phổ thông không điều hòa": "volcano",
+    "Phổ thông có điều hòa": "orange",
+    "Tiêu chuẩn": "blue",
+  };
+  const iconByTienIch = {
+    "Vệ sinh khép kín": <RestOutlined />,
+    "Giường tầng": <ApartmentOutlined />,
+    "Bình nước nóng": <FireOutlined />,
+    Internet: <WifiOutlined />,
+    "Điều hòa": <CloudOutlined />,
+    "Tủ quần áo": <SkinOutlined />,
+    "Tủ giày": <InboxOutlined />,
   };
 
+  const tagColorByTrangThai = {
+    "Đang tiếp nhận": "processing",
+    "Đã tiếp nhận": "blue",
+    "Hoàn thành": "green",
+    "Từ chối": "red",
+  };
   return (
     <div style={{ padding: 24 }}>
       <Card
@@ -68,54 +115,103 @@ export const TheoDoiVaPhongCuaToiPage = () => {
         <Row gutter={[16, 16]}>
           {yeuCauList.map((yeuCau) => (
             <Col span={24} key={yeuCau.id}>
-              <Card type="inner" title={yeuCau.loai} size="default">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    gap: 16,
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <div style={{ marginBottom: 8 }}>
+              <Card type="inner" title={yeuCau.loaiYeuCau} size="default">
+                <Row gutter={[16, 16]} align="top">
+                  <Col xs={24} md={yeuCau.loaiYeuCau === "Đổi phòng" ? 12 : 20}>
+                    <Row align="middle" wrap={false}>
                       <Text strong style={{ fontSize: 16 }}>
-                        🏠 {yeuCau.phong.tenPhong}
-                      </Text>{" "}
-                      <Tag color="blue" style={{ marginLeft: 4 }}>
-                        {yeuCau.phong.loaiPhong}
-                      </Tag>
-                    </div>
+                        🏠{" "}
+                        {yeuCau.loaiYeuCau === "Đổi phòng"
+                          ? yeuCau.phongHienTai.tenPhong +
+                            " ➡️ " +
+                            yeuCau.phongMongMuon?.tenPhong
+                          : yeuCau.phongHienTai.tenPhong}
+                      </Text>
 
-                    <Paragraph style={{ marginBottom: 4 }}>
+                      <Tag
+                        color={
+                          tagColorByLoai[
+                            (yeuCau.loaiYeuCau == "Đổi phòng"
+                              ? yeuCau.phongMongMuon?.loaiPhong
+                              : yeuCau.phongHienTai
+                                  .loaiPhong) as keyof typeof tagColorByLoai
+                          ] || "default"
+                        }
+                        style={{ marginLeft: 8 }}
+                      >
+                        {yeuCau.loaiYeuCau === "Đổi phòng"
+                          ? yeuCau.phongMongMuon?.loaiPhong
+                          : yeuCau.phongHienTai.loaiPhong}
+                      </Tag>
+                    </Row>
+
+                    <Paragraph style={{ marginTop: 8, marginBottom: 4 }}>
                       <Text type="secondary">Giá:</Text>{" "}
                       <Text strong>
-                        {yeuCau.phong.gia.toLocaleString()} đ/tháng
+                        {(yeuCau.loaiYeuCau === "Đổi phòng"
+                          ? yeuCau.phongMongMuon?.gia ?? 0
+                          : yeuCau.phongHienTai.gia ?? 0
+                        ).toLocaleString()}{" "}
+                        đ/tháng
                       </Text>{" "}
                       • <Text type="secondary">Sức chứa:</Text>{" "}
                       <Text strong>
-                        {yeuCau.phong.soLuongDaDangKy}/{yeuCau.phong.soSv} SV
+                        {(yeuCau.loaiYeuCau === "Đổi phòng"
+                          ? yeuCau.phongMongMuon?.soLuongDaDangKy
+                          : yeuCau.phongHienTai.soLuongDaDangKy) +
+                          "/" +
+                          (yeuCau.loaiYeuCau === "Đổi phòng"
+                            ? yeuCau.phongMongMuon?.soSv
+                            : yeuCau.phongHienTai.soSv)}{" "}
+                        SV
                       </Text>
                     </Paragraph>
 
                     <Space wrap size={8}>
-                      {yeuCau.phong.tienIchList.map((tienIch, index) => (
-                        <Tag key={index} color="default">
-                          {tienIch}
+                      {(yeuCau.loaiYeuCau === "Đổi phòng"
+                        ? yeuCau.phongMongMuon?.tienIchList
+                        : yeuCau.phongHienTai.tienIchList
+                      )?.map((tienIch: TienIchModel) => (
+                        <Tag
+                          key={tienIch.id}
+                          color="default"
+                          icon={
+                            iconByTienIch[
+                              tienIch.tenTienIch as keyof typeof iconByTienIch
+                            ]
+                          }
+                        >
+                          {tienIch.tenTienIch}
                         </Tag>
                       ))}
                     </Space>
-                  </div>
+                  </Col>
 
-                  <div style={{ textAlign: "right", minWidth: 120 }}>
-                    <Space size="small">
-                      <Tag color={yeuCau.tagColor}>{yeuCau.trangThai}</Tag>
+                  <Col
+                    xs={24}
+                    md={yeuCau.loaiYeuCau === "Đổi phòng" ? 12 : 4}
+                    style={{ textAlign: "right" }}
+                  >
+                    <Space
+                      direction="vertical"
+                      size="small"
+                      style={{ width: "100%", alignItems: "flex-end" }}
+                    >
+                      <Tag
+                        color={
+                          tagColorByTrangThai[
+                            yeuCau.trangThai as keyof typeof tagColorByTrangThai
+                          ] || "default"
+                        }
+                      >
+                        {yeuCau.trangThai}
+                      </Tag>
                       <Button danger size="small">
                         Hủy yêu cầu
                       </Button>
                     </Space>
-                  </div>
-                </div>
+                  </Col>
+                </Row>
               </Card>
             </Col>
           ))}
@@ -135,7 +231,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
         }}
         cover={
           <img
-            alt={phong.tenPhong}
+            alt={phongCuaToi?.tenPhong || "Phòng của tôi"}
             src="https://www.houzlook.com/assets/images/upload/Rooms/Bed%20Rooms/Malson%20Modern%20Bed%20Room-20180819090641741.jpg"
             style={{
               height: 500,
@@ -148,33 +244,43 @@ export const TheoDoiVaPhongCuaToiPage = () => {
         <Row gutter={[8, 16]} justify="space-between" align="top">
           <Col span={24}>
             <Title level={5} style={{ marginTop: 8, marginBottom: 4 }}>
-              🏠 <Text strong>{phong.tenPhong}</Text>
+              🏠 <Text strong>{phongCuaToi?.tenPhong}</Text>
             </Title>
-            <Tag color={tagColorByLoai[phong.loaiPhong] || "default"}>
-              {phong.loaiPhong}
+            <Tag
+              color={
+                tagColorByLoai[
+                  phongCuaToi?.loaiPhong as keyof typeof tagColorByLoai
+                ] || "default"
+              }
+            >
+              {phongCuaToi?.loaiPhong}
             </Tag>
           </Col>
 
           <Col span={24}>
             <Paragraph style={{ marginBottom: 4 }}>
               <Text type="secondary">Giá:</Text>{" "}
-              <Text strong>{phong.gia.toLocaleString()} đ/tháng</Text>
+              <Text strong>{phongCuaToi?.gia.toLocaleString()} đ/tháng</Text>
             </Paragraph>
             <Paragraph style={{ marginBottom: 4 }}>
               <Text type="secondary">Sức chứa:</Text>{" "}
               <Text strong>
-                {phong.soLuongDaDangKy}/{phong.soSv} SV
+                {phongCuaToi?.soLuongDaDangKy}/{phongCuaToi?.soSv} SV
               </Text>
             </Paragraph>
           </Col>
 
           <Col span={24}>
             <Space wrap size={8}>
-              {phong.tienIchList.map((tienIch) => (
+              {phongCuaToi?.tienIchList.map((tienIch: TienIchModel) => (
                 <Tag
                   key={tienIch.id}
                   color="default"
-                  icon={iconByTienIch[tienIch.tenTienIch]}
+                  icon={
+                    iconByTienIch[
+                      tienIch.tenTienIch as keyof typeof iconByTienIch
+                    ]
+                  }
                 >
                   {tienIch.tenTienIch}
                 </Tag>

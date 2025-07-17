@@ -295,7 +295,7 @@ export const TatCaPhongPage = () => {
                       size="middle"
                       block
                       variant="filled"
-                      // onClick={() => handleDangKy(phong)}
+                      disabled={phong.soLuongDaDangKy >= phong.soSv}
                     >
                       Đăng ký
                     </Button>

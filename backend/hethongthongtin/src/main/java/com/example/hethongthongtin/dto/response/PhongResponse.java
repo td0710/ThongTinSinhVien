@@ -1,4 +1,4 @@
-package com.example.hethongthongtin.dto.request;
+package com.example.hethongthongtin.dto.response;
 
 import com.example.hethongthongtin.entity.TienIch;
 import lombok.AllArgsConstructor;

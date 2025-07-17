@@ -2,10 +2,7 @@ package com.example.hethongthongtin.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -15,6 +12,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"phong"})
 public class PhongSinhVien {
 
     @Id
@@ -23,7 +21,7 @@ public class PhongSinhVien {
 
     @ManyToOne
     @JoinColumn(name = "sinh_vien_id")
-    private Users sinhVien;
+    private Users users;
 
     @ManyToOne
     @JsonBackReference

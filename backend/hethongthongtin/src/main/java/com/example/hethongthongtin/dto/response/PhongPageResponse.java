@@ -1,12 +1,5 @@
 package com.example.hethongthongtin.dto.response;
 
-import com.example.hethongthongtin.dto.request.PhongResponse;
-import com.example.hethongthongtin.entity.Phong;
-import com.example.hethongthongtin.entity.TienIch;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +15,8 @@ import java.util.List;
 public class PhongPageResponse {
 
     private List<PhongResponse> phong;
+
+
 
     private int pageNo;
 

@@ -52,7 +52,6 @@ public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
         File tempFile = File.createTempFile("temp", null);
         file.transferTo(tempFile);
         UploadResponse res = googleDriveUpload.uploadImageToDrive(tempFile);
-        System.out.println(res);
 
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId) ;
 
