@@ -1,5 +1,6 @@
 package com.example.hethongthongtin.service.impl;
 
+import com.example.hethongthongtin.dto.request.PhongResponse;
 import com.example.hethongthongtin.dto.request.SearchPhongRequest;
 import com.example.hethongthongtin.dto.response.PhongPageResponse;
 import com.example.hethongthongtin.entity.Phong;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,8 +38,24 @@ public class PhongServiceImpl implements PhongService {
                 searchPhongRequest.getTrong()
         );
         List<Phong> phongList = phongPage.getContent();
+
+        List<PhongResponse> phongResponseList = phongList.stream()
+        .map((item) -> {
+            PhongResponse phongResponse = new PhongResponse();
+            phongResponse.setId(item.getId());
+            phongResponse.setTenPhong(item.getTenPhong());
+            phongResponse.setLoaiPhong(item.getLoaiPhong());
+            phongResponse.setSoSv(item.getSoSv());
+            phongResponse.setGia(item.getGia());
+            phongResponse.setSoLuongDaDangKy(item.getDanhSachSinhVien().size());
+            phongResponse.setTienIchList(item.getTienIchList());
+            return phongResponse;
+        })
+                .collect(Collectors.toList());
+
+
         PhongPageResponse response = PhongPageResponse.builder()
-                .phong(phongList)
+                .phong(phongResponseList)
                 .pageNo(phongPage.getNumber())
                 .pageSize(phongPage.getSize())
                 .totalPages(phongPage.getTotalPages())

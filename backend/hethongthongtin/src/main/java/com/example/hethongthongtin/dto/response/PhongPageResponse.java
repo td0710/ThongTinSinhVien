@@ -1,5 +1,6 @@
 package com.example.hethongthongtin.dto.response;
 
+import com.example.hethongthongtin.dto.request.PhongResponse;
 import com.example.hethongthongtin.entity.Phong;
 import com.example.hethongthongtin.entity.TienIch;
 import jakarta.persistence.Column;
@@ -20,7 +21,7 @@ import java.util.List;
 @Builder
 public class PhongPageResponse {
 
-    private List<Phong> phong;
+    private List<PhongResponse> phong;
 
     private int pageNo;
 

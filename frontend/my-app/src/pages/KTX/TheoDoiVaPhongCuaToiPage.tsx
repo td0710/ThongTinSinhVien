@@ -59,8 +59,71 @@ export const TheoDoiVaPhongCuaToiPage = () => {
 
   return (
     <div style={{ padding: 24 }}>
+      <Card
+        title="Theo dõi các yêu cầu của bạn"
+        style={{ width: "100%", border: "1px solid #d9d9d9" }}
+        bodyStyle={{ padding: 16 }}
+        hoverable
+      >
+        <Row gutter={[16, 16]}>
+          {yeuCauList.map((yeuCau) => (
+            <Col span={24} key={yeuCau.id}>
+              <Card type="inner" title={yeuCau.loai} size="default">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    gap: 16,
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <div style={{ marginBottom: 8 }}>
+                      <Text strong style={{ fontSize: 16 }}>
+                        🏠 {yeuCau.phong.tenPhong}
+                      </Text>{" "}
+                      <Tag color="blue" style={{ marginLeft: 4 }}>
+                        {yeuCau.phong.loaiPhong}
+                      </Tag>
+                    </div>
+
+                    <Paragraph style={{ marginBottom: 4 }}>
+                      <Text type="secondary">Giá:</Text>{" "}
+                      <Text strong>
+                        {yeuCau.phong.gia.toLocaleString()} đ/tháng
+                      </Text>{" "}
+                      • <Text type="secondary">Sức chứa:</Text>{" "}
+                      <Text strong>
+                        {yeuCau.phong.soLuongDaDangKy}/{yeuCau.phong.soSv} SV
+                      </Text>
+                    </Paragraph>
+
+                    <Space wrap size={8}>
+                      {yeuCau.phong.tienIchList.map((tienIch, index) => (
+                        <Tag key={index} color="default">
+                          {tienIch}
+                        </Tag>
+                      ))}
+                    </Space>
+                  </div>
+
+                  <div style={{ textAlign: "right", minWidth: 120 }}>
+                    <Space size="small">
+                      <Tag color={yeuCau.tagColor}>{yeuCau.trangThai}</Tag>
+                      <Button danger size="small">
+                        Hủy yêu cầu
+                      </Button>
+                    </Space>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Card>
+
       <Title level={3} style={{ textAlign: "left", marginBottom: 24 }}>
-        Theo dõi và phòng của tôi
+        Phòng của tôi
       </Title>
 
       <Card
@@ -126,69 +189,6 @@ export const TheoDoiVaPhongCuaToiPage = () => {
               </Button>
             </Flex>
           </Col>
-        </Row>
-      </Card>
-
-      <Card
-        title="Theo dõi các yêu cầu của bạn"
-        style={{ width: "100%", border: "1px solid #d9d9d9" }}
-        bodyStyle={{ padding: 16 }}
-        hoverable
-      >
-        <Row gutter={[16, 16]}>
-          {yeuCauList.map((yeuCau) => (
-            <Col span={24} key={yeuCau.id}>
-              <Card type="inner" title={yeuCau.loai} size="default">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    gap: 16,
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <div style={{ marginBottom: 8 }}>
-                      <Text strong style={{ fontSize: 16 }}>
-                        🏠 {yeuCau.phong.tenPhong}
-                      </Text>{" "}
-                      <Tag color="blue" style={{ marginLeft: 4 }}>
-                        {yeuCau.phong.loaiPhong}
-                      </Tag>
-                    </div>
-
-                    <Paragraph style={{ marginBottom: 4 }}>
-                      <Text type="secondary">Giá:</Text>{" "}
-                      <Text strong>
-                        {yeuCau.phong.gia.toLocaleString()} đ/tháng
-                      </Text>{" "}
-                      • <Text type="secondary">Sức chứa:</Text>{" "}
-                      <Text strong>
-                        {yeuCau.phong.soLuongDaDangKy}/{yeuCau.phong.soSv} SV
-                      </Text>
-                    </Paragraph>
-
-                    <Space wrap size={8}>
-                      {yeuCau.phong.tienIchList.map((tienIch, index) => (
-                        <Tag key={index} color="default">
-                          {tienIch}
-                        </Tag>
-                      ))}
-                    </Space>
-                  </div>
-
-                  <div style={{ textAlign: "right", minWidth: 120 }}>
-                    <Space size="small">
-                      <Tag color={yeuCau.tagColor}>{yeuCau.trangThai}</Tag>
-                      <Button danger size="small">
-                        Hủy yêu cầu
-                      </Button>
-                    </Space>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-          ))}
         </Row>
       </Card>
     </div>

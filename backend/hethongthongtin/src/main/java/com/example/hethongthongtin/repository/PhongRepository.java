@@ -14,34 +14,46 @@ public interface PhongRepository extends JpaRepository<Phong, Long> {
     Page<Phong> findAll(Pageable pageable);
 
 
-    @Query(
-            value = """
-        SELECT * FROM phong
-        WHERE (:start IS NULL OR gia >= :start)
-        AND (:end IS NULL OR gia <= :end)
-        AND (:loaiPhong IS NULL OR loai_phong = :loaiPhong)
-        AND (:ten IS NULL OR ten_phong LIKE CONCAT('%', :ten, '%'))
-        AND (:soSv IS NULL OR so_sv = :soSv)
-        AND ((:trong = true AND so_luong_da_dang_ky < so_sv)
-            OR (:trong = false)
-        )        """,
-            countQuery = """
-        SELECT COUNT(*) FROM phong
-        WHERE (:start IS NULL OR gia >= :start)
-        AND (:end IS NULL OR gia <= :end)
-        AND (:loaiPhong IS NULL OR loai_phong = :loaiPhong)
-        AND (:ten IS NULL OR ten_phong LIKE CONCAT('%', :ten, '%'))
-        AND (:soSv IS NULL OR so_sv = :soSv)
-        AND (:trong = false OR so_luong_da_dang_ky < so_sv)
+    @Query(value = """
+        SELECT p.* FROM phong p
+        WHERE (:ten IS NULL OR p.ten_phong LIKE CONCAT('%', :ten, '%'))
+          AND (:loaiPhong IS NULL OR p.loai_phong = :loaiPhong)
+          AND (:soSv IS NULL OR p.so_sv = :soSv)
+          AND (:start IS NULL OR p.gia >= :start)
+          AND (:end IS NULL OR p.gia <= :end)
+          AND (
+              :trong IS NULL 
+              OR (:trong = true AND (
+                  SELECT COUNT(*) FROM phong_sinh_vien ps 
+                  WHERE ps.phong_id = p.id 
+                  AND ps.trang_thai != 'DA_CHUYEN'
+              ) < p.so_sv)
+              OR (:trong = false)
+          )
         """,
-            nativeQuery = true
-    )
+            countQuery = """
+        SELECT COUNT(*) FROM phong p
+        WHERE (:ten IS NULL OR p.ten_phong LIKE CONCAT('%', :ten, '%'))
+          AND (:loaiPhong IS NULL OR p.loai_phong = :loaiPhong)
+          AND (:soSv IS NULL OR p.so_sv = :soSv)
+          AND (:start IS NULL OR p.gia >= :start)
+          AND (:end IS NULL OR p.gia <= :end)
+          AND (
+              :trong IS NULL 
+              OR (:trong = true AND (
+                  SELECT COUNT(*) FROM phong_sinh_vien ps 
+                  WHERE ps.phong_id = p.id 
+                  AND ps.trang_thai != 'DA_CHUYEN'
+              ) < p.so_sv)
+              OR (:trong = false AND 1=1)
+          )
+        """,
+            nativeQuery = true)
     Page<Phong> findAllBySearch(Pageable pageable,
                                 @Param("ten") String ten,
                                 @Param("loaiPhong") String loaiPhong,
                                 @Param("soSv") Integer soSv,
                                 @Param("start") Long start,
                                 @Param("end") Long end,
-                                @Param("trong") Boolean trong
-    );
+                                @Param("trong") Boolean trong);
 }

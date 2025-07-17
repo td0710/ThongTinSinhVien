@@ -1,12 +1,14 @@
 package com.example.hethongthongtin.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,9 +35,6 @@ public class Phong {
     @Column(name = "gia")
     private Long gia;
 
-    @Column(name = "so_luong_da_dang_ky")
-    private Long soLuongDaDangKy;
-
     @ManyToMany
     @JoinTable(
             name = "phong_tien_ich",
@@ -43,4 +42,8 @@ public class Phong {
             inverseJoinColumns = @JoinColumn(name = "tien_ich_id")
     )
     private List<TienIch> tienIchList;
+
+    @OneToMany(mappedBy = "phong", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<PhongSinhVien> danhSachSinhVien = new ArrayList<>();
 }

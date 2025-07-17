@@ -76,7 +76,7 @@ export const TatCaPhongPage = () => {
       const response = await axios.post(url, data, {
         withCredentials: true,
       });
-
+      console.log("Response Data:", response.data);
       const phongList = response.data.phong.map((item: any) => {
         return new PhongModel(
           item.id,
@@ -135,7 +135,7 @@ export const TatCaPhongPage = () => {
           layout="vertical"
           onFinish={handleSubmit}
           initialValues={{
-            gia: [500000, 2000000],
+            gia: [0, 2000000],
             trong: false,
           }}
         >
