@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useCustomNotification } from "../components/Notification";
 import { useAuth } from "../hooks/useAuth";
+import { handleAxiosError } from "../utils/errorHandler";
 const { Text } = Typography;
 interface TinhThanh {
   value: string;
@@ -60,14 +61,12 @@ export const ThongTinCaNhanPage = () => {
 
       form.setFieldsValue(formatted);
     } catch (error) {
-      let errorMessage = "Đã xảy ra lỗi khi lấy dữ liệu.";
-      console.log(errorMessage);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message?: string }>;
-        errorMessage =
-          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
-      }
-      notify("error", "Lỗi khi tải dữ liệu", errorMessage);
+      handleAxiosError(
+        error,
+        notify,
+        "Đã xảy ra lỗi khi lấy dữ liệu.",
+        "Lỗi khi tải dữ liệu"
+      );
     }
   };
   useEffect(() => {
@@ -88,24 +87,29 @@ export const ThongTinCaNhanPage = () => {
         "Thông tin cá nhân đã được cập nhật"
       );
     } catch (error) {
-      let errorMessage = "Lỗi khi cập nhật thông tin.";
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message?: string }>;
-        errorMessage =
-          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
-      }
-
-      notify("error", "Cập nhật thất bại", errorMessage);
-
-      console.error("Lỗi khi cập nhật:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi cập nhật thông tin.",
+        "Cập nhật thất bại"
+      );
     }
   };
   const handleSubmit = async () => {
-    const data = {
-      ...form.getFieldsValue(),
-    };
-    console.log(data);
-    await UpdateThongTinCaNhan(data);
+    try {
+      const data = {
+        ...form.getFieldsValue(),
+      };
+      console.log(data);
+      await UpdateThongTinCaNhan(data);
+    } catch (error) {
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi gửi dữ liệu.",
+        "Lỗi gửi biểu mẫu"
+      );
+    }
   };
 
   return (

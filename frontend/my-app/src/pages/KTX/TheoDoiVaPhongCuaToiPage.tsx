@@ -27,6 +27,7 @@ import axios from "axios";
 import { PhongModel } from "../../models/PhongModel";
 import { useCustomNotification } from "../../components/Notification";
 import { useLocation } from "react-router-dom";
+import { handleAxiosError } from "../../utils/errorHandler";
 const { Title, Paragraph, Text } = Typography;
 export const TheoDoiVaPhongCuaToiPage = () => {
   const [yeuCauList, setYeuCauList] = useState<YeuCauKTXModel[]>([]);
@@ -54,6 +55,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
       localStorage.removeItem("notification");
     }
   }, [location.state]);
+
   const fetchYeuCauList = async () => {
     try {
       setLoading(true);
@@ -94,7 +96,12 @@ export const TheoDoiVaPhongCuaToiPage = () => {
       console.log(danhSachYeuCau);
       setYeuCauList(danhSachYeuCau);
     } catch (error) {
-      console.error("Error fetching yêu cầu KTX:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Không thể tải danh sách yêu cầu.",
+        "Lỗi tải danh sách yêu cầu"
+      );
     } finally {
       setLoading(false);
     }
@@ -112,7 +119,12 @@ export const TheoDoiVaPhongCuaToiPage = () => {
 
       setPhongCuaToi(response.data);
     } catch (error) {
-      console.log(error);
+      handleAxiosError(
+        error,
+        notify,
+        "Không thể lấy thông tin phòng của bạn.",
+        "Lỗi phòng của tôi"
+      );
     }
   };
 
@@ -123,7 +135,14 @@ export const TheoDoiVaPhongCuaToiPage = () => {
       const response = await axios.get(url, { withCredentials: true });
 
       setYeuCauHienTai(response.data);
-    } catch (error) {}
+    } catch (error) {
+      handleAxiosError(
+        error,
+        notify,
+        "Không thể lấy thông tin yêu cầu hiện tại",
+        "Lỗi khi lấy yêu cầu hiện tại"
+      );
+    }
   };
   const handleTraPhong = async (phongId: number) => {
     try {
@@ -145,7 +164,12 @@ export const TheoDoiVaPhongCuaToiPage = () => {
         behavior: "smooth",
       });
     } catch (error) {
-      console.error("Error trả phòng:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Không thể gửi yêu cầu trả phòng.",
+        "Lỗi trả phòng"
+      );
     } finally {
       setLoading(false);
     }
@@ -163,7 +187,12 @@ export const TheoDoiVaPhongCuaToiPage = () => {
       fetchYeuCauHienTai();
       fetchYeuCauList();
     } catch (error) {
-      console.error("Error hủy yêu cầu:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Không thể hủy yêu cầu.",
+        "Lỗi hủy yêu cầu"
+      );
     } finally {
       setLoading(false);
     }

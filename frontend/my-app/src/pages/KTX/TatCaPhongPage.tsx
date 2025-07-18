@@ -26,10 +26,11 @@ import {
 } from "antd";
 import { useEffect, useState } from "react";
 import { PhongModel } from "../../models/PhongModel";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { TienIchModel } from "../../models/TienIchModel";
 import { useCustomNotification } from "../../components/Notification";
 import { useNavigate } from "react-router-dom";
+import { handleAxiosError } from "../../utils/errorHandler";
 const { Option } = Select;
 const { Paragraph, Title, Text } = Typography;
 
@@ -81,7 +82,12 @@ export const TatCaPhongPage = () => {
 
       setPhongCuaToi(response.data);
     } catch (error) {
-      console.log(error);
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi lấy phòng của tôi.",
+        "Lỗi lấy phòng"
+      );
     }
   };
   const fetchPhongList = async () => {
@@ -120,7 +126,12 @@ export const TatCaPhongPage = () => {
       setPhongList(phongList);
       setTotalItems(response.data.totalElements);
     } catch (error) {
-      console.error("Error fetching phong list:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi lấy danh sách phòng.",
+        "Lỗi lấy danh sách"
+      );
       setPhongList([]);
       setTotalItems(0);
     } finally {
@@ -137,7 +148,14 @@ export const TatCaPhongPage = () => {
       const response = await axios.get(url, { withCredentials: true });
 
       setYeuCauHienTai(response.data);
-    } catch (error) {}
+    } catch (error) {
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi lấy yêu cầu hiện tại.",
+        "Lỗi lấy yêu cầu"
+      );
+    }
   };
 
   const handleDangKyPhong = async (phongId: number) => {
@@ -156,7 +174,12 @@ export const TatCaPhongPage = () => {
       navigate("/dangkyktx?tab=theo_doi", { state: { notify } });
       localStorage.setItem("notification", JSON.stringify(notify));
     } catch (error) {
-      console.error("Error đăng ký phòng:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi gửi yêu cầu đăng ký phòng.",
+        "Lỗi đăng ký"
+      );
     } finally {
       setLoading(false);
     }
@@ -186,7 +209,12 @@ export const TatCaPhongPage = () => {
       navigate("/dangkyktx?tab=theo_doi", { state: { notify } });
       localStorage.setItem("notification", JSON.stringify(notify));
     } catch (error) {
-      console.error("Error chuyển phòng:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi gửi yêu cầu chuyển phòng.",
+        "Lỗi chuyển phòng"
+      );
     } finally {
       setLoading(false);
     }

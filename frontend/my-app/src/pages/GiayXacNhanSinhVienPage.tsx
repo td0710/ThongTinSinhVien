@@ -17,6 +17,7 @@ import { Key, useEffect, useState } from "react";
 import { GiayXacNhanModel } from "../models/GiayXacNhanModel";
 import axios, { AxiosError } from "axios";
 import { useCustomNotification } from "../components/Notification";
+import { handleAxiosError } from "../utils/errorHandler";
 const { Paragraph } = Typography;
 const { Option } = Select;
 const { useBreakpoint } = Grid;
@@ -30,33 +31,51 @@ export const GiayXacNhanSinhVienPage = () => {
 
   useEffect(() => {
     const fetchLoaiGiayXacNhan = async () => {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/giayxacnhan/get-all`;
-      const response = await axios.get(url, { withCredentials: true });
-      const listGiayXacNhan = response.data.map((item: any) => {
-        return {
-          id: item.id,
-          name: item.name,
-        };
-      });
-      console.log(response);
-      setGiayXacNhan(listGiayXacNhan);
+      try {
+        const url = `${process.env.REACT_APP_API_BASE_URL}/secure/giayxacnhan/get-all`;
+        const response = await axios.get(url, { withCredentials: true });
+        const listGiayXacNhan = response.data.map((item: any) => {
+          return {
+            id: item.id,
+            name: item.name,
+          };
+        });
+        console.log(response);
+        setGiayXacNhan(listGiayXacNhan);
+      } catch (error) {
+        handleAxiosError(
+          error,
+          notify,
+          "Lấy loại giấy thất bại",
+          "Đã xảy ra lỗi khi lấy loại giấy xác nhận."
+        );
+      }
     };
     fetchLoaiGiayXacNhan();
   }, []);
   const fetchDanhSachYeuCau = async () => {
-    const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucaugiayxacnhan/get-all`;
-    const response = await axios.get(url, { withCredentials: true });
-    const list = response.data.map((item: any, index: number) => ({
-      key: index + 1,
-      id: item.id,
-      loai: item.loaiGiay,
-      ngayTao: item.ngayTao?.slice(0, 10),
-      trangThai: item.trangThai,
-      noiNhan: item.noiNhan,
-      ngayNhan: item.ngayNhan,
-      ghiChu: item.ghiChu,
-    }));
-    setDsYeuCau(list);
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucaugiayxacnhan/get-all`;
+      const response = await axios.get(url, { withCredentials: true });
+      const list = response.data.map((item: any, index: number) => ({
+        key: index + 1,
+        id: item.id,
+        loai: item.loaiGiay,
+        ngayTao: item.ngayTao?.slice(0, 10),
+        trangThai: item.trangThai,
+        noiNhan: item.noiNhan,
+        ngayNhan: item.ngayNhan,
+        ghiChu: item.ghiChu,
+      }));
+      setDsYeuCau(list);
+    } catch (error) {
+      handleAxiosError(
+        error,
+        notify,
+        "Lấy danh sách yêu cầu thất bại",
+        "Đã xảy ra lỗi khi lấy danh sách yêu cầu."
+      );
+    }
   };
   useEffect(() => {
     fetchDanhSachYeuCau();
@@ -80,16 +99,12 @@ export const GiayXacNhanSinhVienPage = () => {
       form.resetFields();
       fetchDanhSachYeuCau();
     } catch (error) {
-      let errorMessage = "Đã xảy ra lỗi khi gửi yêu cầu.";
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message?: string }>;
-        errorMessage =
-          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
-      }
-
-      notify("error", "Gửi yêu cầu thất bại", errorMessage);
-
-      console.error("Lỗi khi gửi yêu cầu:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Gửi yêu cầu thất bại",
+        "Đã xảy ra lỗi khi gửi yêu cầu."
+      );
     }
   };
   const handleHuyYeuCau = async (data: number) => {
@@ -104,16 +119,12 @@ export const GiayXacNhanSinhVienPage = () => {
       form.resetFields();
       fetchDanhSachYeuCau();
     } catch (error) {
-      let errorMessage = "Đã xảy ra lỗi khi hủy yêu cầu.";
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message?: string }>;
-        errorMessage =
-          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
-      }
-
-      notify("error", "Hủy yêu cầu thất bại", errorMessage);
-
-      console.error("Lỗi khi hủy yêu cầu:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Hủy yêu cầu thất bại",
+        "Đã xảy ra lỗi khi hủy yêu cầu."
+      );
     }
   };
   interface DataType {
