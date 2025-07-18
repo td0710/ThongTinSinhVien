@@ -57,7 +57,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
   const fetchYeuCauList = async () => {
     try {
       setLoading(true);
-      const url = `${process.env.REACT_APP_API_BASE_URL}/yeucauktx/get-by-id`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/get-by-id`;
 
       const response = await axios.get(url, { withCredentials: true });
 
@@ -118,7 +118,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
 
   const fetchYeuCauHienTai = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/yeucauktx/yeu-cau-hien-tai`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/yeu-cau-hien-tai`;
 
       const response = await axios.get(url, { withCredentials: true });
 
@@ -128,7 +128,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
   const handleTraPhong = async (phongId: number) => {
     try {
       setLoading(true);
-      const url = `${process.env.REACT_APP_API_BASE_URL}/yeucauktx/tra-phong?phongId=${phongId}`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/tra-phong?phongId=${phongId}`;
 
       const response = await axios.post(url, {}, { withCredentials: true });
 
@@ -154,7 +154,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
   const handleHuyYeuCau = async (yeuCauId: number) => {
     try {
       setLoading(true);
-      const url = `${process.env.REACT_APP_API_BASE_URL}/yeucauktx/huy-yeu-cau?yeuCauId=${yeuCauId}`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/huy-yeu-cau?yeuCauId=${yeuCauId}`;
 
       const response = await axios.delete(url, { withCredentials: true });
 
@@ -235,7 +235,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
         >
           {yeuCauList.length > 0 ? (
             <Row gutter={[16, 16]}>
-              {yeuCauList.map((yeuCau) => (
+              {[...yeuCauList].reverse().map((yeuCau) => (
                 <Col span={24} key={yeuCau.id}>
                   <Card type="inner" title={yeuCau.loaiYeuCau} size="default">
                     <Row gutter={[16, 16]} align="top">
@@ -337,21 +337,24 @@ export const TheoDoiVaPhongCuaToiPage = () => {
                           >
                             {yeuCau.trangThai}
                           </Tag>
-                          <Popconfirm
-                            title="Xác nhận hủy"
-                            description="Bạn có chắc chắn muốn hủy yêu cầu này?"
-                            onConfirm={() => handleHuyYeuCau(yeuCau.id)}
-                            okText="Đồng ý"
-                            cancelText="Hủy"
-                          >
-                            <Button
-                              danger
-                              size="small"
-                              style={{ minWidth: "120px" }}
+                          {(yeuCau.trangThai === "Đang tiếp nhận" ||
+                            yeuCau.trangThai === "Đã tiếp nhận") && (
+                            <Popconfirm
+                              title="Xác nhận hủy"
+                              description="Bạn có chắc chắn muốn hủy yêu cầu này?"
+                              onConfirm={() => handleHuyYeuCau(yeuCau.id)}
+                              okText="Đồng ý"
+                              cancelText="Hủy"
                             >
-                              Hủy yêu cầu
-                            </Button>
-                          </Popconfirm>
+                              <Button
+                                danger
+                                size="small"
+                                style={{ minWidth: "120px" }}
+                              >
+                                Hủy yêu cầu
+                              </Button>
+                            </Popconfirm>
+                          )}
                         </Space>
                       </Col>
                     </Row>
