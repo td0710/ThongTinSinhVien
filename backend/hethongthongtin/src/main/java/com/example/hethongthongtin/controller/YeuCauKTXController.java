@@ -56,4 +56,21 @@ public class YeuCauKTXController {
 
         return ResponseEntity.ok(yeucauKTXService.doiPhong(phongHienTaiId, phongMongMuonId, userId));
     }
+
+    @PostMapping("/tra-phong")
+    public ResponseEntity<YeuCauKTX> traPhong(@CookieValue("jwt") String token,
+                                              @RequestParam Long phongId) {
+
+        Long userId = jwtGenerator.extractUserIdFromJwt(token);
+
+        return ResponseEntity.ok(yeucauKTXService.traPhong(userId, phongId));
+    }
+
+    @GetMapping("/yeu-cau-hien-tai")
+    public ResponseEntity<Boolean> yeuCauHienTai(@CookieValue("jwt") String token) {
+
+        Long userId = jwtGenerator.extractUserIdFromJwt(token);
+
+        return ResponseEntity.ok(yeucauKTXService.yeuCauHienTai(userId));
+    }
 }

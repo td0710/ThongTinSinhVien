@@ -16,7 +16,9 @@ import {
   Tag,
   Flex,
   Space,
-  notification,
+  Spin,
+  Alert,
+  Popconfirm,
 } from "antd";
 import { YeuCauKTXModel } from "../../models/YeuCauKTXModel";
 import { useEffect, useState } from "react";
@@ -29,6 +31,8 @@ const { Title, Paragraph, Text } = Typography;
 export const TheoDoiVaPhongCuaToiPage = () => {
   const [yeuCauList, setYeuCauList] = useState<YeuCauKTXModel[]>([]);
   const [phongCuaToi, setPhongCuaToi] = useState<PhongModel>();
+
+  const [yeuCauHienTai, setYeuCauHienTai] = useState(true);
 
   const { contextHolder, notify } = useCustomNotification();
 
@@ -95,6 +99,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
       setLoading(false);
     }
   };
+
   const fetchPhongCuaToi = async () => {
     try {
       const url = `${process.env.REACT_APP_API_BASE_URL}/secure/phong/phong-hien-tai`;
@@ -111,6 +116,41 @@ export const TheoDoiVaPhongCuaToiPage = () => {
     }
   };
 
+  const fetchYeuCauHienTai = async () => {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}/yeucauktx/yeu-cau-hien-tai`;
+
+      const response = await axios.get(url, { withCredentials: true });
+
+      setYeuCauHienTai(response.data);
+    } catch (error) {}
+  };
+  const handleTraPhong = async (phongId: number) => {
+    try {
+      setLoading(true);
+      const url = `${process.env.REACT_APP_API_BASE_URL}/yeucauktx/tra-phong?phongId=${phongId}`;
+
+      const response = await axios.post(url, {}, { withCredentials: true });
+
+      console.log("Trả phòng thành công:", response.data);
+      notify(
+        "success",
+        "Yêu cầu trả phòng đã được gửi thành công",
+        "Vui lòng theo dõi quá trình duyệt yêu cầu."
+      );
+      fetchYeuCauList();
+      fetchYeuCauHienTai();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    } catch (error) {
+      console.error("Error trả phòng:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleHuyYeuCau = async (yeuCauId: number) => {
     try {
       setLoading(true);
@@ -120,6 +160,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
 
       console.log("Yêu cầu đã hủy:", response.data);
       notify("success", "Hủy yêu cầu thành công", "Yêu cầu đã bị hủy");
+      fetchYeuCauHienTai();
       fetchYeuCauList();
     } catch (error) {
       console.error("Error hủy yêu cầu:", error);
@@ -129,6 +170,7 @@ export const TheoDoiVaPhongCuaToiPage = () => {
   };
 
   useEffect(() => {
+    fetchYeuCauHienTai();
     fetchPhongCuaToi();
     fetchYeuCauList();
   }, []);
@@ -161,212 +203,266 @@ export const TheoDoiVaPhongCuaToiPage = () => {
     <>
       {contextHolder}
       <div style={{ padding: 24 }}>
+        {loading && (
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              backgroundColor: "rgba(255,255,255,0.5)",
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Spin size="large" tip="Đang tải..." />
+          </div>
+        )}
+        {yeuCauHienTai && (
+          <Alert
+            message="Bạn hiện đang có một yêu cầu chưa hoàn thành"
+            description="Vui lòng hủy hoặc hoàn thành yêu cầu cũ trước khi thực hiện yêu cầu mới."
+            type="warning"
+            showIcon
+            style={{ marginBottom: 16 }}
+          />
+        )}
         <Card
           title="Theo dõi các yêu cầu của bạn"
           style={{ width: "100%", border: "1px solid #d9d9d9" }}
           bodyStyle={{ padding: 16 }}
           hoverable
         >
-          <Row gutter={[16, 16]}>
-            {yeuCauList.map((yeuCau) => (
-              <Col span={24} key={yeuCau.id}>
-                <Card type="inner" title={yeuCau.loaiYeuCau} size="default">
-                  <Row gutter={[16, 16]} align="top">
-                    <Col
-                      xs={24}
-                      md={yeuCau.loaiYeuCau === "Đổi phòng" ? 12 : 20}
-                    >
-                      <Row align="middle" wrap={false}>
-                        <Text strong style={{ fontSize: 16 }}>
-                          🏠{" "}
-                          {yeuCau.loaiYeuCau === "Đổi phòng"
-                            ? yeuCau.phongHienTai.tenPhong +
-                              " ➡️ " +
-                              yeuCau.phongMongMuon?.tenPhong
-                            : yeuCau.phongHienTai.tenPhong}
-                        </Text>
+          {yeuCauList.length > 0 ? (
+            <Row gutter={[16, 16]}>
+              {yeuCauList.map((yeuCau) => (
+                <Col span={24} key={yeuCau.id}>
+                  <Card type="inner" title={yeuCau.loaiYeuCau} size="default">
+                    <Row gutter={[16, 16]} align="top">
+                      <Col
+                        xs={24}
+                        md={yeuCau.loaiYeuCau === "Đổi phòng" ? 12 : 20}
+                      >
+                        <Row align="middle" wrap={false}>
+                          <Text strong style={{ fontSize: 16 }}>
+                            🏠{" "}
+                            {yeuCau.loaiYeuCau === "Đổi phòng"
+                              ? yeuCau.phongHienTai.tenPhong +
+                                " ➡️ " +
+                                yeuCau.phongMongMuon?.tenPhong
+                              : yeuCau.phongHienTai.tenPhong}
+                          </Text>
 
-                        <Tag
-                          color={
-                            tagColorByLoai[
-                              (yeuCau.loaiYeuCau == "Đổi phòng"
-                                ? yeuCau.phongMongMuon?.loaiPhong
-                                : yeuCau.phongHienTai
-                                    .loaiPhong) as keyof typeof tagColorByLoai
-                            ] || "default"
-                          }
-                          style={{ marginLeft: 8 }}
-                        >
-                          {yeuCau.loaiYeuCau === "Đổi phòng"
-                            ? yeuCau.phongMongMuon?.loaiPhong
-                            : yeuCau.phongHienTai.loaiPhong}
-                        </Tag>
-                      </Row>
-
-                      <Paragraph style={{ marginTop: 8, marginBottom: 4 }}>
-                        <Text type="secondary">Giá:</Text>{" "}
-                        <Text strong>
-                          {(yeuCau.loaiYeuCau === "Đổi phòng"
-                            ? yeuCau.phongMongMuon?.gia ?? 0
-                            : yeuCau.phongHienTai.gia ?? 0
-                          ).toLocaleString()}{" "}
-                          đ/tháng
-                        </Text>{" "}
-                        • <Text type="secondary">Sức chứa:</Text>{" "}
-                        <Text strong>
-                          {(yeuCau.loaiYeuCau === "Đổi phòng"
-                            ? yeuCau.phongMongMuon?.soLuongDaDangKy
-                            : yeuCau.phongHienTai.soLuongDaDangKy) +
-                            "/" +
-                            (yeuCau.loaiYeuCau === "Đổi phòng"
-                              ? yeuCau.phongMongMuon?.soSv
-                              : yeuCau.phongHienTai.soSv)}{" "}
-                          SV
-                        </Text>
-                      </Paragraph>
-
-                      <Space wrap size={8}>
-                        {(yeuCau.loaiYeuCau === "Đổi phòng"
-                          ? yeuCau.phongMongMuon?.tienIchList
-                          : yeuCau.phongHienTai.tienIchList
-                        )?.map((tienIch: TienIchModel) => (
                           <Tag
-                            key={tienIch.id}
-                            color="default"
-                            icon={
-                              iconByTienIch[
-                                tienIch.tenTienIch as keyof typeof iconByTienIch
-                              ]
+                            color={
+                              tagColorByLoai[
+                                (yeuCau.loaiYeuCau == "Đổi phòng"
+                                  ? yeuCau.phongMongMuon?.loaiPhong
+                                  : yeuCau.phongHienTai
+                                      .loaiPhong) as keyof typeof tagColorByLoai
+                              ] || "default"
+                            }
+                            style={{ marginLeft: 8 }}
+                          >
+                            {yeuCau.loaiYeuCau === "Đổi phòng"
+                              ? yeuCau.phongMongMuon?.loaiPhong
+                              : yeuCau.phongHienTai.loaiPhong}
+                          </Tag>
+                        </Row>
+
+                        <Paragraph style={{ marginTop: 8, marginBottom: 4 }}>
+                          <Text type="secondary">Giá:</Text>{" "}
+                          <Text strong>
+                            {(yeuCau.loaiYeuCau === "Đổi phòng"
+                              ? yeuCau.phongMongMuon?.gia ?? 0
+                              : yeuCau.phongHienTai.gia ?? 0
+                            ).toLocaleString()}{" "}
+                            đ/tháng
+                          </Text>{" "}
+                          • <Text type="secondary">Sức chứa:</Text>{" "}
+                          <Text strong>
+                            {(yeuCau.loaiYeuCau === "Đổi phòng"
+                              ? yeuCau.phongMongMuon?.soLuongDaDangKy
+                              : yeuCau.phongHienTai.soLuongDaDangKy) +
+                              "/" +
+                              (yeuCau.loaiYeuCau === "Đổi phòng"
+                                ? yeuCau.phongMongMuon?.soSv
+                                : yeuCau.phongHienTai.soSv)}{" "}
+                            SV
+                          </Text>
+                        </Paragraph>
+
+                        <Space wrap size={8}>
+                          {(yeuCau.loaiYeuCau === "Đổi phòng"
+                            ? yeuCau.phongMongMuon?.tienIchList
+                            : yeuCau.phongHienTai.tienIchList
+                          )?.map((tienIch: TienIchModel) => (
+                            <Tag
+                              key={tienIch.id}
+                              color="default"
+                              icon={
+                                iconByTienIch[
+                                  tienIch.tenTienIch as keyof typeof iconByTienIch
+                                ]
+                              }
+                            >
+                              {tienIch.tenTienIch}
+                            </Tag>
+                          ))}
+                        </Space>
+                      </Col>
+
+                      <Col
+                        xs={24}
+                        md={yeuCau.loaiYeuCau === "Đổi phòng" ? 12 : 4}
+                        style={{ textAlign: "right" }}
+                      >
+                        <Space
+                          direction="vertical"
+                          size="small"
+                          style={{ width: "100%" }}
+                          align="end"
+                        >
+                          <Tag
+                            style={{
+                              minWidth: "120px",
+                              textAlign: "center",
+                              marginRight: 0,
+                            }}
+                            color={
+                              tagColorByTrangThai[
+                                yeuCau.trangThai as keyof typeof tagColorByTrangThai
+                              ] || "default"
                             }
                           >
-                            {tienIch.tenTienIch}
+                            {yeuCau.trangThai}
                           </Tag>
-                        ))}
-                      </Space>
-                    </Col>
-
-                    <Col
-                      xs={24}
-                      md={yeuCau.loaiYeuCau === "Đổi phòng" ? 12 : 4}
-                      style={{ textAlign: "right" }}
-                    >
-                      <Space
-                        direction="vertical"
-                        size="small"
-                        style={{ width: "100%" }}
-                        align="end"
-                      >
-                        <Tag
-                          style={{
-                            minWidth: "120px",
-                            textAlign: "center",
-                            marginRight: 0,
-                          }}
-                          color={
-                            tagColorByTrangThai[
-                              yeuCau.trangThai as keyof typeof tagColorByTrangThai
-                            ] || "default"
-                          }
-                        >
-                          {yeuCau.trangThai}
-                        </Tag>
-
-                        <Button
-                          danger
-                          size="small"
-                          style={{ minWidth: "120px" }}
-                          onClick={() => handleHuyYeuCau(yeuCau.id)}
-                        >
-                          Hủy yêu cầu
-                        </Button>
-                      </Space>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            ))}
-          </Row>
+                          <Popconfirm
+                            title="Xác nhận hủy"
+                            description="Bạn có chắc chắn muốn hủy yêu cầu này?"
+                            onConfirm={() => handleHuyYeuCau(yeuCau.id)}
+                            okText="Đồng ý"
+                            cancelText="Hủy"
+                          >
+                            <Button
+                              danger
+                              size="small"
+                              style={{ minWidth: "120px" }}
+                            >
+                              Hủy yêu cầu
+                            </Button>
+                          </Popconfirm>
+                        </Space>
+                      </Col>
+                    </Row>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <Alert
+              message="Không có yêu cầu nào"
+              description="Bạn chưa gửi yêu cầu nào. Vui lòng gửi yêu cầu mới nếu cần."
+              type="info"
+              showIcon
+              style={{ marginTop: 16 }}
+            />
+          )}
         </Card>
 
-        <Title level={3} style={{ textAlign: "left", marginBottom: 24 }}>
-          Phòng của tôi
-        </Title>
+        {phongCuaToi && (
+          <>
+            <Title level={3} style={{ textAlign: "left", marginBottom: 24 }}>
+              Phòng của tôi
+            </Title>
 
-        <Card
-          hoverable
-          style={{
-            width: "100%",
-            border: "1px solid #d9d9d9",
-            marginBottom: 24,
-          }}
-          cover={
-            <img
-              alt={phongCuaToi?.tenPhong || "Phòng của tôi"}
-              src="https://www.houzlook.com/assets/images/upload/Rooms/Bed%20Rooms/Malson%20Modern%20Bed%20Room-20180819090641741.jpg"
+            <Card
+              hoverable
               style={{
-                height: 500,
-                objectFit: "cover",
+                width: "100%",
+                border: "1px solid #d9d9d9",
+                marginBottom: 24,
               }}
-            />
-          }
-          bodyStyle={{ padding: 16 }}
-        >
-          <Row gutter={[8, 16]} justify="space-between" align="top">
-            <Col span={24}>
-              <Title level={5} style={{ marginTop: 8, marginBottom: 4 }}>
-                🏠 <Text strong>{phongCuaToi?.tenPhong}</Text>
-              </Title>
-              <Tag
-                color={
-                  tagColorByLoai[
-                    phongCuaToi?.loaiPhong as keyof typeof tagColorByLoai
-                  ] || "default"
-                }
-              >
-                {phongCuaToi?.loaiPhong}
-              </Tag>
-            </Col>
-
-            <Col span={24}>
-              <Paragraph style={{ marginBottom: 4 }}>
-                <Text type="secondary">Giá:</Text>{" "}
-                <Text strong>{phongCuaToi?.gia.toLocaleString()} đ/tháng</Text>
-              </Paragraph>
-              <Paragraph style={{ marginBottom: 4 }}>
-                <Text type="secondary">Sức chứa:</Text>{" "}
-                <Text strong>
-                  {phongCuaToi?.soLuongDaDangKy}/{phongCuaToi?.soSv} SV
-                </Text>
-              </Paragraph>
-            </Col>
-
-            <Col span={24}>
-              <Space wrap size={8}>
-                {phongCuaToi?.tienIchList.map((tienIch: TienIchModel) => (
+              cover={
+                <img
+                  alt={phongCuaToi?.tenPhong || "Phòng của tôi"}
+                  src="https://www.houzlook.com/assets/images/upload/Rooms/Bed%20Rooms/Malson%20Modern%20Bed%20Room-20180819090641741.jpg"
+                  style={{
+                    height: 500,
+                    objectFit: "cover",
+                  }}
+                />
+              }
+              bodyStyle={{ padding: 16 }}
+            >
+              <Row gutter={[8, 16]} justify="space-between" align="top">
+                <Col span={24}>
+                  <Title level={5} style={{ marginTop: 8, marginBottom: 4 }}>
+                    🏠 <Text strong>{phongCuaToi?.tenPhong}</Text>
+                  </Title>
                   <Tag
-                    key={tienIch.id}
-                    color="default"
-                    icon={
-                      iconByTienIch[
-                        tienIch.tenTienIch as keyof typeof iconByTienIch
-                      ]
+                    color={
+                      tagColorByLoai[
+                        phongCuaToi?.loaiPhong as keyof typeof tagColorByLoai
+                      ] || "default"
                     }
                   >
-                    {tienIch.tenTienIch}
+                    {phongCuaToi?.loaiPhong}
                   </Tag>
-                ))}
-              </Space>
-            </Col>
+                </Col>
 
-            <Col span={24}>
-              <Flex justify="end">
-                <Button danger type="primary">
-                  Hủy đăng ký phòng
-                </Button>
-              </Flex>
-            </Col>
-          </Row>
-        </Card>
+                <Col span={24}>
+                  <Paragraph style={{ marginBottom: 4 }}>
+                    <Text type="secondary">Giá:</Text>{" "}
+                    <Text strong>
+                      {phongCuaToi?.gia.toLocaleString()} đ/tháng
+                    </Text>
+                  </Paragraph>
+                  <Paragraph style={{ marginBottom: 4 }}>
+                    <Text type="secondary">Sức chứa:</Text>{" "}
+                    <Text strong>
+                      {phongCuaToi?.soLuongDaDangKy}/{phongCuaToi?.soSv} SV
+                    </Text>
+                  </Paragraph>
+                </Col>
+
+                <Col span={24}>
+                  <Space wrap size={8}>
+                    {phongCuaToi?.tienIchList.map((tienIch: TienIchModel) => (
+                      <Tag
+                        key={tienIch.id}
+                        color="default"
+                        icon={
+                          iconByTienIch[
+                            tienIch.tenTienIch as keyof typeof iconByTienIch
+                          ]
+                        }
+                      >
+                        {tienIch.tenTienIch}
+                      </Tag>
+                    ))}
+                  </Space>
+                </Col>
+
+                <Col span={24}>
+                  <Flex justify="end">
+                    <Popconfirm
+                      title="Xác nhận trả phòng"
+                      description="Bạn có chắc chắn muốn trả phòng?"
+                      onConfirm={() => handleTraPhong(phongCuaToi.id)}
+                      okText="Đồng ý"
+                      cancelText="Hủy"
+                    >
+                      <Button danger type="primary" disabled={yeuCauHienTai}>
+                        Trả phòng
+                      </Button>
+                    </Popconfirm>
+                  </Flex>
+                </Col>
+              </Row>
+            </Card>
+          </>
+        )}
       </div>
     </>
   );

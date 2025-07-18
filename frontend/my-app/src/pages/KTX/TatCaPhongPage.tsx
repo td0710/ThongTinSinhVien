@@ -45,6 +45,8 @@ export const TatCaPhongPage = () => {
 
   const [phongList, setPhongList] = useState<PhongModel[]>([]);
 
+  const [yeuCauHienTai, setYeuCauHienTai] = useState(true);
+
   const [loading, setLoading] = useState(false);
 
   const { contextHolder, notify } = useCustomNotification();
@@ -128,6 +130,16 @@ export const TatCaPhongPage = () => {
     }
   };
 
+  const fetchYeuCauHienTai = async () => {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}/yeucauktx/yeu-cau-hien-tai`;
+
+      const response = await axios.get(url, { withCredentials: true });
+
+      setYeuCauHienTai(response.data);
+    } catch (error) {}
+  };
+
   const handleDangKyPhong = async (phongId: number) => {
     try {
       setLoading(true);
@@ -181,6 +193,7 @@ export const TatCaPhongPage = () => {
   };
 
   useEffect(() => {
+    fetchYeuCauHienTai();
     fetchPhongCuaToi();
     fetchPhongList();
     window.scrollTo({
@@ -191,6 +204,7 @@ export const TatCaPhongPage = () => {
   const handleSubmit = async () => {
     currentPage == 1 ? fetchPhongList() : setCurrentPage(1);
   };
+  console.log("Phong cua toi:", phongCuaToi);
   return (
     <>
       {contextHolder}
@@ -374,13 +388,15 @@ export const TatCaPhongPage = () => {
 
                   <Col span={24}>
                     <Flex>
-                      {phongCuaToi === null ? (
+                      {phongCuaToi === undefined ? (
                         <Button
                           color="primary"
                           size="middle"
                           block
                           variant="filled"
-                          disabled={phong.soLuongDaDangKy >= phong.soSv}
+                          disabled={
+                            phong.soLuongDaDangKy >= phong.soSv || yeuCauHienTai
+                          }
                           onClick={() => handleDangKyPhong(phong.id)}
                         >
                           {phong.soLuongDaDangKy >= phong.soSv
@@ -395,7 +411,8 @@ export const TatCaPhongPage = () => {
                           variant="filled"
                           disabled={
                             phong.soLuongDaDangKy >= phong.soSv ||
-                            typeof phongCuaToi?.id !== "number"
+                            typeof phongCuaToi?.id !== "number" ||
+                            yeuCauHienTai
                           }
                           onClick={() => {
                             if (typeof phongCuaToi?.id === "number") {

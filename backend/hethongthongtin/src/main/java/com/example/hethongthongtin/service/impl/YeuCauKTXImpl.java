@@ -88,8 +88,8 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
        ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
 
        Phong phong = phongRepository.findById(phongId).get() ;
-        System.out.println(thongTinCaNhan);
-        System.out.println(phong);
+
+
         YeuCauKTX yeuCauKTX = YeuCauKTX.builder()
                 .maSinhVien(thongTinCaNhan.getMaSinhVien())
                 .loaiYeuCauKTX(LoaiYeuCauKTX.DangKy)
@@ -127,5 +127,39 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
         yeuCauKTXRepository.save(yeuCauKTX);
 
         return yeuCauKTX;
+    }
+
+    @Override
+    public YeuCauKTX traPhong(Long userId, Long phongId) {
+
+        ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
+
+        Phong phong = phongRepository.findById(phongId).get() ;
+
+        YeuCauKTX yeuCauKTX = YeuCauKTX.builder()
+                .maSinhVien(thongTinCaNhan.getMaSinhVien())
+                .loaiYeuCauKTX(LoaiYeuCauKTX.TraPhong)
+                .trangThai(TrangThai.DangTiepNhan)
+                .phongHienTai(phong)
+                .build();
+
+        yeuCauKTXRepository.save(yeuCauKTX);
+
+        return yeuCauKTX;
+    }
+
+    @Override
+    public Boolean yeuCauHienTai(Long userId) {
+
+        ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
+
+        List<YeuCauKTX> yeuCauKTXList = yeuCauKTXRepository.findByMaSinhVien(thongTinCaNhan.getMaSinhVien());
+
+        if(yeuCauKTXList.isEmpty()) return false;
+
+        Boolean response = yeuCauKTXList.stream()
+                                        .anyMatch((item) -> (!item.getTrangThai().equals(TrangThai.HoanThanh)
+                                                && !item.getTrangThai().equals(TrangThai.TuChoi)));
+        return response;
     }
 }

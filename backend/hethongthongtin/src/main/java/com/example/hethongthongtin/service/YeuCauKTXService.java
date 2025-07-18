@@ -15,4 +15,9 @@ public interface YeuCauKTXService {
     void huyYeuCau(Long yeuCauId);
 
     YeuCauKTX doiPhong(Long phongHienTaiId, Long phongMongMuonId, Long userId);
+
+    YeuCauKTX traPhong(Long userId, Long phongId);
+
+    Boolean yeuCauHienTai(Long userId);
+
 }
