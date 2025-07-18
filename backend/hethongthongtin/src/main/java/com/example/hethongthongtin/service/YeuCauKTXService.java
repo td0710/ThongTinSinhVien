@@ -13,4 +13,6 @@ public interface YeuCauKTXService {
     YeuCauKTX dangKyPhong(Long userId, Long phongId);
 
     void huyYeuCau(Long yeuCauId);
+
+    YeuCauKTX doiPhong(Long phongHienTaiId, Long phongMongMuonId, Long userId);
 }

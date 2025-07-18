@@ -46,4 +46,14 @@ public class YeuCauKTXController {
 
         return ResponseEntity.ok("Hủy yêu cầu thành công!") ;
     }
+
+    @PostMapping("/doi-phong")
+    public ResponseEntity<YeuCauKTX> doiPhong(@CookieValue("jwt") String token,
+                                                 @RequestParam Long phongHienTaiId,
+                                                 @RequestParam Long phongMongMuonId) {
+
+        Long userId = jwtGenerator.extractUserIdFromJwt(token);
+
+        return ResponseEntity.ok(yeucauKTXService.doiPhong(phongHienTaiId, phongMongMuonId, userId));
+    }
 }

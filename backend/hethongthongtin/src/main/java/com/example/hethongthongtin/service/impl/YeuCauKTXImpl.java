@@ -106,4 +106,26 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
     public void huyYeuCau(Long yeuCauId) {
         yeuCauKTXRepository.deleteById(yeuCauId);
     }
+
+    @Override
+    public YeuCauKTX doiPhong(Long phongHienTaiId, Long phongMongMuonId, Long userId) {
+
+        ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
+
+        Phong phongHienTai = phongRepository.findById(phongHienTaiId).get() ;
+        Phong phongMongMuon = phongRepository.findById(phongMongMuonId).get() ;
+
+        System.out.println(thongTinCaNhan);
+        YeuCauKTX yeuCauKTX = YeuCauKTX.builder()
+                .maSinhVien(thongTinCaNhan.getMaSinhVien())
+                .loaiYeuCauKTX(LoaiYeuCauKTX.DoiPhong)
+                .trangThai(TrangThai.DangTiepNhan)
+                .phongHienTai(phongHienTai)
+                .phongMongMuon(phongMongMuon)
+                .build();
+
+        yeuCauKTXRepository.save(yeuCauKTX);
+
+        return yeuCauKTX;
+    }
 }

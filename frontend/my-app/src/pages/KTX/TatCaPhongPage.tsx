@@ -41,6 +41,8 @@ export const TatCaPhongPage = () => {
 
   const [form] = Form.useForm();
 
+  const [phongCuaToi, setPhongCuaToi] = useState<PhongModel>();
+
   const [phongList, setPhongList] = useState<PhongModel[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -65,7 +67,21 @@ export const TatCaPhongPage = () => {
     "Tủ quần áo": <SkinOutlined />,
     "Tủ giày": <InboxOutlined />,
   };
+  const fetchPhongCuaToi = async () => {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/phong/phong-hien-tai`;
 
+      const response = await axios.get(url, {
+        withCredentials: true,
+      });
+
+      console.log(response);
+
+      setPhongCuaToi(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const fetchPhongList = async () => {
     try {
       setLoading(true);
@@ -121,9 +137,9 @@ export const TatCaPhongPage = () => {
       console.log("Đăng ký phòng thành công:", response.data);
       const notify = {
         type: "success",
-        message: "Đăng ký thành công",
+        message: "Yêu cầu đăng ký thành công",
         description:
-          "Bạn đã đăng ký phòng thành công. Vui lòng theo dõi quá trình duyệt yêu cầu.",
+          "Bạn đã gửi yêu cầu đăng ký phòng thành công. Vui lòng theo dõi quá trình duyệt yêu cầu.",
       };
       navigate("/dangkyktx?tab=theo_doi", { state: { notify } });
       localStorage.setItem("notification", JSON.stringify(notify));
@@ -133,7 +149,39 @@ export const TatCaPhongPage = () => {
       setLoading(false);
     }
   };
+
+  const handleDoiPhong = async (
+    phongHienTaiId: number,
+    phongMongMuonId: number
+  ) => {
+    try {
+      setLoading(true);
+      console.log(
+        "Chuyển phòng từ ID:",
+        phongHienTaiId,
+        "đến ID:",
+        phongMongMuonId
+      );
+      const url = `${process.env.REACT_APP_API_BASE_URL}/yeucauktx/doi-phong?phongHienTaiId=${phongHienTaiId}&phongMongMuonId=${phongMongMuonId}`;
+      const response = await axios.post(url, {}, { withCredentials: true });
+      console.log("Chuyển phòng thành công:", response.data);
+      const notify = {
+        type: "success",
+        message: "Yêu cầu chuyển phòng thành công",
+        description:
+          "Bạn đã gửi yêu cầu chuyển phòng thành công. Vui lòng theo dõi quá trình duyệt yêu cầu.",
+      };
+      navigate("/dangkyktx?tab=theo_doi", { state: { notify } });
+      localStorage.setItem("notification", JSON.stringify(notify));
+    } catch (error) {
+      console.error("Error chuyển phòng:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
+    fetchPhongCuaToi();
     fetchPhongList();
     window.scrollTo({
       top: window.innerHeight / 2,
@@ -326,18 +374,40 @@ export const TatCaPhongPage = () => {
 
                   <Col span={24}>
                     <Flex>
-                      <Button
-                        color="primary"
-                        size="middle"
-                        block
-                        variant="filled"
-                        disabled={phong.soLuongDaDangKy >= phong.soSv}
-                        onClick={() => handleDangKyPhong(phong.id)}
-                      >
-                        {phong.soLuongDaDangKy >= phong.soSv
-                          ? "Đã đầy"
-                          : "Đăng ký phòng"}
-                      </Button>
+                      {phongCuaToi === null ? (
+                        <Button
+                          color="primary"
+                          size="middle"
+                          block
+                          variant="filled"
+                          disabled={phong.soLuongDaDangKy >= phong.soSv}
+                          onClick={() => handleDangKyPhong(phong.id)}
+                        >
+                          {phong.soLuongDaDangKy >= phong.soSv
+                            ? "Đã đầy"
+                            : "Đăng ký phòng"}
+                        </Button>
+                      ) : (
+                        <Button
+                          color="primary"
+                          size="middle"
+                          block
+                          variant="filled"
+                          disabled={
+                            phong.soLuongDaDangKy >= phong.soSv ||
+                            typeof phongCuaToi?.id !== "number"
+                          }
+                          onClick={() => {
+                            if (typeof phongCuaToi?.id === "number") {
+                              handleDoiPhong(phongCuaToi.id, phong.id);
+                            }
+                          }}
+                        >
+                          {phong.soLuongDaDangKy >= phong.soSv
+                            ? "Đã đầy"
+                            : "Chuyển phòng"}
+                        </Button>
+                      )}
                     </Flex>
                   </Col>
                 </Row>
