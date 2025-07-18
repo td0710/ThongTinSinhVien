@@ -1,5 +1,8 @@
 package com.example.hethongthongtin.entity;
 
+import com.example.hethongthongtin.exception.AppException;
+import com.example.hethongthongtin.exception.ErrorCode;
+
 public enum LoaiVe {
     mot_tuyen("motTuyen"),
     lien_tuyen("lienTuyen");
@@ -20,6 +23,6 @@ public enum LoaiVe {
                 return tt;
             }
         }
-        throw new IllegalArgumentException("Không tìm thấy loại vé phù hợp với label: " + label);
+        throw new AppException(ErrorCode.INVALID_LOAI_VE);
     }
 }

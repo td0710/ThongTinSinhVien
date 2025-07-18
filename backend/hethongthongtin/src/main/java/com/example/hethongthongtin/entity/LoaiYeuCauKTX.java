@@ -1,5 +1,8 @@
 package com.example.hethongthongtin.entity;
 
+import com.example.hethongthongtin.exception.AppException;
+import com.example.hethongthongtin.exception.ErrorCode;
+
 public enum LoaiYeuCauKTX {
     DangKy("Đăng ký"),
     DoiPhong("Đổi phòng"),
@@ -15,12 +18,12 @@ public enum LoaiYeuCauKTX {
         return label;
     }
 
-    public static LoaiVe fromLabel(String label) {
-        for (LoaiVe tt : LoaiVe.values()) {
+    public static LoaiYeuCauKTX fromLabel(String label) {
+        for (LoaiYeuCauKTX tt : LoaiYeuCauKTX.values()) {
             if (tt.getLabel().equalsIgnoreCase(label)) {
                 return tt;
             }
         }
-        throw new IllegalArgumentException("Không tìm thấy loại yêu cầu phù hợp với label: " + label);
+        throw new AppException(ErrorCode.INVALID_LOAI_YEU_CAU);
     }
 }

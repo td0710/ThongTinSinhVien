@@ -1,5 +1,8 @@
 package com.example.hethongthongtin.entity;
 
+import com.example.hethongthongtin.exception.AppException;
+import com.example.hethongthongtin.exception.ErrorCode;
+
 public enum TrangThai {
     DangTiepNhan("Đang tiếp nhận"),
     DaTiepNhan("Đã tiếp nhận"),
@@ -22,6 +25,6 @@ public enum TrangThai {
                 return tt;
             }
         }
-        throw new IllegalArgumentException("Không tìm thấy trạng thái phù hợp với label: " + label);
+        throw new AppException(ErrorCode.INVALID_TRANG_THAI);
     }
 }
