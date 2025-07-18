@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { TuyenXeModel } from "../models/TuyenXeModel";
 import { PlusOutlined } from "@ant-design/icons";
 import { useCustomNotification } from "../components/Notification";
+import { handleAxiosError } from "../utils/errorHandler";
 const { Option } = Select;
 const { Paragraph } = Typography;
 export const DangKyXeBuytPage = () => {
@@ -66,16 +67,12 @@ export const DangKyXeBuytPage = () => {
       fetchDanhSachYeuCau();
       form.resetFields();
     } catch (error) {
-      let errorMessage = "Đã xảy ra lỗi khi gửi yêu cầu.";
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message?: string }>;
-        errorMessage =
-          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
-      }
-
-      notify("error", "Gửi yêu cầu thất bại", errorMessage);
-
-      console.error("Lỗi khi gửi yêu cầu:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Gửi yêu cầu thất bại",
+        "Đã xảy ra lỗi khi gửi yêu cầu."
+      );
     }
   };
 
@@ -98,26 +95,35 @@ export const DangKyXeBuytPage = () => {
   }, []);
 
   const fetchDanhSachYeuCau = async () => {
-    const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauvexebuyt/get-all`;
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauvexebuyt/get-all`;
 
-    const response = await axios.get(url, { withCredentials: true });
+      const response = await axios.get(url, { withCredentials: true });
 
-    const list = response.data.map((item: any, index: number) => ({
-      key: index + 1,
-      id: item.id,
-      tuyen: item.tuyen,
-      ngayTao: item.ngayTao?.slice(0, 10),
-      trangThai: item.trangThai,
-      noiNhan: item.noiNhan,
-      ngayNhan: item.ngayNhan,
-      ghiChu: item.ghiChu,
-    }));
-    setDsYeuCau(list);
+      const list = response.data.map((item: any, index: number) => ({
+        key: index + 1,
+        id: item.id,
+        tuyen: item.tuyen,
+        ngayTao: item.ngayTao?.slice(0, 10),
+        trangThai: item.trangThai,
+        noiNhan: item.noiNhan,
+        ngayNhan: item.ngayNhan,
+        ghiChu: item.ghiChu,
+      }));
+      setDsYeuCau(list);
+    } catch (error) {
+      handleAxiosError(
+        error,
+        notify,
+        "Tải thất bại",
+        "Lỗi khi tải danh sách yêu cầu."
+      );
+    }
   };
   useEffect(() => {
     fetchDanhSachYeuCau();
   }, []);
-  console.log(123);
+
   const handleHuyYeuCau = async (data: number) => {
     try {
       console.log(data);
@@ -132,16 +138,12 @@ export const DangKyXeBuytPage = () => {
       form.resetFields();
       fetchDanhSachYeuCau();
     } catch (error) {
-      let errorMessage = "Đã xảy ra lỗi khi hủy yêu cầu.";
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message?: string }>;
-        errorMessage =
-          axiosError.response?.data?.message || "Lỗi kết nối đến server.";
-      }
-
-      notify("error", "Hủy yêu cầu thất bại", errorMessage);
-
-      console.error("Lỗi khi hủy yêu cầu:", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Hủy yêu cầu thất bại",
+        "Đã xảy ra lỗi khi hủy yêu cầu."
+      );
     }
   };
   interface DataType {

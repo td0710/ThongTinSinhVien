@@ -18,6 +18,8 @@ import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { ThongBaoModel } from "../models/ThongBaoModel";
+import { useCustomNotification } from "../components/Notification";
+import { handleAxiosError } from "../utils/errorHandler";
 const { Paragraph, Title, Text } = Typography;
 
 const dateFormat = "YYYY/MM/DD";
@@ -27,6 +29,8 @@ export const ThongBaoPage = () => {
   const [totalThongBao, setTotalThongBao] = useState<number>(0);
   const [selectedItem, setSelectedItem] = useState<ThongBaoModel | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const { contextHolder, notify } = useCustomNotification();
 
   const [form] = Form.useForm();
   const [totalItems, setTotalItems] = useState(0);
@@ -69,6 +73,12 @@ export const ThongBaoPage = () => {
       setTotalItems(response.data.totalElements);
       setThongBaoList(thongBaoList);
     } catch (error) {
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi tải danh sách thông báo",
+        "Tải thất bại"
+      );
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -84,7 +94,12 @@ export const ThongBaoPage = () => {
       console.log("Tổng số thông báo:", response.data);
       setTotalThongBao(response.data);
     } catch (error) {
-      console.error("Lỗi khi lấy tổng số thông báo", error);
+      handleAxiosError(
+        error,
+        notify,
+        "Lỗi khi tải tổng số thông báo",
+        "Tải thất bại"
+      );
     }
   };
 
