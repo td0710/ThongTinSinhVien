@@ -1,9 +1,8 @@
 import { AppstoreOutlined, ProfileOutlined } from "@ant-design/icons";
-import { Card, Menu, MenuProps, Typography } from "antd";
-import { useState } from "react";
+import { Menu, MenuProps } from "antd";
 import { TatCaPhongPage } from "./TatCaPhongPage";
 import { TheoDoiVaPhongCuaToiPage } from "./TheoDoiVaPhongCuaToiPage";
-const { Paragraph, Title, Text } = Typography;
+import { useLocation, useNavigate } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -21,17 +20,24 @@ const items: MenuItem[] = [
 ];
 
 export const DangKyKTXPage = () => {
-  const [selectedKey, setSelectedKey] = useState("phong");
+  const useTabFromQuery = () => {
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const tab = params.get("tab");
+    return tab === "theo_doi" ? "theo_doi" : "phong";
+  };
+
+  const navigate = useNavigate();
+  const selectedKey = useTabFromQuery();
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    setSelectedKey(e.key);
+    navigate(`?tab=${e.key}`);
   };
 
   const renderContent = () => {
     switch (selectedKey) {
       case "phong":
         return <TatCaPhongPage />;
-
       case "theo_doi":
         return <TheoDoiVaPhongCuaToiPage />;
     }

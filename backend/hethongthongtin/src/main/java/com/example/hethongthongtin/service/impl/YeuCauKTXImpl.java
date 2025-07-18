@@ -2,9 +2,7 @@ package com.example.hethongthongtin.service.impl;
 
 import com.example.hethongthongtin.dto.response.PhongResponse;
 import com.example.hethongthongtin.dto.response.YeuCauPhongResponse;
-import com.example.hethongthongtin.entity.Phong;
-import com.example.hethongthongtin.entity.ThongTinCaNhan;
-import com.example.hethongthongtin.entity.YeuCauKTX;
+import com.example.hethongthongtin.entity.*;
 import com.example.hethongthongtin.repository.PhongRepository;
 import com.example.hethongthongtin.repository.ThongTinCaNhanRepository;
 import com.example.hethongthongtin.repository.YeuCauKTXRepository;
@@ -82,5 +80,30 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
                 .collect(Collectors.toList()) ;
 
         return yeuCauPhongResponses;
+    }
+
+    @Override
+    public YeuCauKTX dangKyPhong(Long userId, Long phongId) {
+
+       ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
+
+       Phong phong = phongRepository.findById(phongId).get() ;
+        System.out.println(thongTinCaNhan);
+        System.out.println(phong);
+        YeuCauKTX yeuCauKTX = YeuCauKTX.builder()
+                .maSinhVien(thongTinCaNhan.getMaSinhVien())
+                .loaiYeuCauKTX(LoaiYeuCauKTX.DangKy)
+                .trangThai(TrangThai.DangTiepNhan)
+                .phongHienTai(phong)
+                .build();
+
+        yeuCauKTXRepository.save(yeuCauKTX);
+
+        return yeuCauKTX;
+    }
+
+    @Override
+    public void huyYeuCau(Long yeuCauId) {
+        yeuCauKTXRepository.deleteById(yeuCauId);
     }
 }

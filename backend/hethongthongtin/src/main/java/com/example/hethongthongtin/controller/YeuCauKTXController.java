@@ -2,6 +2,7 @@ package com.example.hethongthongtin.controller;
 
 
 import com.example.hethongthongtin.dto.response.YeuCauPhongResponse;
+import com.example.hethongthongtin.entity.YeuCauKTX;
 import com.example.hethongthongtin.security.JWTGenerator;
 import com.example.hethongthongtin.service.YeuCauKTXService;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,25 @@ public class YeuCauKTXController {
 
 
     @GetMapping("/get-by-id")
-    public ResponseEntity<List<YeuCauPhongResponse>> getYeuCauPhongById(@RequestParam Long id) {
+    public ResponseEntity<List<YeuCauPhongResponse>> getYeuCauPhongById(@CookieValue("jwt") String token) {
 
-        return ResponseEntity.ok(yeucauKTXService.getYeuCauPhongSV(id));
+        Long userId = jwtGenerator.extractUserIdFromJwt(token);
+
+        return ResponseEntity.ok(yeucauKTXService.getYeuCauPhongSV(userId));
+    }
+
+    @PostMapping("/dang-ky-phong")
+    public ResponseEntity<YeuCauKTX> dangKyPhong(@CookieValue("jwt") String token, @RequestParam Long phongId) {
+        Long userId = jwtGenerator.extractUserIdFromJwt(token);
+
+        return ResponseEntity.ok(yeucauKTXService.dangKyPhong(userId, phongId));
+    }
+
+    @DeleteMapping("/huy-yeu-cau")
+    public ResponseEntity<?> huyYeuCau(@RequestParam Long yeuCauId) {
+
+        yeucauKTXService.huyYeuCau(yeuCauId);
+
+        return ResponseEntity.ok("Hủy yêu cầu thành công!") ;
     }
 }
