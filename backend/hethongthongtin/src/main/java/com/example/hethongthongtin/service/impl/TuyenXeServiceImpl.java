@@ -12,7 +12,7 @@ import java.util.List;
 @Transactional
 public class TuyenXeServiceImpl implements TuyenXeService {
 
-    private TuyenXeRepository tuyenXeRepository;
+    private final TuyenXeRepository tuyenXeRepository;
 
     TuyenXeServiceImpl(TuyenXeRepository tuyenXeRepository) {
         this.tuyenXeRepository = tuyenXeRepository;
@@ -20,7 +20,7 @@ public class TuyenXeServiceImpl implements TuyenXeService {
 
     @Override
     public List<TuyenXe> getAllTuyenXe() {
-        List<TuyenXe> tuyenXe= tuyenXeRepository.findAll();
-        return tuyenXe;
+        return tuyenXeRepository.findAll();
+
     }
 }

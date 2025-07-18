@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
 
-    private GoogleDriveUpload googleDriveUpload;
-    private YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository;
-    private ThongTinCaNhanRepository thongTinCaNhanRepository;
+    private final GoogleDriveUpload googleDriveUpload;
+    private final YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository;
+    private final ThongTinCaNhanRepository thongTinCaNhanRepository;
 
 
     YeuCauVeXeBuytServiceImpl(YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository,
@@ -49,15 +49,23 @@ public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
                                  Long userId) throws IOException,
             GeneralSecurityException {
 
+        String contentType = file.getContentType();
+
+        if (file.isEmpty() || contentType == null || !contentType.startsWith("image/")) {
+            throw new AppException(ErrorCode.INVALID_FILE);
+        }
+
         File tempFile = File.createTempFile("temp", null);
         file.transferTo(tempFile);
         UploadResponse res = googleDriveUpload.uploadImageToDrive(tempFile);
 
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId) ;
 
-        if(thongTinCaNhan == null || thongTinCaNhan.getMaSinhVien().equals("")) {
+        if(thongTinCaNhan == null || thongTinCaNhan.getMaSinhVien().isEmpty()) {
             throw new AppException(ErrorCode.PROFILE_NOT_FOUND) ;
         }
+
+
         YeuCauVeXeBuyt yeuCauVeXeBuyt = YeuCauVeXeBuyt.builder()
                 .maSinhVien(thongTinCaNhan.getMaSinhVien())
                 .loaiVe(LoaiVe.fromLabel(yeuCauVeXeBuytRequest.getLoaiVe()))
@@ -73,13 +81,18 @@ public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
     }
 
     @Override
-    public List<YeuCauVeXeBuytReponse> getYeuCauVeXeBuytList(Long userId) throws IOException {
+    public List<YeuCauVeXeBuytReponse> getYeuCauVeXeBuytList(Long userId) {
 
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
 
+        if(thongTinCaNhan == null || thongTinCaNhan.getMaSinhVien().isEmpty()) {
+            throw new AppException(ErrorCode.PROFILE_NOT_FOUND) ;
+        }
+
         List<YeuCauVeXeBuyt> yeuCauVeXeBuyt = yeuCauVeXeBuytRepository.findAllByMaSinhVien(thongTinCaNhan.getMaSinhVien());
 
-        List<YeuCauVeXeBuytReponse> yeuCauVeXeBuytReponseList = yeuCauVeXeBuyt
+
+        return yeuCauVeXeBuyt
                 .stream()
                 .map(vxb -> YeuCauVeXeBuytReponse.builder()
                         .id(vxb.getId())
@@ -91,11 +104,15 @@ public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
                         .tuyen(vxb.getTuyen())
                         .build())
                 .collect(Collectors.toList());
-        return yeuCauVeXeBuytReponseList;
     }
 
     @Override
     public void deleteYeuCauVeXeBuyt(Long id) {
+
+        if (!yeuCauVeXeBuytRepository.existsById(id)) {
+            throw new AppException(ErrorCode.REQUEST_NOT_FOUND);
+        }
+
         yeuCauVeXeBuytRepository.deleteById(id);
     }
 }

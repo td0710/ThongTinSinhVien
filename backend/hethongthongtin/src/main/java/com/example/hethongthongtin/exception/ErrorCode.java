@@ -14,6 +14,13 @@ public enum ErrorCode {
     INVALID_LOAI_YEU_CAU(1006, "Loại yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
     INVALID_LOAI_GIAY(1007, "Loại giấy tờ không hợp lệ", HttpStatus.BAD_REQUEST),
     INVALID_TRANG_THAI(1008, "Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_PAGE_REQUEST(1010, "Yêu cầu phân trang không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_SEARCH_PARAMS(1011, "Tham số tìm kiếm không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_ATTACHMENT_DATA(1012, "Dữ liệu tệp đính kèm không hợp lệ", HttpStatus.BAD_REQUEST),
+    MSV_NOT_FOUND(1013, "Sinh viên chưa cập nhật đầy đủ hồ sơ", HttpStatus.INTERNAL_SERVER_ERROR),
+    PHONG_NOT_FOUND(1014, "Không tìm thấy phòng", HttpStatus.NOT_FOUND),
+
+
     ;
     private final int code;
     private final String message;

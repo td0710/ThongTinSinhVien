@@ -3,6 +3,8 @@ package com.example.hethongthongtin.service.impl;
 import com.example.hethongthongtin.dto.response.PhongResponse;
 import com.example.hethongthongtin.dto.response.YeuCauPhongResponse;
 import com.example.hethongthongtin.entity.*;
+import com.example.hethongthongtin.exception.AppException;
+import com.example.hethongthongtin.exception.ErrorCode;
 import com.example.hethongthongtin.repository.PhongRepository;
 import com.example.hethongthongtin.repository.ThongTinCaNhanRepository;
 import com.example.hethongthongtin.repository.YeuCauKTXRepository;
@@ -17,9 +19,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class YeuCauKTXImpl implements YeuCauKTXService {
 
-    private YeuCauKTXRepository yeuCauKTXRepository;
-    private ThongTinCaNhanRepository thongTinCaNhanRepository;
-    private PhongRepository phongRepository;
+    private final YeuCauKTXRepository yeuCauKTXRepository;
+    private final ThongTinCaNhanRepository thongTinCaNhanRepository;
+    private final PhongRepository phongRepository;
 
     YeuCauKTXImpl(YeuCauKTXRepository yeuCauKTXRepository,
                   ThongTinCaNhanRepository thongTinCaNhanRepository,
@@ -35,10 +37,16 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
 
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
 
+        if(thongTinCaNhan == null) {
+            throw new AppException(ErrorCode.PROFILE_NOT_FOUND) ;
+        }
+
+        if(thongTinCaNhan.getMaSinhVien().isEmpty()) {
+            throw new AppException(ErrorCode.MSV_NOT_FOUND) ;
+        }
         List<YeuCauKTX> yeuCauKTX = yeuCauKTXRepository.findByMaSinhVien(thongTinCaNhan.getMaSinhVien());
 
-
-        List<YeuCauPhongResponse> yeuCauPhongResponses = yeuCauKTX.stream()
+        return yeuCauKTX.stream()
                 .map((item) -> {
                     YeuCauPhongResponse yeuCauPhongResponse= new YeuCauPhongResponse();
 
@@ -58,7 +66,7 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
                             .tenPhong(phong.getTenPhong())
                     .build();
                     
-                    if(item.getLoaiYeuCauKTX().getLabel() == "Đổi phòng") {
+                    if(item.getLoaiYeuCauKTX().getLabel().equals("Đổi phòng")) {
 
                         Phong phongMongMuon = item.getPhongMongMuon() ;
 
@@ -78,8 +86,6 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
                     return yeuCauPhongResponse;
                 })
                 .collect(Collectors.toList()) ;
-
-        return yeuCauPhongResponses;
     }
 
     @Override
@@ -87,7 +93,16 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
 
        ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
 
-       Phong phong = phongRepository.findById(phongId).get() ;
+        if(thongTinCaNhan == null) {
+            throw new AppException(ErrorCode.PROFILE_NOT_FOUND) ;
+        }
+
+        if(thongTinCaNhan.getMaSinhVien().isEmpty()) {
+            throw new AppException(ErrorCode.MSV_NOT_FOUND) ;
+        }
+
+       Phong phong = phongRepository.findById(phongId)
+               .orElseThrow(() -> new AppException(ErrorCode.PHONG_NOT_FOUND));
 
 
         YeuCauKTX yeuCauKTX = YeuCauKTX.builder()
@@ -104,6 +119,11 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
 
     @Override
     public void huyYeuCau(Long yeuCauId) {
+
+        if(!yeuCauKTXRepository.existsById(yeuCauId)) {
+            throw new AppException(ErrorCode.REQUEST_NOT_FOUND) ;
+        }
+
         yeuCauKTXRepository.deleteById(yeuCauId);
     }
 
@@ -112,10 +132,19 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
 
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
 
-        Phong phongHienTai = phongRepository.findById(phongHienTaiId).get() ;
-        Phong phongMongMuon = phongRepository.findById(phongMongMuonId).get() ;
+        if(thongTinCaNhan == null) {
+            throw new AppException(ErrorCode.PROFILE_NOT_FOUND) ;
+        }
 
-        System.out.println(thongTinCaNhan);
+        if(thongTinCaNhan.getMaSinhVien().isEmpty()) {
+            throw new AppException(ErrorCode.MSV_NOT_FOUND) ;
+        }
+
+        Phong phongHienTai = phongRepository.findById(phongHienTaiId)
+                .orElseThrow(() -> new AppException(ErrorCode.PHONG_NOT_FOUND));
+        Phong phongMongMuon = phongRepository.findById(phongMongMuonId)
+                .orElseThrow(() -> new AppException(ErrorCode.PHONG_NOT_FOUND));
+
         YeuCauKTX yeuCauKTX = YeuCauKTX.builder()
                 .maSinhVien(thongTinCaNhan.getMaSinhVien())
                 .loaiYeuCauKTX(LoaiYeuCauKTX.DoiPhong)
@@ -134,7 +163,16 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
 
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
 
-        Phong phong = phongRepository.findById(phongId).get() ;
+        if(thongTinCaNhan == null) {
+            throw new AppException(ErrorCode.PROFILE_NOT_FOUND) ;
+        }
+
+        if(thongTinCaNhan.getMaSinhVien().isEmpty()) {
+            throw new AppException(ErrorCode.MSV_NOT_FOUND) ;
+        }
+
+        Phong phong = phongRepository.findById(phongId)
+                .orElseThrow(() -> new AppException(ErrorCode.PHONG_NOT_FOUND)) ;
 
         YeuCauKTX yeuCauKTX = YeuCauKTX.builder()
                 .maSinhVien(thongTinCaNhan.getMaSinhVien())
@@ -153,13 +191,20 @@ public class YeuCauKTXImpl implements YeuCauKTXService {
 
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId);
 
+        if(thongTinCaNhan == null) {
+            throw new AppException(ErrorCode.PROFILE_NOT_FOUND) ;
+        }
+
+        if(thongTinCaNhan.getMaSinhVien().isEmpty()) {
+            throw new AppException(ErrorCode.MSV_NOT_FOUND) ;
+        }
+
         List<YeuCauKTX> yeuCauKTXList = yeuCauKTXRepository.findByMaSinhVien(thongTinCaNhan.getMaSinhVien());
 
         if(yeuCauKTXList.isEmpty()) return false;
 
-        Boolean response = yeuCauKTXList.stream()
+        return yeuCauKTXList.stream()
                                         .anyMatch((item) -> (!item.getTrangThai().equals(TrangThai.HoanThanh)
                                                 && !item.getTrangThai().equals(TrangThai.TuChoi)));
-        return response;
     }
 }

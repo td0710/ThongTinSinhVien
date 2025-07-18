@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class GiayXacNhanServiceImpl implements GiayXacNhanService {
 
-    private GiayXacNhanRepository giayXacNhanRepository;
+    private final GiayXacNhanRepository giayXacNhanRepository;
 
     GiayXacNhanServiceImpl(GiayXacNhanRepository giayXacNhanRepository) {
         this.giayXacNhanRepository = giayXacNhanRepository;
@@ -22,13 +22,12 @@ public class GiayXacNhanServiceImpl implements GiayXacNhanService {
 
     public List<GiayXacNhanResponse> getAll() {
         List<GiayXacNhan> giayXacNhan = giayXacNhanRepository.findAll() ;
-        List<GiayXacNhanResponse> giayXacNhanResponses = giayXacNhan
+        return  giayXacNhan
                 .stream()
                 .map(gxn -> GiayXacNhanResponse.builder()
                         .id(gxn.getId())
                         .name(gxn.getLoaiGiay().getLabel())
                         .build())
                 .collect(Collectors.toList());
-        return giayXacNhanResponses;
     }
 }

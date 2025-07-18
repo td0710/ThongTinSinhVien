@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class YeuCauGiayXacNhanServiceImpl implements YeuCauGiayXacNhanService {
 
-    private YeuCauGiayXacNhanRepository yeuCauGiayXacNhanRepository;
-    private ThongTinCaNhanRepository thongTinCaNhanRepository;
+    private final YeuCauGiayXacNhanRepository yeuCauGiayXacNhanRepository;
+    private final ThongTinCaNhanRepository thongTinCaNhanRepository;
     YeuCauGiayXacNhanServiceImpl(YeuCauGiayXacNhanRepository yeuCauGiayXacNhanRepository, ThongTinCaNhanRepository thongTinCaNhanRepository) {
         this.yeuCauGiayXacNhanRepository = yeuCauGiayXacNhanRepository;
         this.thongTinCaNhanRepository = thongTinCaNhanRepository;
@@ -32,9 +32,11 @@ public class YeuCauGiayXacNhanServiceImpl implements YeuCauGiayXacNhanService {
     @Override
     public void createYeuCauGiayXacNhan(YeuCauGiayXacNhanRequest yeuCauXacNhanDto, Long userId) {
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId) ;
+
         if(thongTinCaNhan == null) {
             throw new AppException(ErrorCode.PROFILE_NOT_FOUND);
         }
+
         YeuCauGiayXacNhan yeuCauGiayXacNhan = YeuCauGiayXacNhan.builder()
                 .maSinhVien(thongTinCaNhan.getMaSinhVien())
                 .loaiGiay(LoaiGiay.fromLabel(yeuCauXacNhanDto.getLoaiGiay()))
@@ -48,13 +50,15 @@ public class YeuCauGiayXacNhanServiceImpl implements YeuCauGiayXacNhanService {
     @Override
     public List<YeuCauGiayXacNhanResponse> getByUserId(Long userId) {
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId) ;
+
         if(thongTinCaNhan == null) {
             throw new AppException(ErrorCode.PROFILE_NOT_FOUND);
         }
+
         List<YeuCauGiayXacNhan> yeuCauGiayXacNhan = yeuCauGiayXacNhanRepository
                 .findYeuCauGiayXacNhanByMaSinhVien(thongTinCaNhan.getMaSinhVien());
 
-        List<YeuCauGiayXacNhanResponse> yeuCauGiayXacNhanResponses = yeuCauGiayXacNhan
+        return yeuCauGiayXacNhan
                 .stream()
                 .map(gxn -> YeuCauGiayXacNhanResponse.builder()
                                 .id(gxn.getId())
@@ -67,8 +71,7 @@ public class YeuCauGiayXacNhanServiceImpl implements YeuCauGiayXacNhanService {
                                 .build()
                         )
                 .collect(Collectors.toList());
-        System.out.println(yeuCauGiayXacNhanResponses);
-        return yeuCauGiayXacNhanResponses;
+
     }
 
     @Override

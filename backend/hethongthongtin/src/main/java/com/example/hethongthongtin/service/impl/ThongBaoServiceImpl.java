@@ -4,6 +4,8 @@ import com.example.hethongthongtin.dto.request.SearchThongBaoRequest;
 import com.example.hethongthongtin.dto.response.ThongBaoPageResponse;
 import com.example.hethongthongtin.dto.response.ThongBaoResponse;
 import com.example.hethongthongtin.entity.ThongBao;
+import com.example.hethongthongtin.exception.AppException;
+import com.example.hethongthongtin.exception.ErrorCode;
 import com.example.hethongthongtin.repository.ThongBaoRepository;
 import com.example.hethongthongtin.service.ThongBaoService;
 import jakarta.transaction.Transactional;
@@ -29,9 +31,19 @@ public class ThongBaoServiceImpl implements ThongBaoService {
     public ThongBaoPageResponse searchThongBao(int page, int size,
                                                SearchThongBaoRequest searchThongBaoRequest) {
 
+        if (page < 0 || size <= 0) {
+            throw new AppException(ErrorCode.INVALID_PAGE_REQUEST);
+        }
+
+        if (searchThongBaoRequest.getStartDate() != null && searchThongBaoRequest.getEndDate() != null) {
+            if (searchThongBaoRequest.getStartDate().isAfter(searchThongBaoRequest.getEndDate())) {
+                throw new AppException(ErrorCode.INVALID_SEARCH_PARAMS);
+            }
+        }
+
         Pageable pageable = PageRequest.of(page, size);
 
-        Page thongBaoPage= thongBaoRepository.findBySearch(
+        Page<ThongBao> thongBaoPage= thongBaoRepository.findBySearch(
                 pageable,
                 searchThongBaoRequest.getStartDate()
                 ,searchThongBaoRequest.getEndDate()
@@ -52,7 +64,7 @@ public class ThongBaoServiceImpl implements ThongBaoService {
                 })
                 .collect(Collectors.toList());
 
-        ThongBaoPageResponse thongBaoPageResponse = ThongBaoPageResponse.builder()
+        return ThongBaoPageResponse.builder()
                 .thongBao(thongBaoResponseList)
                 .pageNo(thongBaoPage.getNumber())
                 .totalElements(thongBaoPage.getTotalElements())
@@ -61,7 +73,6 @@ public class ThongBaoServiceImpl implements ThongBaoService {
                 .last(thongBaoPage.isLast())
                 .build();
 
-        return thongBaoPageResponse;
     }
 
     @Override

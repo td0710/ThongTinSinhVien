@@ -6,6 +6,8 @@ import com.example.hethongthongtin.dto.response.PhongPageResponse;
 import com.example.hethongthongtin.entity.Phong;
 import com.example.hethongthongtin.entity.PhongSinhVien;
 import com.example.hethongthongtin.entity.Users;
+import com.example.hethongthongtin.exception.AppException;
+import com.example.hethongthongtin.exception.ErrorCode;
 import com.example.hethongthongtin.repository.PhongRepository;
 import com.example.hethongthongtin.repository.PhongSinhVienRepository;
 import com.example.hethongthongtin.repository.UserRepository;
@@ -23,9 +25,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class PhongServiceImpl implements PhongService {
 
-    private PhongRepository phongRepository;
-    private PhongSinhVienRepository phongSinhVienRepository;
-    private UserRepository userRepository;
+    private final PhongRepository phongRepository;
+    private final PhongSinhVienRepository phongSinhVienRepository;
+    private final UserRepository userRepository;
 
     PhongServiceImpl(PhongRepository phongRepository,
                      PhongSinhVienRepository phongSinhVienRepository,
@@ -65,7 +67,7 @@ public class PhongServiceImpl implements PhongService {
                 .collect(Collectors.toList());
 
 
-        PhongPageResponse response = PhongPageResponse.builder()
+        return PhongPageResponse.builder()
                 .phong(phongResponseList)
                 .pageNo(phongPage.getNumber())
                 .pageSize(phongPage.getSize())
@@ -73,18 +75,18 @@ public class PhongServiceImpl implements PhongService {
                 .totalElements(phongPage.getTotalElements())
                 .last(phongPage.isLast())
                 .build();
-        return response ;
     }
 
     @Override
     public PhongResponse getPhongHienTai(Long userId) {
 
-        Users user = userRepository.findById(userId).get();
+        Users user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
 
 
         PhongSinhVien phongSinhVien = phongSinhVienRepository.findPhongSinhVienByUsers(user);
 
-        PhongResponse phongResponse = PhongResponse.builder()
+        return  PhongResponse.builder()
                         .id(phongSinhVien.getPhong().getId())
                         .loaiPhong(phongSinhVien.getPhong().getLoaiPhong())
                 .tenPhong(phongSinhVien.getPhong().getTenPhong())
@@ -94,6 +96,5 @@ public class PhongServiceImpl implements PhongService {
                 .soLuongDaDangKy(phongSinhVien.getPhong().getDanhSachSinhVien().size())
                 .build();
 
-        return phongResponse;
     }
 }

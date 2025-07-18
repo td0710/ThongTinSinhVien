@@ -33,7 +33,7 @@ public class ThongTinCaNhanServiceImpl implements ThongTinCaNhanService {
             throw new AppException(ErrorCode.PROFILE_NOT_FOUND);
         }
 
-        ThongTinCaNhanResponse thongTinCaNhanResponse = ThongTinCaNhanResponse.builder()
+        return  ThongTinCaNhanResponse.builder()
                 .maSinhVien(thongTinCaNhan.getMaSinhVien())
                 .hoTen(thongTinCaNhan.getHoTen())
                 .khoa(thongTinCaNhan.getKhoa())
@@ -71,7 +71,6 @@ public class ThongTinCaNhanServiceImpl implements ThongTinCaNhanService {
                 .ngayCapNhat(LocalDateTime.now())
                 .build();
 
-        return thongTinCaNhanResponse;
     }
 
     public void updateThongTin(ThongTinCaNhanRequest thongTinCaNhanDto, Long userId) {

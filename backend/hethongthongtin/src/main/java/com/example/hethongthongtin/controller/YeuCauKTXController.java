@@ -12,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
-@RequestMapping("/api/yeucauktx")
+@RequestMapping("/api/secure/yeucauktx")
 public class YeuCauKTXController {
 
     private YeuCauKTXService yeucauKTXService;
