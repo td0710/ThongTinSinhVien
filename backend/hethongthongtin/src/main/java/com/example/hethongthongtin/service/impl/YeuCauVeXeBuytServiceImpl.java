@@ -1,5 +1,7 @@
 package com.example.hethongthongtin.service.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.hethongthongtin.dto.request.YeuCauVeXeBuytRequest;
 import com.example.hethongthongtin.dto.response.UploadResponse;
 import com.example.hethongthongtin.dto.response.YeuCauVeXeBuytReponse;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,15 +34,18 @@ public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
     private final GoogleDriveUpload googleDriveUpload;
     private final YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository;
     private final ThongTinCaNhanRepository thongTinCaNhanRepository;
+    private final Cloudinary cloudinary;
 
 
     YeuCauVeXeBuytServiceImpl(YeuCauVeXeBuytRepository yeuCauVeXeBuytRepository,
                               GoogleDriveUpload googleDriveUpload,
-                              ThongTinCaNhanRepository thongTinCaNhanRepository
+                              ThongTinCaNhanRepository thongTinCaNhanRepository,
+                              Cloudinary cloudinary
                        ) {
         this.yeuCauVeXeBuytRepository = yeuCauVeXeBuytRepository;
         this.googleDriveUpload = googleDriveUpload;
         this.thongTinCaNhanRepository = thongTinCaNhanRepository;
+        this.cloudinary = cloudinary;
     }
 
 
@@ -57,7 +63,11 @@ public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
 
         File tempFile = File.createTempFile("temp", null);
         file.transferTo(tempFile);
-        UploadResponse res = googleDriveUpload.uploadImageToDrive(tempFile);
+        Map<?, ?> uploadResult = cloudinary.uploader().upload(tempFile, ObjectUtils.asMap(
+                "folder", "vxb_img"
+        ));
+
+        String imageUrl = (String) uploadResult.get("secure_url");
 
         ThongTinCaNhan thongTinCaNhan = thongTinCaNhanRepository.findByUserId(userId) ;
 
@@ -72,7 +82,7 @@ public class YeuCauVeXeBuytServiceImpl implements YeuCauVeXeBuytService {
                 .tuyen(yeuCauVeXeBuytRequest.getTuyen() == null ? "Liên tuyến" : yeuCauVeXeBuytRequest.getTuyen())
                 .soDienThoai(yeuCauVeXeBuytRequest.getSdt())
                 .trangThai(TrangThai.DangTiepNhan)
-                .duongDanAnh(res.getUrl())
+                .duongDanAnh(imageUrl)
                 .ngayYeuCau(LocalDateTime.now())
                 .ghiChu("Yêu cầu mới tạo. Đang chờ xử lý.")
                 .build() ;

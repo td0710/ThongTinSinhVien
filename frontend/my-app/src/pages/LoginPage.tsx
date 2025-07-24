@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Card, Row, Col, Layout, Flex } from "antd";
 import { WindowsFilled, WindowsOutlined } from "@ant-design/icons";
 import bgImage from "../asserts/img/loginbackground.jpg";
+// Use image from public folder
 
 const { Content } = Layout;
 

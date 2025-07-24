@@ -41,6 +41,8 @@ export const DangKyXeBuytPage = () => {
     }
     return e?.fileList;
   };
+
+        console.log("Tuyen xe", tuyenXe);
   const handleSubmit = async (values: any) => {
     try {
       const img = values.anh?.[0]?.originFileObj;
