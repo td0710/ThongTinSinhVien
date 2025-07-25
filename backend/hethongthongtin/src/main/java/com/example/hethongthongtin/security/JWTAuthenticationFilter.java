@@ -33,7 +33,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             String token = getJwtFromCookies(request);
 
             if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
-
+                System.out.println("JWT: " + token);
                 String email = tokenGenerator.getEmailFromJwt(token);
                     UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -42,12 +42,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-
         } catch (AppException ex) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"code\": \"" + ex.getErrorCode().getCode() + "\", \"message\": \"" + ex.getErrorCode().getMessage() + "\"}");
-        } finally {
+        }
+        finally {
             filterChain.doFilter(request, response);
         }
     }

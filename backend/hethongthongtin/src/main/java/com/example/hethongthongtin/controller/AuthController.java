@@ -38,12 +38,15 @@ public class AuthController {
         return ResponseEntity.ok("Đăng nhập thành công");
     }
     @GetMapping("/check-session")
-    public ResponseEntity<Void> checkSession() {
+    public ResponseEntity<Void> checkSession(HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication);
-        System.out.println(authentication.isAuthenticated());
         if (authentication == null || !authentication.isAuthenticated() ||
                 authentication.getPrincipal().equals("anonymousUser")) {
+            Cookie cookie = new Cookie("jwt", null);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
         }
 
@@ -51,7 +54,6 @@ public class AuthController {
     }
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        System.out.println(1234);
         Cookie cookie = new Cookie("jwt", null);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
