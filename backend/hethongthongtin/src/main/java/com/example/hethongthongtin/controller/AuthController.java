@@ -40,6 +40,7 @@ public class AuthController {
     @GetMapping("/check-session")
     public ResponseEntity<Void> checkSession(HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication);
         if (authentication == null || !authentication.isAuthenticated() ||
                 authentication.getPrincipal().equals("anonymousUser")) {
             Cookie cookie = new Cookie("jwt", null);

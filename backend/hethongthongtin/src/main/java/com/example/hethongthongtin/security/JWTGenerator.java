@@ -8,21 +8,18 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Jwts;
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
-import java.util.Optional;
 
 @Component
 public class JWTGenerator {
 
     private SecretKey key;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public JWTGenerator(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -45,11 +42,10 @@ public class JWTGenerator {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
 
-        System.out.println(now);
-        System.out.println(expiryDate);
         return Jwts.builder()
-                .claim("id", user.getId())
                 .setSubject(user.getEmail())
+                .claim("id", user.getId())
+                .claim("role", user.getRole())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key)
