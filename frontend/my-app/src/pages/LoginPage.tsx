@@ -1,14 +1,19 @@
 import React from "react";
 import { Button, Card, Row, Col, Layout, Flex } from "antd";
-import { WindowsFilled, WindowsOutlined } from "@ant-design/icons";
-import bgImage from "../asserts/img/loginbackground.jpg";
-// Use image from public folder
+import { WindowsFilled } from "@ant-design/icons";
+import bgImage from "../assets/img/loginbackground.jpg";
 
 const { Content } = Layout;
 
 const LoginPage: React.FC = () => {
   const handleMicrosoftLogin = () => {
-    window.location.href = `https://login.microsoftonline.com/${process.env.REACT_APP_AZURE_TENANT_ID}/oauth2/v2.0/authorize?client_id=${process.env.REACT_APP_AZURE_CLIENT_ID}&response_type=code&redirect_uri=${process.env.REACT_APP_AZURE_REDIRECT_URI}&response_mode=query&scope=openid email profile&state=abc123`;
+    window.location.href = `https://login.microsoftonline.com/${
+      import.meta.env.VITE_AZURE_TENANT_ID
+    }/oauth2/v2.0/authorize?client_id=${
+      import.meta.env.VITE_AZURE_CLIENT_ID
+    }&response_type=code&redirect_uri=${
+      import.meta.env.VITE_AZURE_REDIRECT_URI
+    }&response_mode=query&scope=openid email profile&state=abc123`;
   };
 
   return (

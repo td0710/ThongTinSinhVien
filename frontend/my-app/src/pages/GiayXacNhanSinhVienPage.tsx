@@ -32,7 +32,9 @@ export const GiayXacNhanSinhVienPage = () => {
   useEffect(() => {
     const fetchLoaiGiayXacNhan = async () => {
       try {
-        const url = `${process.env.REACT_APP_API_BASE_URL}/secure/giayxacnhan/get-all`;
+        const url = `${
+          import.meta.env.VITE_API_BASE_URL
+        }/secure/giayxacnhan/get-all`;
         const response = await axios.get(url, { withCredentials: true });
         const listGiayXacNhan = response.data.map((item: any) => {
           return {
@@ -56,7 +58,9 @@ export const GiayXacNhanSinhVienPage = () => {
   console.log(123);
   const fetchDanhSachYeuCau = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucaugiayxacnhan/get-all`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucaugiayxacnhan/get-all`;
       const response = await axios.get(url, { withCredentials: true });
       const list = response.data.map((item: any, index: number) => ({
         key: index + 1,
@@ -83,7 +87,9 @@ export const GiayXacNhanSinhVienPage = () => {
   }, []);
   const handleSubmit = async (values: any) => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucaugiayxacnhan/create`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucaugiayxacnhan/create`;
       const response = await axios.post(
         url,
         {
@@ -110,7 +116,9 @@ export const GiayXacNhanSinhVienPage = () => {
   };
   const handleHuyYeuCau = async (data: number) => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucaugiayxacnhan/delete?id=${data}`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucaugiayxacnhan/delete?id=${data}`;
       const response = await axios.delete(url, { withCredentials: true });
       notify(
         "success",

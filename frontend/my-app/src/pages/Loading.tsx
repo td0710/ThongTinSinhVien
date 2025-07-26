@@ -17,7 +17,9 @@ export const Loading = () => {
         if (isMatch) {
           const authCode = decodeURIComponent(`${isMatch[1]}`);
 
-          const url = `${process.env.REACT_APP_API_BASE_URL}/auth/login?id=${authCode}`;
+          const url = `${
+            import.meta.env.VITE_API_BASE_URL
+          }/auth/login?id=${authCode}`;
 
           const response = await axios.post(
             url,

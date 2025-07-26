@@ -72,7 +72,9 @@ export const TatCaPhongPage = () => {
   };
   const fetchPhongCuaToi = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/phong/phong-hien-tai`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/phong/phong-hien-tai`;
 
       const response = await axios.get(url, {
         withCredentials: true,
@@ -103,7 +105,7 @@ export const TatCaPhongPage = () => {
         trong: form.getFieldValue("trong"),
       };
       const url = `${
-        process.env.REACT_APP_API_BASE_URL
+        import.meta.env.VITE_API_BASE_URL
       }/secure/phong/search-phong?page=${currentPage - 1}&size=${PAGE_SIZE}`;
       const response = await axios.post(url, data, {
         withCredentials: true,
@@ -143,7 +145,9 @@ export const TatCaPhongPage = () => {
 
   const fetchYeuCauHienTai = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/yeu-cau-hien-tai`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauktx/yeu-cau-hien-tai`;
 
       const response = await axios.get(url, { withCredentials: true });
 
@@ -162,7 +166,9 @@ export const TatCaPhongPage = () => {
     try {
       setLoading(true);
       console.log("Đăng ký phòng với ID:", phongId);
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/dang-ky-phong?phongId=${phongId}`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauktx/dang-ky-phong?phongId=${phongId}`;
       const response = await axios.post(url, {}, { withCredentials: true });
       console.log("Đăng ký phòng thành công:", response.data);
       const notify = {
@@ -197,7 +203,9 @@ export const TatCaPhongPage = () => {
         "đến ID:",
         phongMongMuonId
       );
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/doi-phong?phongHienTaiId=${phongHienTaiId}&phongMongMuonId=${phongMongMuonId}`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauktx/doi-phong?phongHienTaiId=${phongHienTaiId}&phongMongMuonId=${phongMongMuonId}`;
       const response = await axios.post(url, {}, { withCredentials: true });
       console.log("Chuyển phòng thành công:", response.data);
       const notify = {

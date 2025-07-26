@@ -52,7 +52,7 @@ export const ThongBaoPage = () => {
       };
       const response = await axios.post(
         `${
-          process.env.REACT_APP_API_BASE_URL
+          import.meta.env.VITE_API_BASE_URL
         }/secure/thongbao/search-thong-bao?page=${
           currentPage - 1
         }&size=${PAGE_SIZE}`,
@@ -88,7 +88,7 @@ export const ThongBaoPage = () => {
   const fetchTotalThongBao = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/secure/thongbao/total`,
+        `${import.meta.env.VITE_API_BASE_URL}/secure/thongbao/total`,
         { withCredentials: true }
       );
       console.log("Tổng số thông báo:", response.data);

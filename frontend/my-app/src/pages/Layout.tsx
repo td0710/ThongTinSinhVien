@@ -3,7 +3,6 @@ import { Drawer, Grid, Layout, Spin, theme } from "antd";
 import Sidebar from "../components/Sidebar";
 import HeaderBar from "../components/Header";
 import { useLocation } from "react-router-dom";
-
 const { useBreakpoint } = Grid;
 const { Sider, Header, Content } = Layout;
 

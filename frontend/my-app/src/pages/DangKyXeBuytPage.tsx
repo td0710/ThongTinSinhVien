@@ -42,12 +42,12 @@ export const DangKyXeBuytPage = () => {
     return e?.fileList;
   };
 
-        console.log("Tuyen xe", tuyenXe);
+  console.log("Tuyen xe", tuyenXe);
   const handleSubmit = async (values: any) => {
     try {
       const img = values.anh?.[0]?.originFileObj;
       const res = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauvexebuyt/create`,
+        `${import.meta.env.VITE_API_BASE_URL}/secure/yeucauvexebuyt/create`,
         {
           loaiVe: values.tuyen,
           tuyen: values.selectedTuyen,
@@ -80,7 +80,7 @@ export const DangKyXeBuytPage = () => {
 
   useEffect(() => {
     const fetchTuyenXe = async () => {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/tuyenxe/get-all`;
+      const url = `${import.meta.env.VITE_API_BASE_URL}/secure/tuyenxe/get-all`;
       const response = await axios.get(url, { withCredentials: true });
 
       const listTuyenXe = response.data.map((item: any) => {
@@ -98,7 +98,9 @@ export const DangKyXeBuytPage = () => {
 
   const fetchDanhSachYeuCau = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauvexebuyt/get-all`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauvexebuyt/get-all`;
 
       const response = await axios.get(url, { withCredentials: true });
 
@@ -129,7 +131,9 @@ export const DangKyXeBuytPage = () => {
   const handleHuyYeuCau = async (data: number) => {
     try {
       console.log(data);
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauvexebuyt/delete?id=${data}`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauvexebuyt/delete?id=${data}`;
       const response = await axios.delete(url, { withCredentials: true });
       notify(
         "success",

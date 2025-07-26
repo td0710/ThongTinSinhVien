@@ -3,7 +3,7 @@ import axios from "axios";
 export const authService = {
   login: async (email: string, microsoftId: string, fullName: string) => {
     const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/auth/login`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`,
       { email, microsoft_id: microsoftId, full_name: fullName },
       { withCredentials: true }
     );
@@ -12,7 +12,7 @@ export const authService = {
 
   logout: async () => {
     await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/auth/logout`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`,
       {},
       { withCredentials: true }
     );
@@ -21,7 +21,7 @@ export const authService = {
   checkSession: async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/check-session`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/check-session`,
         { withCredentials: true }
       );
       return response.data;

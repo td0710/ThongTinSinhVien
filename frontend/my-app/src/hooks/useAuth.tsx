@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/auth/logout`,
+        `${import.meta.env.VITE_API_BASE_URL}/auth/logout`,
         {},
         { withCredentials: true }
       );
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("kkkk");
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/auth/check-session`,
+        `${import.meta.env.VITE_API_BASE_URL}/auth/check-session`,
         {
           withCredentials: true,
         }

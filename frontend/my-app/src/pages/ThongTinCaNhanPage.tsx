@@ -47,7 +47,9 @@ export const ThongTinCaNhanPage = () => {
   }, []);
   const fetchThongTinCaNhan = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/thongtincanhan/get`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/thongtincanhan/get`;
       console.log(url);
       const response = await axios.get(url, { withCredentials: true });
 
@@ -76,7 +78,7 @@ export const ThongTinCaNhanPage = () => {
   const UpdateThongTinCaNhan = async (data: any) => {
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_BASE_URL}/secure/thongtincanhan/update`,
+        `${import.meta.env.VITE_API_BASE_URL}/secure/thongtincanhan/update`,
         data,
         { withCredentials: true }
       );

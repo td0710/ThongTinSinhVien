@@ -59,7 +59,9 @@ export const TheoDoiVaPhongCuaToiPage = () => {
   const fetchYeuCauList = async () => {
     try {
       setLoading(true);
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/get-by-id`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauktx/get-by-id`;
 
       const response = await axios.get(url, { withCredentials: true });
 
@@ -109,7 +111,9 @@ export const TheoDoiVaPhongCuaToiPage = () => {
 
   const fetchPhongCuaToi = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/phong/phong-hien-tai`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/phong/phong-hien-tai`;
 
       const response = await axios.get(url, {
         withCredentials: true,
@@ -130,7 +134,9 @@ export const TheoDoiVaPhongCuaToiPage = () => {
 
   const fetchYeuCauHienTai = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/yeu-cau-hien-tai`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauktx/yeu-cau-hien-tai`;
 
       const response = await axios.get(url, { withCredentials: true });
 
@@ -147,7 +153,9 @@ export const TheoDoiVaPhongCuaToiPage = () => {
   const handleTraPhong = async (phongId: number) => {
     try {
       setLoading(true);
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/tra-phong?phongId=${phongId}`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauktx/tra-phong?phongId=${phongId}`;
 
       const response = await axios.post(url, {}, { withCredentials: true });
 
@@ -178,7 +186,9 @@ export const TheoDoiVaPhongCuaToiPage = () => {
   const handleHuyYeuCau = async (yeuCauId: number) => {
     try {
       setLoading(true);
-      const url = `${process.env.REACT_APP_API_BASE_URL}/secure/yeucauktx/huy-yeu-cau?yeuCauId=${yeuCauId}`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/secure/yeucauktx/huy-yeu-cau?yeuCauId=${yeuCauId}`;
 
       const response = await axios.delete(url, { withCredentials: true });
 
